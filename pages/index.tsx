@@ -1,97 +1,168 @@
 import type { NextPage } from "next";
 
-const Home: NextPage = () => {
+import styled from "styled-components";
+
+const Main = styled.div`
+	width: 100%;
+	justify-content: center;
+	display: flex;
+`;
+
+const Header = styled.div`
+	background-color: white;
+	top: 0px;
+	height: 48px;
+	display: flex;
+	align-items: center;
+	position: fixed;
+	justify-content: space-between;
+	max-width: 1024px;
+	width: 100%;
+	padding-left: 1.5rem;
+	padding-right: 1.5rem;
+`;
+
+const Logo = styled.img`
+	height: 36px;
+`;
+const Search = styled.div`
+	display: flex;
+	position: relative;
+	align-items: center;
+	cursor: text;
+
+	&:focus-within {
+		div {
+			display: none;
+		}
+	}
+`;
+const SearchInput = styled.input`
+	width: 256px;
+	outline: 2px solid transparent;
+	outline-offset: 2px;
+	padding-left: 32px;
+	height: 40px;
+	border-width: 1px;
+	border-radius: 6px;
+	background-color: rgb(244 244 246);
+	color: rgb(107 114 128);
+	&:focus {
+		color: black;
+		padding-left: 16px;
+	}
+`;
+
+const SearchLogo = styled.div`
+	position: absolute;
+	padding-left: 8px;
+`;
+
+const Menu = styled.div`
+	display: flex;
+	justify-content: flex-end;
+`;
+
+const Pic = styled.div`
+	padding-top: 64px;
+	display: grid;
+	gap: 16px;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+`;
+
+const PicImage = styled.img`
+	aspect-ratio: 1 / 1;
+	width: 320px;
+
+	transition-property: transform, backdrop-filter;
+	transition-duration: 500ms;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	transition: transform 1;
+
+	&:hover {
+		transform: scale(1.1);
+	}
+	&:nth-child(3n) {
+		transform-origin: right;
+	}
+	&:nth-child(3n + 1) {
+		transform-origin: left;
+	}
+`;
+
+const index = () => {
 	return (
-		<div className="bg-slate-400 py-20  px-10 grid gap-10 min-h-screen">
-			<div className="bg-white p-10 rounded-2xl shadow-xl">
-				<span className="font-semibold text-3xl">Select Item</span>
-				<div className="flex justify-between my-2">
-					<span className="font-semibold">Gray Chair</span>
-					<span className="text-gray-500">$19</span>
-				</div>
-				<div className="flex justify-between">
-					<span className="font-semibold">Tooly Table</span>
-					<span className="text-gray-500">$19</span>
-				</div>
+		<Main>
+			<Header>
+				<Logo src="./reef_logo.png" />
+				<Search>
+					<SearchInput required type="text" />
+					<SearchLogo>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							className="h-4 w-4"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							strokeWidth="2"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+							/>
+						</svg>
+					</SearchLogo>
+				</Search>
 
-				<div className="flex justify-between mt-2 pt-2 border-t-2">
-					<span className="font-semibold">Total</span>
-					<span>$10</span>
-				</div>
-
-				<button className="block mx-auto mt-5 bg-blue-500 text-white p-5 w-3/4  text-center rounded-xl hover:bg-teal-500 hover:text-black active:bg-yellow-500 focus:text-red-500">
-					Checkout
-				</button>
-			</div>
-			<div className="bg-white overflow-hidden rounded-2xl shadow-xl">
-				<div className="bg-blue-500 p-6 pb-14">
-					<span className="text-white text-2xl">Profile</span>
-				</div>
-
-				<div className="rounded-3xl p-6 bg-white relative -top-5">
-					<div className="flex items-end  justify-between">
-						<div className="flex flex-col items-center">
-							<span className="text-sm text-gray-500">Orders</span>
-							<span className="font-medium">340</span>
-						</div>
-
-						<div className="h-24 w-24 bg-red-400 rounded-full" />
-
-						<div className="flex flex-col items-center">
-							<span className="text-sm text-gray-500">Spent</span>
-							<span className="font-medium">340</span>
-						</div>
+				<Menu>
+					<div>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							className="h-7 w-7"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							strokeWidth="2"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+							/>
+						</svg>
 					</div>
-				</div>
-
-				<div className="relative flex  flex-col  items-center -mt-5 mb-5">
-					<span className="text-lg font-medium">Tony Molloy</span>
-					<span className="textt-sm text-gray-400">미국</span>
-				</div>
-			</div>
-			<div className="bg-white p-10 rounded-2xl shadow-xl">
-				<div className="flex justify-between items-center">
-					<span>⬅️</span>
-					<div className="space-x-3">
-						<span>⭐️4.9</span>
-						<span className="shadow-xl p-2 rounded-md">🧡</span>
+					<div>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							className="h-7 w-7"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							strokeWidth="2"
+						>
+							{" "}
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+							/>
+						</svg>
 					</div>
-				</div>
-
-				<div className="bg-zinc-400 h-72 mb-5" />
-
-				<div className="flex flex-col">
-					<span className="font-medium text-xl ">Swoon Lounge</span>
-					<span className="text-xs text-gray-500">Chair</span>
-
-					<div className="mt-3 mb-5 flex justify-between items-center">
-						<div className="space-x-2">
-							<button className="w-5 h-5 rounded-full bg-yellow-500 ring-2 ring-offset-1" />
-							<button className="w-5 h-5 rounded-full bg-indigo-500" />
-							<button className="w-5 h-5 rounded-full bg-teal-500" />
-						</div>
-
-						<div className="flex items-center space-x-2">
-							<button className=" rounded-lg bg-blue-200 flex justify-center items-center aspect-square w-8 font-medium text-xl text-gray-500">
-								-
-							</button>
-							<span>1</span>
-							<button className=" rounded-lg bg-blue-200 flex justify-center items-center aspect-square w-8 font-medium text-xl text-gray-500">
-								+
-							</button>
-						</div>
-					</div>
-				</div>
-
-				<div className="flex justify-between items-center">
-					<span className="font-medium text-2xl">$450</span>
-					<button className="bg-blue-500 text-center  text-xs py-2 px-8 text-white rounded-lg">
-						Add to cart
-					</button>
-				</div>
-			</div>
-		</div>
+				</Menu>
+			</Header>
+			<Pic>
+				{[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, i) => (
+					<PicImage key={i} src="/reef_img.jpg" />
+				))}
+			</Pic>
+		</Main>
 	);
 };
 
-export default Home;
+export default index;
+
+/*
+
+
+*/
