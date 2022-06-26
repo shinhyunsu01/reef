@@ -58,7 +58,8 @@ const InfoValue = styled.span`
 const Season = styled.div`
 	display: flex;
 	justify-content: space-around;
-	font-size: 16px;
+	font-weight: bold;
+	font-size: 12px;
 	border-top-width: 2px;
 	margin-top: 50px;
 	background-color: #fafafa;
@@ -83,6 +84,17 @@ const index = () => {
 	const { register, handleSubmit, watch } = useForm();
 	const [editOpen, setEditOpen] = useState(false);
 
+	const waterData = [
+		{ key: "temp", name: "온도", value: 26 },
+		{ key: "ph", name: "ph", value: 0.001 },
+		{ key: "salt", name: "염도", value: 0.001 },
+		{ key: "alkalinity", name: "경도", value: 0.001 },
+		{ key: "calcium", name: "칼슘", value: 0.001 },
+		{ key: "mag", name: "마그네슘", value: 0.001 },
+		{ key: "nitrate", name: "질산염", value: 0.001 },
+		{ key: "phosphorus", name: "인산염", value: 0.001 },
+	];
+
 	const editFn = () => {
 		setEditOpen(true);
 	};
@@ -101,6 +113,14 @@ const index = () => {
 		setEditOpen(false);
 		console.log("ok", validForm);
 	};
+	/*
+	const [state, setState] = useState({
+		loading: false,
+		data: undefined,
+		error: undefined,
+	});
+	*/
+	console.log("watch", watch());
 
 	return (
 		<Main>
@@ -155,52 +175,92 @@ const index = () => {
 							<Input
 								item="스키머 / 제조사"
 								itemValue="마린코스트"
-								editEnable={!editOpen}
+								editEnable={editOpen}
 								register={register("skimmer", {
 									required: true,
 								})}
 								required
+								type="text"
 							/>
 
 							<Input
 								item="수조 / 하단 섬프(O,X) / 제조사"
 								itemValue="400x400/X/제스트"
-								editEnable={!editOpen}
+								editEnable={editOpen}
 								register={register("watertank", {
 									required: true,
 								})}
 								required
+								type="text"
 							/>
 
 							<Input
 								item="조명 / 제조사"
 								itemValue="오펙"
-								editEnable={!editOpen}
+								editEnable={editOpen}
 								register={register("lamp", {
 									required: true,
 								})}
 								required
+								type="text"
 							/>
 
 							<Input
 								item="수류모터 / 제조사"
 								itemValue="SW-15/제바오"
-								editEnable={!editOpen}
+								editEnable={editOpen}
 								register={register("watermotor", {
 									required: true,
 								})}
 								required
+								type="text"
 							/>
 						</div>
 						<div className="flex mt-4">
-							<Input
+							{waterData.map((v, i) => (
+								<Input
+									key={i}
+									item={v.name}
+									itemValue={v.value}
+									editEnable={editOpen}
+									register={register(v.key, {
+										required: true,
+									})}
+									required
+									type="number"
+								/>
+							))}
+						</div>
+					</form>
+				</div>
+			</UserProfile>
+			<Season>
+				{[1, 2, 3].map((_, i) => (
+					<SeasonItem key={i}>Season {i}</SeasonItem>
+				))}
+			</Season>
+
+			<div className="grid grid-cols-3 gap-2">
+				{[1, 2, 3, 4, 5, 6].map((_, i) => (
+					<img key={i} src="./reef_img.jpg" className="h-50 aspect-square" />
+				))}
+			</div>
+		</Main>
+	);
+};
+
+export default index;
+
+/*
+<Input
 								item="온도"
 								itemValue="26"
-								editEnable={!editOpen}
+								editEnable={editOpen}
 								register={register("watermotor", {
 									required: true,
 								})}
 								required
+								type="number"
 							/>
 							<Info>
 								<InfoItem>ph</InfoItem>
@@ -234,35 +294,4 @@ const index = () => {
 								<InfoItem>암모니아</InfoItem>
 								<InfoValue>0.001</InfoValue>
 							</Info>
-						</div>
-					</form>
-				</div>
-			</UserProfile>
-			<Season className="mb-2">
-				{[1, 2, 3].map((_, i) => (
-					<SeasonItem key={i}>Season {i}</SeasonItem>
-				))}
-			</Season>
-
-			<div className="grid grid-cols-3 gap-2">
-				{[1, 2, 3, 4, 5, 6].map((_, i) => (
-					<img key={i} src="./reef_img.jpg" className="h-50 aspect-square" />
-				))}
-			</div>
-		</Main>
-	);
-};
-
-export default index;
-
-/*
-{editOpen ? <Edit /> : null}
-
-									<input
-										className="outline-none bg-transparent"
-										placeholder="마린 코스트/나노 스키머"
-										disabled={!editOpen}
-										{...register("skimmer")}
-										required
-									/>
 */

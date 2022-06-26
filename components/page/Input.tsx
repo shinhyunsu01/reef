@@ -8,6 +8,7 @@ interface ReefInput {
 	watertank?: string;
 	lamp?: string;
 	watermotor?: string;
+	
 	temp?: number;
 	ph?: number;
 
@@ -23,10 +24,11 @@ interface ReefInput {
 
 interface InputPros {
 	item: string;
-	itemValue: string;
+	itemValue: string | number;
 	editEnable: boolean;
 	register: UseFormRegisterReturn;
 	required?: boolean;
+	type: string;
 }
 
 const Info = styled.div`
@@ -39,13 +41,16 @@ const Item = styled.div`
 	display: flex;
 	align-items: center;
 `;
-const InfoItem = styled.span`
+const InfoItem = styled.span<any>`
 	border-bottom-width: 2px;
 	color: gray;
 	font-size: 14px;
+
+	text-align: ${(props) => (props.type === "number" ? "center" : null)};
 `;
 
 const ReefInput = styled.input`
+	appearance: none;
 	outline: 2px solid transparent;
 	outline-offset: 2px;
 	background-color: transparent;
@@ -55,6 +60,15 @@ const ReefInput = styled.input`
 	&::placeholder {
 		color: black;
 	}
+
+	border-bottom-color: ${(props) =>
+		props.type === "number" && props.disabled === false ? "#40a940" : null};
+	border-bottom-width: ${(props) =>
+		props.type === "number" && props.disabled === false ? "2px" : null};
+
+	width: ${(props) => (props.type === "number" ? "40px" : null)};
+	font-size: ${(props) => (props.type === "number" ? "14px" : null)};
+	text-align: ${(props) => (props.type === "number" ? "center" : null)};
 `;
 
 export default function Input({
@@ -63,17 +77,21 @@ export default function Input({
 	required,
 	item,
 	itemValue,
+	type,
 }: InputPros) {
 	return (
 		<Info>
-			<InfoItem>{item}</InfoItem>
+			<InfoItem type={type}>{item}</InfoItem>
+
 			<Item>
-				{editEnable ? null : <Edit />}
+				{editEnable === true && type !== "number" ? <Edit /> : null}
 				<ReefInput
-					placeholder={itemValue}
+					placeholder={itemValue + ""}
 					required={required}
 					{...register}
-					disabled={editEnable}
+					disabled={!editEnable}
+					type={type}
+					step={type === "number" ? "0.01" : ""}
 				/>
 			</Item>
 		</Info>
