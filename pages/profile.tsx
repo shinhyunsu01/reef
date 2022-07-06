@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 
 import styled from "styled-components";
 import { CheckBox, Edit } from "../components/icon";
-import Input from "../components/page/Input";
-import Navbar from "../components/page/navbar";
+import Input from "../components/Input";
+import Navbar from "../components/navbar";
 
 const Main = styled.div`
 	width: 100%;

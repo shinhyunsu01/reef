@@ -3,7 +3,14 @@ import Router, { useRouter } from "next/router";
 import styled from "styled-components";
 import axios from "axios";
 import useMutation from "../libs/client/useMutation";
-//import useMutation from "../../libs/client/useMutation";
+import {
+	HomeSvg,
+	LogoutSvg,
+	NaverSvg,
+	ProfileSvg,
+	SearchSvg,
+	UploadSvg,
+} from "./icon";
 
 const Header = styled.div`
 	background-color: white;
@@ -61,28 +68,14 @@ const Menu = styled.div`
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
+
+	svg,
+	img {
+		margin-right: 10px;
+		cursor: pointer;
+	}
 `;
-const MenuItem = styled.div`
-	margin-right: 10px;
-`;
 
-const Button = {
-	Container: styled.div``,
-
-	ButtonList: styled.div`
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	`,
-
-	NaverButton: styled.img`
-		width: 30px;
-	`,
-};
-
-const LogOut = styled.div`
-	width: 30px;
-`;
 interface UserInfo {
 	age: string;
 	birthyear: string;
@@ -100,7 +93,7 @@ export default function Navbar() {
 
 		const login = () => {
 			naverLogin = new naver.LoginWithNaverId({
-				clientId: "DVT02TWmt7ZH60rqocn2", // ClientID
+				clientId: process.env.NAVER_LOGIN_ID, // ClientID
 				callbackUrl: "http://localhost:3000/", // Callback URL
 				isPopup: false, // 팝업 형태로 인증 여부
 				loginButton: { color: "green", type: 1, height: 10 },
@@ -169,8 +162,8 @@ export default function Navbar() {
 		const res = await axios.get("/oauth2.0/token", {
 			params: {
 				grant_type: "delete",
-				client_id: "DVT02TWmt7ZH60rqocn2", // Client ID
-				client_secret: "8bS83b5YbH", // Clietn Secret
+				client_id: process.env.NAVER_LOGIN_ID, // Client ID
+				client_secret: process.env.NAVER_LOGIHN_PASSWORD, // Clietn Secret
 				access_token: router.query.token, // 발급된 Token 정보
 				service_provider: "NAVER",
 			},
@@ -187,110 +180,15 @@ export default function Navbar() {
 			<Search>
 				<SearchInput required type="text" />
 				<SearchLogo>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="h-4 w-4"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-						strokeWidth="2"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-						/>
-					</svg>
+					<SearchSvg />
 				</SearchLogo>
 			</Search>
 			<Menu>
-				{/* 홈 버튼 */}
-				<MenuItem>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="h-7 w-7"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-						strokeWidth="2"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-						/>
-					</svg>
-				</MenuItem>
-				{/* my 프로파일 이동 */}
-				<MenuItem>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="h-7 w-7"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-						strokeWidth="2"
-					>
-						{" "}
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-						/>
-					</svg>
-				</MenuItem>
-				{/*업로드 버튼 */}
-				{userInfo?.email ? (
-					<MenuItem>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="h-6 w-6"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-							strokeWidth="2"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								d="M12 4v16m8-8H4"
-							/>
-						</svg>
-					</MenuItem>
-				) : null}
-
-				{/* 네이버 로그인 */}
-				<MenuItem>
-					<Button.Container>
-						<Button.ButtonList>
-							<Button.NaverButton
-								src="/naver_white.png"
-								onClick={handleNaverLogin}
-							/>
-							<div id="naverIdLogin" style={{ display: "none" }} />
-						</Button.ButtonList>
-					</Button.Container>
-				</MenuItem>
-				{/* 로그 아웃 */}
-				{userInfo?.email ? (
-					<MenuItem>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="h-6 w-6"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="#000"
-							strokeWidth="2"
-							onClick={NaverLogout}
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-							/>
-						</svg>
-					</MenuItem>
-				) : null}
+				<HomeSvg />
+				<ProfileSvg />
+				{userInfo?.email ? <UploadSvg /> : null}
+				<NaverSvg onClick={handleNaverLogin} />
+				{userInfo?.email ? <LogoutSvg onClick={NaverLogout} /> : null}
 			</Menu>
 		</Header>
 	);
