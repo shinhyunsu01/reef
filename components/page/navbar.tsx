@@ -1,6 +1,8 @@
-import { useEffect } from "react";
-import Router from "next/router";
+import { useEffect, useState } from "react";
+import Router, { useRouter } from "next/router";
 import styled from "styled-components";
+import axios from "axios";
+import useMutation from "../../libs/client/useMutation";
 
 const Header = styled.div`
 	background-color: white;
@@ -80,8 +82,17 @@ const Button = {
 const LogOut = styled.div`
 	width: 30px;
 `;
-
+interface UserInfo {
+	age: string;
+	birthyear: string;
+	email: string;
+	gender: string;
+}
 export default function Navbar() {
+	const router = useRouter();
+	const [userInfo, setUserinfo] = useState<UserInfo>();
+	const [loginData, { loading, data, error }] = useMutation("/api/users/me");
+
 	useEffect(() => {
 		const naver = (window as any).naver;
 		let naverLogin: any;
@@ -104,11 +115,17 @@ export default function Navbar() {
 				naverLogin.getLoginStatus((status: any) => {
 					if (status) {
 						// 로그인 상태 값이 있을 경우
-						console.log(naverLogin.user); // 사용자 정보 조회
+						const { age, birthyear, email, gender } = naverLogin.user;
+						setUserinfo({
+							age,
+							birthyear,
+							email,
+							gender,
+						});
 
 						// /naver 페이지로 token값과 함께 전달 (서비스할 땐 token 전달을 하지 않고 상태 관리를 사용하는 것이 바람직할 것으로 보임)
 						Router.push({
-							pathname: "/naver",
+							pathname: "/",
 							query: {
 								token: token,
 							},
@@ -121,6 +138,12 @@ export default function Navbar() {
 		login();
 		getToken();
 	}, []);
+
+	useEffect(() => {
+		if (userInfo) loginData(userInfo);
+		console.log(loading, data, error);
+	}, [userInfo]);
+
 	const handleNaverLogin = () => {
 		if (
 			document &&
@@ -131,6 +154,32 @@ export default function Navbar() {
 			loginBtn.click();
 		}
 	};
+
+	const NaverLogout = async () => {
+		if (userInfo)
+			setUserinfo({
+				birthyear: "",
+				email: "",
+				gender: "",
+				age: "",
+			});
+
+		// 실제 url은 https://nid.naver.com/oauth2.0/token이지만 proxy를 적용하기 위해 도메인은 제거
+		const res = await axios.get("/oauth2.0/token", {
+			params: {
+				grant_type: "delete",
+				client_id: "DVT02TWmt7ZH60rqocn2", // Client ID
+				client_secret: "8bS83b5YbH", // Clietn Secret
+				access_token: router.query.token, // 발급된 Token 정보
+				service_provider: "NAVER",
+			},
+		});
+
+		if (res) {
+			Router.push("/"); // 로그인 페이지로 이동
+		}
+	};
+
 	return (
 		<Header>
 			<Reef>REEF</Reef>
@@ -154,6 +203,7 @@ export default function Navbar() {
 				</SearchLogo>
 			</Search>
 			<Menu>
+				{/* 홈 버튼 */}
 				<MenuItem>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -170,6 +220,7 @@ export default function Navbar() {
 						/>
 					</svg>
 				</MenuItem>
+				{/* my 프로파일 이동 */}
 				<MenuItem>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -187,6 +238,27 @@ export default function Navbar() {
 						/>
 					</svg>
 				</MenuItem>
+				{/*업로드 버튼 */}
+				{userInfo?.email ? (
+					<MenuItem>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							className="h-6 w-6"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							strokeWidth="2"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M12 4v16m8-8H4"
+							/>
+						</svg>
+					</MenuItem>
+				) : null}
+
+				{/* 네이버 로그인 */}
 				<MenuItem>
 					<Button.Container>
 						<Button.ButtonList>
@@ -198,22 +270,26 @@ export default function Navbar() {
 						</Button.ButtonList>
 					</Button.Container>
 				</MenuItem>
-				<MenuItem>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="h-6 w-6"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="#40A940"
-						strokeWidth="2"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-						/>
-					</svg>
-				</MenuItem>
+				{/* 로그 아웃 */}
+				{userInfo?.email ? (
+					<MenuItem>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							className="h-6 w-6"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="#000"
+							strokeWidth="2"
+							onClick={NaverLogout}
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+							/>
+						</svg>
+					</MenuItem>
+				) : null}
 			</Menu>
 		</Header>
 	);
