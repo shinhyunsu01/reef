@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 
 import styled from "styled-components";
-import Navbar from "../components/page/navbar";
+import Navbar from "../components/navbar";
 
 const Main = styled.div`
 	width: 100%;

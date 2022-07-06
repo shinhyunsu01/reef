@@ -33,7 +33,7 @@ async function handler(
 		const {
 			body: { age, birthyear, email, gender },
 		} = req;
-		if (email != null) {
+		if (email != "") {
 			user = await client.user.upsert({
 				where: {
 					email,
@@ -49,6 +49,10 @@ async function handler(
 			req.session.user = {
 				id: user.id,
 			};
+			console.log("create", user);
+			await req.session.save();
+		} else {
+			delete req.session.user;
 			await req.session.save();
 		}
 		res.json({

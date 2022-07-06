@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import styled from "styled-components";
-import { CheckBox, Edit } from "../components/page/icon";
+import { CheckBox, Edit } from "../components/icon";
 import Input from "../components/page/Input";
 import Navbar from "../components/page/navbar";
 

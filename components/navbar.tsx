@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import Router, { useRouter } from "next/router";
 import styled from "styled-components";
 import axios from "axios";
-import useMutation from "../../libs/client/useMutation";
+import useMutation from "../libs/client/useMutation";
+//import useMutation from "../../libs/client/useMutation";
 
 const Header = styled.div`
 	background-color: white;
