@@ -13,10 +13,11 @@ datasource db {
 }
 
 model User {
-  email     String @unique
-  gender    String
-  age       String
-  birthyear String
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  gender    String?
+  age       String?
+  birthyear String?
 
   avatar String?
 
