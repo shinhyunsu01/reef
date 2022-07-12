@@ -1,6 +1,6 @@
 import { UseFormRegisterReturn } from "react-hook-form";
 import styled from "styled-components";
-import { Edit } from "./icon";
+import { EditArrow } from "./icon";
 
 /*
 interface ReefInput {
@@ -44,9 +44,18 @@ const Item = styled.div`
 const InfoItem = styled.span<any>`
 	border-bottom-width: 2px;
 	color: gray;
-	font-size: 14px;
+	font-size: 12px;
 
 	text-align: ${(props) => (props.type === "number" ? "center" : null)};
+
+	@media only screen and (max-width: 600px) {
+		font-size: 8px;
+		line-height: 8px;
+	}
+	@media only screen and (max-width: 768px) {
+		font-size: 6px
+		line-height: 6px;
+	}
 `;
 
 const ReefInput = styled.input`
@@ -69,6 +78,11 @@ const ReefInput = styled.input`
 	width: ${(props) => (props.type === "number" ? "40px" : null)};
 	font-size: ${(props) => (props.type === "number" ? "14px" : null)};
 	text-align: ${(props) => (props.type === "number" ? "center" : null)};
+
+	@media only screen and (max-width: 600px) {
+		font-size: 0.7rem;
+		line-height: 0.7rem;
+	}
 `;
 
 export default function Input({
@@ -84,7 +98,7 @@ export default function Input({
 			<InfoItem type={type}>{item}</InfoItem>
 
 			<Item>
-				{editEnable === true && type !== "number" ? <Edit /> : null}
+				{editEnable === true && type !== "number" ? <EditArrow /> : null}
 				<ReefInput
 					placeholder={itemValue + ""}
 					required={required}

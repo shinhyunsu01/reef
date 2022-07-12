@@ -3,6 +3,7 @@ import Router, { useRouter } from "next/router";
 import styled from "styled-components";
 import axios from "axios";
 import useMutation from "../libs/client/useMutation";
+
 import {
 	HomeSvg,
 	LogoutSvg,
@@ -11,6 +12,8 @@ import {
 	SearchSvg,
 	UploadSvg,
 } from "./icon";
+import useUser from "../libs/client/useUser";
+import Upload from "./upload/Upload";
 
 const Header = styled.div`
 	background-color: white;
@@ -24,7 +27,7 @@ const Header = styled.div`
 	width: 100%;
 	padding-left: 1.5rem;
 	padding-right: 1.5rem;
-	z-index: 1000;
+	z-index: 5;
 `;
 
 const Search = styled.div`
@@ -63,6 +66,7 @@ const SearchLogo = styled.div`
 const Reef = styled.div`
 	font-weight: bold;
 	font-size: 27px;
+	cursor: pointer;
 `;
 const Menu = styled.div`
 	display: flex;
@@ -75,26 +79,70 @@ const Menu = styled.div`
 		cursor: pointer;
 	}
 `;
+/*
+const Upload = styled.div`
+	z-index: 99;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
 
+	background-color: rgba(0, 0, 0, 0.6);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+`;*/
+const OpenUpload = styled.div`
+	width: 80%;
+	height: 60%;
+	background-color: #fff;
+	border-radius: 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+`;
+const PaddingTest = styled.div`
+	height: 80%;
+	width: 80%;
+	border-width: 2px;
+	border-style: dashed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 20px;
+`;
 interface UserInfo {
 	age: string;
 	birthyear: string;
 	email: string;
 	gender: string;
 }
+interface MutationResult {
+	ok: boolean;
+}
 export default function Navbar() {
+	const { user, isLoading } = useUser();
 	const router = useRouter();
+	const [uploadopen, setUploadopen] = useState(false);
 	const [userInfo, setUserinfo] = useState<UserInfo>();
-	const [loginData, { loading, data, error }] = useMutation("/api/users/me");
+	const [loginData, { loading, data, error }] =
+		useMutation<MutationResult>("/api/users/me");
 
+	const opnUpload = () => {
+		setUploadopen(true);
+	};
+	const closeUpload = () => {
+		setUploadopen(false);
+	};
 	useEffect(() => {
 		const naver = (window as any).naver;
 		let naverLogin: any;
 
 		const login = () => {
 			naverLogin = new naver.LoginWithNaverId({
-				clientId: process.env.NAVER_LOGIN_ID, // ClientID
-				callbackUrl: "http://localhost:3000/", // Callback URL
+				clientId: "DVT02TWmt7ZH60rqocn2", // ClientID
+				callbackUrl: "http://localhost:3000", // Callback URL
 				isPopup: false, // 팝업 형태로 인증 여부
 				loginButton: { color: "green", type: 1, height: 10 },
 			});
@@ -116,13 +164,10 @@ export default function Navbar() {
 							email,
 							gender,
 						});
-
+						loginData({ age, birthyear, email, gender });
 						// /naver 페이지로 token값과 함께 전달 (서비스할 땐 token 전달을 하지 않고 상태 관리를 사용하는 것이 바람직할 것으로 보임)
 						Router.push({
 							pathname: "/",
-							query: {
-								token: token,
-							},
 						});
 					}
 				});
@@ -132,11 +177,7 @@ export default function Navbar() {
 		login();
 		getToken();
 	}, []);
-
-	useEffect(() => {
-		if (userInfo) loginData(userInfo);
-		console.log(loading, data, error);
-	}, [userInfo]);
+	console.log("navbar", user, userInfo);
 
 	const handleNaverLogin = () => {
 		if (
@@ -150,6 +191,8 @@ export default function Navbar() {
 	};
 
 	const NaverLogout = async () => {
+		console.log("logout");
+		loginData("");
 		if (userInfo)
 			setUserinfo({
 				birthyear: "",
@@ -162,34 +205,56 @@ export default function Navbar() {
 		const res = await axios.get("/oauth2.0/token", {
 			params: {
 				grant_type: "delete",
-				client_id: process.env.NAVER_LOGIN_ID, // Client ID
-				client_secret: process.env.NAVER_LOGIHN_PASSWORD, // Clietn Secret
+				client_id: "DVT02TWmt7ZH60rqocn2", // Client ID
+				client_secret: "8bS83b5YbH", // Clietn Secret
 				access_token: router.query.token, // 발급된 Token 정보
 				service_provider: "NAVER",
 			},
 		});
-
-		if (res) {
-			Router.push("/"); // 로그인 페이지로 이동
-		}
+		router.push("/");
 	};
 
 	return (
-		<Header>
-			<Reef>REEF</Reef>
-			<Search>
-				<SearchInput required type="text" />
-				<SearchLogo>
-					<SearchSvg />
-				</SearchLogo>
-			</Search>
-			<Menu>
-				<HomeSvg />
-				<ProfileSvg />
-				{userInfo?.email ? <UploadSvg /> : null}
-				<NaverSvg onClick={handleNaverLogin} />
-				{userInfo?.email ? <LogoutSvg onClick={NaverLogout} /> : null}
-			</Menu>
-		</Header>
+		<>
+			<Header>
+				<Reef onClick={() => router.push("/")}>REEF</Reef>
+				<Search>
+					<SearchInput required type="text" />
+					<SearchLogo>
+						<SearchSvg />
+					</SearchLogo>
+				</Search>
+				<Menu>
+					<HomeSvg onClick={() => router.push("/")} />
+					{user?.email || userInfo?.email ? (
+						<ProfileSvg onClick={() => router.push("/profile")} />
+					) : (
+						<ProfileSvg onClick={() => router.push("/")} />
+					)}
+					{user?.email || userInfo?.email ? (
+						<UploadSvg onClick={opnUpload} />
+					) : null}
+					{user?.email || userInfo?.email ? (
+						<NaverSvg onClick={handleNaverLogin} style={{ display: "none" }} />
+					) : (
+						<NaverSvg onClick={handleNaverLogin} />
+					)}
+					{user?.email || userInfo?.email ? (
+						<LogoutSvg onClick={NaverLogout} />
+					) : null}
+				</Menu>
+			</Header>
+			`{uploadopen ? <Upload closeModal={closeUpload} /> : null}
+		</>
 	);
 }
+
+/*
+
+{user?.email ? (
+						<NaverSvg onClick={handleNaverLogin} style={{ display: "none" }} />
+					) : (
+						<NaverSvg onClick={handleNaverLogin} />
+					)}
+
+*/

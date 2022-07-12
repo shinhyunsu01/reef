@@ -9,6 +9,9 @@ const nextConfig = {
 			},
 		];
 	},
+	images: {
+		domains: ["imagedelivery.net", "upload.imagedelivery.net"],
+	},
 };
 
 module.exports = nextConfig;

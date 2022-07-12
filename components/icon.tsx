@@ -14,7 +14,32 @@ const Button = {
 	`,
 };
 
-export const Edit = () => {
+export const Edit = (key: any) => {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			className="h-6 w-6"
+			fill="none"
+			viewBox="0 0 24 24"
+			stroke="currentColor"
+			strokeWidth="2"
+			{...key}
+		>
+			<path
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+			/>
+			<path
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+			/>
+		</svg>
+	);
+};
+
+export const EditArrow = () => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -33,6 +58,22 @@ export const Edit = () => {
 	);
 };
 
+export const Save = () => {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			className="h-7 w-7"
+			viewBox="0 0 20 20"
+			fill="#40A940"
+		>
+			<path
+				fillRule="evenodd"
+				d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+				clipRule="evenodd"
+			/>
+		</svg>
+	);
+};
 export const CheckBox = () => {
 	return (
 		<svg
@@ -52,7 +93,7 @@ export const CheckBox = () => {
 	);
 };
 
-export const UploadSvg = () => {
+export const UploadSvg = (key: any) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -61,13 +102,14 @@ export const UploadSvg = () => {
 			viewBox="0 0 24 24"
 			stroke="currentColor"
 			strokeWidth="2"
+			{...key}
 		>
 			<path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
 		</svg>
 	);
 };
 
-export const ProfileSvg = () => {
+export const ProfileSvg = (key: any) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -76,6 +118,7 @@ export const ProfileSvg = () => {
 			viewBox="0 0 24 24"
 			stroke="currentColor"
 			strokeWidth="2"
+			{...key}
 		>
 			{" "}
 			<path
@@ -87,7 +130,7 @@ export const ProfileSvg = () => {
 	);
 };
 
-export const HomeSvg = () => {
+export const HomeSvg = (key: any) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -96,6 +139,7 @@ export const HomeSvg = () => {
 			viewBox="0 0 24 24"
 			stroke="currentColor"
 			strokeWidth="2"
+			{...key}
 		>
 			<path
 				strokeLinecap="round"
@@ -150,8 +194,67 @@ export const NaverSvg = (key: any) => {
 		<Button.Container>
 			<Button.ButtonList>
 				<Button.NaverButton src="/naver_white.png" {...key} />
+
 				<div id="naverIdLogin" style={{ display: "none" }} />
 			</Button.ButtonList>
 		</Button.Container>
+	);
+};
+
+export const CloseSvg = (key: any) => {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			className="h-6 w-6"
+			fill="none"
+			viewBox="0 0 24 24"
+			stroke="currentColor"
+			strokeWidth="2"
+			{...key}
+		>
+			<path
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				d="M6 18L18 6M6 6l12 12"
+			/>
+		</svg>
+	);
+};
+
+export const EditPlusBtn = (key: any) => {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			className="h-10 w-10"
+			viewBox="0 0 20 20"
+			fill="#40A940"
+			{...key}
+		>
+			<path
+				fillRule="evenodd"
+				d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+				clipRule="evenodd"
+			/>
+		</svg>
+	);
+};
+
+export const UploadBtnSvg = (key: any) => {
+	return (
+		<svg
+			className="h-12 w-12 "
+			stroke="currentColor"
+			fill="none"
+			viewBox="0 0 48 48"
+			aria-hidden="true"
+			{...key}
+		>
+			<path
+				d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+				strokeWidth={2}
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+		</svg>
 	);
 };

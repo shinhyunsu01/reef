@@ -1,32 +1,75 @@
+import { UploadInfo } from ".prisma/client";
 import type { NextPage } from "next";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-
 import styled from "styled-components";
-import { CheckBox, Edit } from "../components/icon";
+import useSWR from "swr";
+import { Edit, EditPlusBtn, Save } from "../components/icon";
 import Input from "../components/Input";
 import Navbar from "../components/navbar";
+import { cloudFlareUpload } from "../libs/client/cloudFlareUpload";
+import useMutation from "../libs/client/useMutation";
+import useUser from "../libs/client/useUser";
 
 const Main = styled.div`
+	height: 100%;
 	width: 100%;
 	display: flex;
 	flex-direction: column;
 `;
 
 const UserProfile = styled.div`
+	height: 18rem;
+	padding: 10px;
 	padding-top: 80px;
 
-	width: 100%;
 	display: flex;
 	justify-content: center;
+	align-items: center;
+`;
+
+const UserProfileDivision = styled.div`
+	height: 100%;
+	width: 50%;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 20px;
 `;
 
 const ProfilePic = styled.div`
 	height: 8rem;
 	width: 8rem;
-	background-color: blue;
 	border-radius: 8rem;
-	margin-right: 20px;
+	z-index: 5;
+	position: relative;
+`;
+const ProfileImg = styled.img`
+	width: 100%;
+	height: 100%;
+
+	border-radius: 8rem;
+`;
+const BackProfileImg = styled.img`
+	opacity: 30%;
+	width: 100%;
+	height: 100%;
+	border-radius: 20px;
+	position: absolute;
+`;
+
+const BackEditPlus = styled.div`
+	z-index: 10;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	cursor: pointer;
+`;
+const EditPlus = styled.div`
+	position: absolute;
+	cursor: pointer;
 `;
 const Name = styled.span`
 	font-size: 20px;
@@ -40,21 +83,6 @@ const ProfileTop = styled.div`
 	padding-bottom: 10px;
 `;
 
-const Info = styled.div`
-	margin-right: 5px;
-	display: flex;
-	flex-direction: column;
-`;
-const InfoItem = styled.span`
-	border-bottom-width: 2px;
-	color: gray;
-	font-size: 14px;
-`;
-
-const InfoValue = styled.span`
-	font-size: 14px;
-	font-weight: bold;
-`;
 const Season = styled.div`
 	display: flex;
 	justify-content: space-around;
@@ -75,24 +103,91 @@ const SeasonItem = styled.div`
 		border-color: black;
 	}
 `;
+const WaterInfo = styled.div`
+	display: flex;
+	margin-top: 1rem;
+	width: 100%;
 
-interface InfoForm {
-	skimmber?: string;
+	@media only screen and (max-width: 600px) {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 0.5rem;
+	}
+`;
+
+interface AquaInfoForm {
+	skimmer?: string;
+	watertank?: string;
+	lamp?: string;
+	watermotor?: string;
+	temp?: number;
+	ph?: number;
+	salt?: number;
+	alkalinity?: number;
+	calcium?: number;
+	mag?: number;
+	nitrate?: number;
+	phosphorus?: number;
+	season?: number;
 }
-
+interface resPost {
+	ok: boolean;
+	post: UploadInfo[];
+}
+interface resAquaInfoForm {
+	ok: boolean;
+	info: AquaInfoForm;
+}
+const fetcher = (url: string) => fetch(url).then((response) => response.json());
 const index = () => {
+	const router = useRouter();
+	const { user, isLoading } = useUser();
+
+	const { data: aquaInfoInitData, error: resError } = useSWR<resAquaInfoForm>(
+		"/api/users/me/aquaedit",
+		fetcher
+	);
+	const [aquaInfoFn, { data: aquaInfoData, loading, error }] = useMutation(
+		"api/users/me/aquaedit"
+	);
+	const [uploadFn, { data }] = useMutation("/api/users/me");
+	const { data: manyPost } = useSWR<resPost>("/api/users/me/post", fetcher);
+	//console.log("manyPost", manyPost);
 	const { register, handleSubmit, watch } = useForm();
 	const [editOpen, setEditOpen] = useState(false);
 
+	const baseData = [
+		{
+			key: "skimmer",
+			name: "스키머 / 제조사",
+			value: aquaInfoInitData?.info.skimmer,
+		},
+		{
+			key: "watertank",
+			name: "수조 / 하단 섬프(O,X) / 제조사",
+			value: aquaInfoInitData?.info.watertank,
+		},
+		{ key: "lamp", name: "조명", value: aquaInfoInitData?.info.lamp },
+		{
+			key: "watermotor",
+			name: "수류모터 / 제조사",
+			value: aquaInfoInitData?.info.watermotor,
+		},
+	];
+
 	const waterData = [
-		{ key: "temp", name: "온도", value: 26 },
-		{ key: "ph", name: "ph", value: 0.001 },
-		{ key: "salt", name: "염도", value: 0.001 },
-		{ key: "alkalinity", name: "경도", value: 0.001 },
-		{ key: "calcium", name: "칼슘", value: 0.001 },
-		{ key: "mag", name: "마그네슘", value: 0.001 },
-		{ key: "nitrate", name: "질산염", value: 0.001 },
-		{ key: "phosphorus", name: "인산염", value: 0.001 },
+		{ key: "temp", name: "온도", value: aquaInfoInitData?.info.temp },
+		{ key: "ph", name: "ph", value: aquaInfoInitData?.info.ph },
+		{ key: "salt", name: "염도", value: aquaInfoInitData?.info.salt },
+		{
+			key: "alkalinity",
+			name: "경도",
+			value: aquaInfoInitData?.info.alkalinity,
+		},
+		{ key: "calcium", name: "칼슘", value: aquaInfoInitData?.info.calcium },
+		{ key: "mag", name: "마그네슘", value: aquaInfoInitData?.info.mag },
+		{ key: "nitrate", name: "질산염", value: aquaInfoInitData?.info.nitrate },
+		{ key: "phosphorus", name: "인산염", value: aquaInfoInitData?.info.ph },
 	];
 
 	const editFn = () => {
@@ -104,145 +199,132 @@ const index = () => {
 		}
 	};
 
-	useEffect(() => {
-		if (editOpen === true) {
-		}
-	}, [editOpen]);
-
-	const onValid = (validForm: InfoForm) => {
+	const onValid = async (all: AquaInfoForm) => {
+		aquaInfoFn({ ...all });
 		setEditOpen(false);
-		console.log("ok", validForm);
 	};
-	/*
-	const [state, setState] = useState({
-		loading: false,
-		data: undefined,
-		error: undefined,
-	});
-	*/
-	console.log("watch", watch());
+
+	const fileRead = async (e) => {
+		e.preventDefault();
+		if (!e.target?.files) return;
+		const { uploadURL } = await (await fetch("/api/files")).json();
+		const imageId = await cloudFlareUpload(uploadURL, e.target?.files[0]);
+		e.target.id === "backImg"
+			? uploadFn({ backavatar: imageId })
+			: uploadFn({ avatar: imageId });
+
+		router.reload();
+	};
 
 	return (
 		<Main>
 			<Navbar />
 
 			<UserProfile>
-				<ProfilePic />
-				<div>
-					<form onSubmit={handleSubmit(onValid)}>
+				{/*온쪽 유저 사진 */}
+				<UserProfileDivision>
+					{editOpen ? (
+						<BackEditPlus>
+							<label>
+								<input
+									type="file"
+									accept="image/*"
+									className="hidden"
+									onChange={fileRead}
+									id="backImg"
+								/>
+								<EditPlusBtn style={{ cursor: "pointer" }} />
+							</label>
+						</BackEditPlus>
+					) : (
+						""
+					)}
+					<BackProfileImg
+						src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${user?.backavatar}/public`}
+					/>
+					<ProfilePic>
+						{editOpen ? (
+							<EditPlus>
+								<label>
+									<input
+										type="file"
+										accept="image/*"
+										className="hidden"
+										onChange={fileRead}
+										id="profileImg"
+									/>
+									<EditPlusBtn style={{ cursor: "pointer" }} />
+								</label>
+							</EditPlus>
+						) : (
+							""
+						)}
+						<ProfileImg
+							src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${user?.avatar}/public`}
+						/>
+					</ProfilePic>
+				</UserProfileDivision>
+
+				{/*오른쪽 form */}
+				<UserProfileDivision>
+					<form
+						onSubmit={handleSubmit(onValid)}
+						style={{ width: "100%", height: "100%" }}
+					>
 						<ProfileTop>
-							<Name>Shinhyunsu</Name>
-							<div onClick={editFn}>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									className="h-6 w-6"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke="currentColor"
-									strokeWidth="2"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-									/>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-									/>
-								</svg>
-							</div>
+							<Name>{user?.nickname}</Name>
+
+							<Edit onClick={editFn} />
+
 							{editOpen ? (
 								<button type="submit">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="h-7 w-7"
-										viewBox="0 0 20 20"
-										fill="#40A940"
-									>
-										<path
-											fillRule="evenodd"
-											d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-											clipRule="evenodd"
-										/>
-									</svg>
+									<Save />
 								</button>
 							) : null}
 						</ProfileTop>
 
 						<div className="grid-cols-2  grid  gap-4">
-							<Input
-								item="스키머 / 제조사"
-								itemValue="마린코스트"
-								editEnable={editOpen}
-								register={register("skimmer", {
-									required: true,
-								})}
-								required
-								type="text"
-							/>
-
-							<Input
-								item="수조 / 하단 섬프(O,X) / 제조사"
-								itemValue="400x400/X/제스트"
-								editEnable={editOpen}
-								register={register("watertank", {
-									required: true,
-								})}
-								required
-								type="text"
-							/>
-
-							<Input
-								item="조명 / 제조사"
-								itemValue="오펙"
-								editEnable={editOpen}
-								register={register("lamp", {
-									required: true,
-								})}
-								required
-								type="text"
-							/>
-
-							<Input
-								item="수류모터 / 제조사"
-								itemValue="SW-15/제바오"
-								editEnable={editOpen}
-								register={register("watermotor", {
-									required: true,
-								})}
-								required
-								type="text"
-							/>
+							{baseData.map((v, i) => (
+								<Input
+									key={i}
+									item={v.name}
+									itemValue={v.value ? v.value : ""}
+									editEnable={editOpen}
+									register={register(v.key)}
+									type="text"
+								/>
+							))}
 						</div>
-						<div className="flex mt-4">
+						<WaterInfo>
 							{waterData.map((v, i) => (
 								<Input
 									key={i}
 									item={v.name}
-									itemValue={v.value}
+									itemValue={v.value ? v.value : ""}
 									editEnable={editOpen}
-									register={register(v.key, {
-										required: true,
-									})}
-									required
+									register={register(v.key)}
 									type="number"
 								/>
 							))}
-						</div>
+						</WaterInfo>
 					</form>
-				</div>
+				</UserProfileDivision>
 			</UserProfile>
+
+			{/*추후 선택 할수 있게 할 예정 */}
 			<Season>
-				{[1, 2, 3].map((_, i) => (
-					<SeasonItem key={i}>Season {i}</SeasonItem>
+				{[1].map((_, i) => (
+					<SeasonItem key={i}>Season {i + 1}</SeasonItem>
 				))}
 			</Season>
 
 			<div className="grid grid-cols-3 gap-2">
-				{[1, 2, 3, 4, 5, 6].map((_, i) => (
-					<img key={i} src="./reef_img.jpg" className="h-50 aspect-square" />
+				{manyPost?.post.map((data, i) => (
+					<img
+						key={i}
+						src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
+						className="h-50 aspect-square"
+					/>
 				))}
 			</div>
 		</Main>
@@ -250,48 +332,12 @@ const index = () => {
 };
 
 export default index;
-
 /*
-<Input
-								item="온도"
-								itemValue="26"
-								editEnable={editOpen}
-								register={register("watermotor", {
-									required: true,
-								})}
-								required
-								type="number"
-							/>
-							<Info>
-								<InfoItem>ph</InfoItem>
-								<InfoValue>0.1</InfoValue>
-							</Info>
-							<Info>
-								<InfoItem>염도</InfoItem>
-								<InfoValue>0.01</InfoValue>
-							</Info>
-							<Info>
-								<InfoItem>경도</InfoItem>
-								<InfoValue>0.01</InfoValue>
-							</Info>
-							<Info>
-								<InfoItem>칼슘</InfoItem>
-								<InfoValue>0.001</InfoValue>
-							</Info>
-							<Info>
-								<InfoItem>마그네숨</InfoItem>
-								<InfoValue>0.001</InfoValue>
-							</Info>
-							<Info>
-								<InfoItem>질산염</InfoItem>
-								<InfoValue>0.001</InfoValue>
-							</Info>
-							<Info>
-								<InfoItem>인산염</InfoItem>
-								<InfoValue>0.001</InfoValue>
-							</Info>
-							<Info>
-								<InfoItem>암모니아</InfoItem>
-								<InfoValue>0.001</InfoValue>
-							</Info>
+
+<div className="grid grid-cols-3 gap-2">
+				{[1, 2, 3, 4, 5, 6].map((_, i) => (
+					<img key={i} src="./reef_img.jpg" className="h-50 aspect-square" />
+				))}
+			</div>
+
 */

@@ -14,13 +14,56 @@ datasource db {
 
 model User {
   id        Int     @id @default(autoincrement())
+  nickname  String?
   email     String  @unique
   gender    String?
   age       String?
   birthyear String?
 
-  avatar String?
+  avatar     String?
+  backavatar String?
+
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  aquaInfo   AquaInfo[]
+  uploadInfo UploadInfo[]
+}
+
+model AquaInfo {
+  id         Int     @id @default(autoincrement())
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  skimmer    String?
+  watertank  String?
+  lamp       String?
+  watermotor String?
+
+  temp       Float?
+  ph         Float?
+  salt       Float?
+  alkalinity Float?
+  calcium    Float?
+  mag        Float?
+  nitrate    Float?
+  phosphorus Float?
+
+  season Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model UploadInfo {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  picType     String?
+  animateType String?
+  coralType   String?
+  avatar      String?
+
+  description String? @db.MediumText
 }

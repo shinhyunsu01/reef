@@ -19,21 +19,56 @@ async function handler(
 	let user;
 
 	if (req.method === "GET") {
-		user = await client.user.findUnique({
-			where: {
-				id: req.session.user?.id,
-			},
-		});
-		res.json({
-			ok: true,
-			user,
-		});
+		console.log("get", req?.session.user);
+		if (req?.session?.user) {
+			user = await client.user.findUnique({
+				where: {
+					id: req?.session?.user?.id,
+				},
+				select: {
+					id: true,
+					email: true,
+					age: true,
+					birthyear: true,
+					gender: true,
+					nickname: true,
+					avatar: true,
+					backavatar: true,
+				},
+			});
+			res.json({
+				ok: true,
+				user,
+			});
+		} else {
+			console.log("get error");
+			res.json({
+				ok: false,
+			});
+		}
 	}
 	if (req.method === "POST") {
 		const {
-			body: { age, birthyear, email, gender },
+			body: { age, birthyear, email, gender, avatar, backavatar },
 		} = req;
-		if (email != "") {
+
+		if (avatar || backavatar) {
+			user = await client.user.findUnique({
+				where: {
+					id: req?.session?.user?.id,
+				},
+			});
+			await client.user.update({
+				where: {
+					id: user?.id,
+				},
+				data: {
+					avatar,
+					backavatar,
+				},
+			});
+		} else if (email) {
+			console.log("postemail");
 			user = await client.user.upsert({
 				where: {
 					email,
@@ -43,15 +78,19 @@ async function handler(
 					age,
 					birthyear,
 					gender,
+					avatar,
+					backavatar,
 				},
 				update: {},
 			});
 			req.session.user = {
 				id: user.id,
 			};
-			console.log("create", user);
 			await req.session.save();
-		} else {
+		}
+
+		if (req.body === "") {
+			console.log("delete");
 			delete req.session.user;
 			await req.session.save();
 		}
