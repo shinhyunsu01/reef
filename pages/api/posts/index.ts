@@ -17,11 +17,17 @@ async function handler(
 				backavatar: true,
 			},
 		});
-
-		res.json({
-			ok: true,
-			users: manyUser,
-		});
+		if (!manyUser) {
+			res.json({
+				ok: false,
+				users: manyUser,
+			});
+		} else {
+			res.json({
+				ok: true,
+				users: manyUser,
+			});
+		}
 	}
 
 	res.status(200).end();
