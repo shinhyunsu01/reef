@@ -10,7 +10,7 @@ async function handler(
 	let manyUser;
 	if (req.method === "GET") {
 		console.log("api posts index");
-		/*manyUser = await client.user.findMany({
+		manyUser = await client.user.findMany({
 			select: {
 				id: true,
 				nickname: true,
@@ -23,11 +23,11 @@ async function handler(
 				ok: true,
 				users: manyUser,
 			});
-		} else {*/
-		res.json({
-			ok: false,
-		});
-		//}
+		} else {
+			res.json({
+				ok: false,
+			});
+		}
 	}
 
 	res.status(200).end();
