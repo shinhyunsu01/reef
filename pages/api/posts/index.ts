@@ -9,6 +9,7 @@ async function handler(
 ) {
 	let manyUser;
 	if (req.method === "GET") {
+		console.log("api posts index");
 		manyUser = await client.user.findMany({
 			select: {
 				id: true,
