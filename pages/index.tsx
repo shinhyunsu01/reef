@@ -73,7 +73,7 @@ const Index = () => {
 			<Pic>
 				{data?.ok
 					? data?.users.map((data, i) => (
-							<MainDiv>
+							<MainDiv key={i}>
 								<Check>
 									<AvatarImage
 										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}

@@ -141,7 +141,7 @@ interface resAquaInfoForm {
 	info: AquaInfoForm;
 }
 
-const index = () => {
+const Index = () => {
 	const router = useRouter();
 	const { user } = useUser();
 
@@ -323,4 +323,4 @@ const index = () => {
 	);
 };
 
-export default index;
+export default Index;
