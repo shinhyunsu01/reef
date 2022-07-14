@@ -33,10 +33,4 @@ async function handler(
 	res.status(200).end();
 }
 
-export default withIronSessionApiRoute(
-	withHandler({ methods: ["GET"], handler }),
-	{
-		cookieName: "reef",
-		password: process.env.COOKIE_PASSWORD!,
-	}
-);
+export default withHandler({ methods: ["GET"], handler });
