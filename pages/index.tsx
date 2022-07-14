@@ -70,8 +70,9 @@ const Index = () => {
 
 	return (
 		<Main>
+			<Navbar />
+
 			<Pic>
-				<Navbar />
 				<div>asdfs</div>
 			</Pic>
 		</Main>
