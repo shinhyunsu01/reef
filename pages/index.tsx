@@ -62,7 +62,7 @@ interface ManyUser {
 	users: User[];
 }
 
-const index = () => {
+const Index = () => {
 	const { data, error } = useSWR<ManyUser>(
 		typeof window === "undefined" ? null : "/api/posts"
 	);
@@ -95,7 +95,7 @@ const index = () => {
 	);
 };
 
-export default index;
+export default Index;
 
 /*
 
