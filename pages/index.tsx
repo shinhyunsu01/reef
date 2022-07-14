@@ -72,6 +72,7 @@ const Index = () => {
 		<Main>
 			<Pic>
 				<Navbar />
+				<div>asdfs</div>
 			</Pic>
 		</Main>
 	);
