@@ -103,7 +103,7 @@ export default function Navbar() {
 
 		const login = () => {
 			naverLogin = new naver.LoginWithNaverId({
-				clientId: "DVT02TWmt7ZH60rqocn2", // ClientID
+				clientId: process.env.NEXT_PUBLIC_NAVER_LOGIN_ID, // ClientID
 				callbackUrl: "http://localhost:3000", // Callback URL
 				isPopup: false, // 팝업 형태로 인증 여부
 				loginButton: { color: "green", type: 1, height: 10 },
@@ -127,7 +127,7 @@ export default function Navbar() {
 							gender,
 						});
 						loginData({ age, birthyear, email, gender });
-						// /naver 페이지로 token값과 함께 전달 (서비스할 땐 token 전달을 하지 않고 상태 관리를 사용하는 것이 바람직할 것으로 보임)
+
 						Router.push({
 							pathname: "/",
 						});
@@ -139,7 +139,7 @@ export default function Navbar() {
 		login();
 		getToken();
 	}, []);
-	console.log("navbar", user, userInfo);
+	
 
 	const handleNaverLogin = () => {
 		if (
@@ -153,7 +153,7 @@ export default function Navbar() {
 	};
 
 	const NaverLogout = async () => {
-		console.log("logout");
+		
 		loginData("");
 		if (userInfo)
 			setUserinfo({
@@ -166,8 +166,8 @@ export default function Navbar() {
 		const res = await axios.get("/oauth2.0/token", {
 			params: {
 				grant_type: "delete",
-				client_id: "DVT02TWmt7ZH60rqocn2", // Client ID
-				client_secret: "8bS83b5YbH", // Clietn Secret
+				client_id: process.env.NEXT_PUBLIC_NAVER_LOGIN_ID, // Client ID
+				client_secret: process.env.NEXT_PUBLIC_NAVER_LOGIN_PASSWORD, // Clietn Secret
 				access_token: router.query.token, // 발급된 Token 정보
 				service_provider: "NAVER",
 			},

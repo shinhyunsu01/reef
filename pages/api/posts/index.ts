@@ -18,7 +18,6 @@ async function handler(
 			},
 		});
 
-		console.log("API manyuser", manyUser);
 		res.json({
 			ok: true,
 			users: manyUser,

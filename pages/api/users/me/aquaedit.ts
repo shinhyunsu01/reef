@@ -33,7 +33,6 @@ async function handler(
 				info,
 			});
 		} else {
-			console.log("get error");
 			res.json({
 				ok: false,
 			});

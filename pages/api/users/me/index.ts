@@ -19,7 +19,7 @@ async function handler(
 	let user;
 
 	if (req.method === "GET") {
-		console.log("get", req?.session.user);
+		
 		if (req?.session?.user) {
 			user = await client.user.findUnique({
 				where: {
@@ -41,7 +41,7 @@ async function handler(
 				user,
 			});
 		} else {
-			console.log("get error");
+			
 			res.json({
 				ok: false,
 			});
@@ -68,7 +68,7 @@ async function handler(
 				},
 			});
 		} else if (email) {
-			console.log("postemail");
+			
 			user = await client.user.upsert({
 				where: {
 					email,
@@ -90,7 +90,7 @@ async function handler(
 		}
 
 		if (req.body === "") {
-			console.log("delete");
+			
 			delete req.session.user;
 			await req.session.save();
 		}

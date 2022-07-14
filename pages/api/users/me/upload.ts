@@ -30,7 +30,7 @@ async function handler(
 				},
 			},
 		});
-		console.log("upload ok");
+		
 		res.json({
 			ok: true,
 			post,

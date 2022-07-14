@@ -22,7 +22,7 @@ export default function withHandler({ methods, handler }: ConfigType) {
 		try {
 			await handler(req, res);
 		} catch (error) {
-			console.log(error);
+			
 			return res.status(500).json({ error });
 		}
 	};
