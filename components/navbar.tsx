@@ -14,15 +14,14 @@ import {
 } from "./icon";
 import useUser from "../libs/client/useUser";
 import Upload from "./upload/Upload";
+import { Com } from "../components/styledCom";
 
-const Header = styled.div`
+const Header = styled(Com.ColCenter)`
 	background-color: white;
 	top: 0px;
 	height: 48px;
-	display: flex;
-	align-items: center;
-	position: fixed;
 	justify-content: space-between;
+	position: fixed;
 	max-width: 1024px;
 	width: 100%;
 	padding-left: 1.5rem;
@@ -30,10 +29,8 @@ const Header = styled.div`
 	z-index: 5;
 `;
 
-const Search = styled.div`
-	display: flex;
+const Search = styled(Com.ColCenter)`
 	position: relative;
-	align-items: center;
 	cursor: text;
 
 	&:focus-within {
@@ -68,10 +65,8 @@ const Reef = styled.div`
 	font-size: 27px;
 	cursor: pointer;
 `;
-const Menu = styled.div`
-	display: flex;
+const Menu = styled(Com.ColCenter)`
 	justify-content: flex-end;
-	align-items: center;
 
 	svg,
 	img {
@@ -79,39 +74,7 @@ const Menu = styled.div`
 		cursor: pointer;
 	}
 `;
-/*
-const Upload = styled.div`
-	z-index: 99;
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
 
-	background-color: rgba(0, 0, 0, 0.6);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-`;*/
-const OpenUpload = styled.div`
-	width: 80%;
-	height: 60%;
-	background-color: #fff;
-	border-radius: 20px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-`;
-const PaddingTest = styled.div`
-	height: 80%;
-	width: 80%;
-	border-width: 2px;
-	border-style: dashed;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	border-radius: 20px;
-`;
 interface UserInfo {
 	age: string;
 	birthyear: string;
@@ -122,12 +85,11 @@ interface MutationResult {
 	ok: boolean;
 }
 export default function Navbar() {
-	const { user, isLoading } = useUser();
+	const { user } = useUser();
 	const router = useRouter();
 	const [uploadopen, setUploadopen] = useState(false);
 	const [userInfo, setUserinfo] = useState<UserInfo>();
-	const [loginData, { loading, data, error }] =
-		useMutation<MutationResult>("/api/users/me");
+	const [loginData] = useMutation<MutationResult>("/api/users/me");
 
 	const opnUpload = () => {
 		setUploadopen(true);
@@ -201,7 +163,6 @@ export default function Navbar() {
 				age: "",
 			});
 
-		// 실제 url은 https://nid.naver.com/oauth2.0/token이지만 proxy를 적용하기 위해 도메인은 제거
 		const res = await axios.get("/oauth2.0/token", {
 			params: {
 				grant_type: "delete",
@@ -248,13 +209,3 @@ export default function Navbar() {
 		</>
 	);
 }
-
-/*
-
-{user?.email ? (
-						<NaverSvg onClick={handleNaverLogin} style={{ display: "none" }} />
-					) : (
-						<NaverSvg onClick={handleNaverLogin} />
-					)}
-
-*/

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { Com } from "../styledCom";
 
 const Label = styled.label`
 	input:checked + div {
@@ -22,11 +23,8 @@ const Input = styled.input`
 	white-space: nowrap;
 	border-width: 0;
 `;
-const Text = styled.div`
+const Text = styled(Com.Center)`
 	cursor: pointer;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 	padding: 1.25rem;
 	height: 2.25rem;
 	font-weight: 600;

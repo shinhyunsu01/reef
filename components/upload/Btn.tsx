@@ -1,11 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import UploadLabel from "./Label";
+import { Com } from "../styledCom";
 
-const Line = styled.div`
-	display: flex;
-	align-items: center;
-`;
+const Line = styled(Com.ColCenter)``;
 
 const Title = styled.div`
 	width: 140px;
@@ -24,9 +22,7 @@ const Title = styled.div`
 		line-height: 0.7rem;
 	}
 `;
-const Question = styled.div`
-	display: flex;
-	align-items: center;
+const Question = styled(Com.ColCenter)`
 	margin-top: 1rem;
 	margin-bottom: 1rem;
 `;

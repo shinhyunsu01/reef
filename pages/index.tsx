@@ -5,8 +5,8 @@ import Navbar from "../components/navbar";
 
 const Main = styled.div`
 	width: 100%;
-	justify-content: center;
 	display: flex;
+	justify-content: center;
 `;
 
 const Pic = styled.div`

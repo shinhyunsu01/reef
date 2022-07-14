@@ -1,5 +1,4 @@
 import { UploadInfo } from ".prisma/client";
-import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -11,6 +10,7 @@ import Navbar from "../components/navbar";
 import { cloudFlareUpload } from "../libs/client/cloudFlareUpload";
 import useMutation from "../libs/client/useMutation";
 import useUser from "../libs/client/useUser";
+import { Com } from "../components/styledCom";
 
 const Main = styled.div`
 	height: 100%;
@@ -19,23 +19,16 @@ const Main = styled.div`
 	flex-direction: column;
 `;
 
-const UserProfile = styled.div`
+const UserProfile = styled(Com.Center)`
 	height: 18rem;
 	padding: 10px;
 	padding-top: 80px;
-
-	display: flex;
-	justify-content: center;
-	align-items: center;
 `;
 
-const UserProfileDivision = styled.div`
+const UserProfileDivision = styled(Com.Center)`
 	height: 100%;
 	width: 50%;
 	position: relative;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 	padding: 0 20px;
 `;
 
@@ -49,7 +42,6 @@ const ProfilePic = styled.div`
 const ProfileImg = styled.img`
 	width: 100%;
 	height: 100%;
-
 	border-radius: 8rem;
 `;
 const BackProfileImg = styled.img`
@@ -115,6 +107,16 @@ const WaterInfo = styled.div`
 	}
 `;
 
+const ProductInfo = styled.div`
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+`;
+
+const PostImg = styled.img`
+	aspect-ratio: 1 / 1;
+`;
+
 interface AquaInfoForm {
 	skimmer?: string;
 	watertank?: string;
@@ -138,25 +140,21 @@ interface resAquaInfoForm {
 	ok: boolean;
 	info: AquaInfoForm;
 }
-const fetcher = (url: string) => fetch(url).then((response) => response.json());
+
 const index = () => {
 	const router = useRouter();
-	const { user, isLoading } = useUser();
+	const { user } = useUser();
 
-	const { data: aquaInfoInitData, error: resError } = useSWR<resAquaInfoForm>(
-		"/api/users/me/aquaedit",
-		fetcher
+	const { data: aquaInfoInitData } = useSWR<resAquaInfoForm>(
+		"/api/users/me/aquaedit"
 	);
-	const [aquaInfoFn, { data: aquaInfoData, loading, error }] = useMutation(
-		"api/users/me/aquaedit"
-	);
-	const [uploadFn, { data }] = useMutation("/api/users/me");
-	const { data: manyPost } = useSWR<resPost>("/api/users/me/post", fetcher);
-	//console.log("manyPost", manyPost);
-	const { register, handleSubmit, watch } = useForm();
+	const [aquaInfoFn] = useMutation("api/users/me/aquaedit");
+	const [uploadFn] = useMutation("/api/users/me");
+	const { data: manyPost } = useSWR<resPost>("/api/users/me/post");
+	const { register, handleSubmit } = useForm();
 	const [editOpen, setEditOpen] = useState(false);
 
-	const baseData = [
+	const productData = [
 		{
 			key: "skimmer",
 			name: "스키머 / 제조사",
@@ -191,12 +189,8 @@ const index = () => {
 	];
 
 	const editFn = () => {
-		setEditOpen(true);
-	};
-	const closeFn = () => {
-		if (editOpen === true) {
-			setEditOpen(false);
-		}
+		if (editOpen === true) setEditOpen(false);
+		else setEditOpen(true);
 	};
 
 	const onValid = async (all: AquaInfoForm) => {
@@ -219,9 +213,8 @@ const index = () => {
 	return (
 		<Main>
 			<Navbar />
-
 			<UserProfile>
-				{/*온쪽 유저 사진 */}
+				{/*왼쪽 유저 사진 */}
 				<UserProfileDivision>
 					{editOpen ? (
 						<BackEditPlus>
@@ -229,7 +222,7 @@ const index = () => {
 								<input
 									type="file"
 									accept="image/*"
-									className="hidden"
+									style={{ display: "none" }}
 									onChange={fileRead}
 									id="backImg"
 								/>
@@ -249,7 +242,7 @@ const index = () => {
 									<input
 										type="file"
 										accept="image/*"
-										className="hidden"
+										style={{ display: "none" }}
 										onChange={fileRead}
 										id="profileImg"
 									/>
@@ -274,17 +267,15 @@ const index = () => {
 						<ProfileTop>
 							<Name>{user?.nickname}</Name>
 
-							<Edit onClick={editFn} />
+							<Edit onClick={editFn} style={{ cursor: "pointer" }} />
 
 							{editOpen ? (
-								<button type="submit">
-									<Save />
-								</button>
+								<Save type="submit" style={{ cursor: "pointer" }} />
 							) : null}
 						</ProfileTop>
 
-						<div className="grid-cols-2  grid  gap-4">
-							{baseData.map((v, i) => (
+						<ProductInfo>
+							{productData.map((v, i) => (
 								<Input
 									key={i}
 									item={v.name}
@@ -294,7 +285,7 @@ const index = () => {
 									type="text"
 								/>
 							))}
-						</div>
+						</ProductInfo>
 						<WaterInfo>
 							{waterData.map((v, i) => (
 								<Input
@@ -320,10 +311,9 @@ const index = () => {
 
 			<div className="grid grid-cols-3 gap-2">
 				{manyPost?.post.map((data, i) => (
-					<img
+					<PostImg
 						key={i}
 						src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
-						className="h-50 aspect-square"
 					/>
 				))}
 			</div>
@@ -332,12 +322,3 @@ const index = () => {
 };
 
 export default index;
-/*
-
-<div className="grid grid-cols-3 gap-2">
-				{[1, 2, 3, 4, 5, 6].map((_, i) => (
-					<img key={i} src="./reef_img.jpg" className="h-50 aspect-square" />
-				))}
-			</div>
-
-*/

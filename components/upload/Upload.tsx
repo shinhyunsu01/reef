@@ -1,13 +1,13 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { cloudFlareUpload } from "../../libs/client/cloudFlareUpload";
 import useMutation from "../../libs/client/useMutation";
 import { CloseSvg, UploadBtnSvg } from "../icon";
 import Btn from "./Btn";
+import { Com } from "../styledCom";
 
-const OpenUpload = styled.div`
+const OpenUpload = styled(Com.Center)`
 	z-index: 15;
 	position: fixed;
 	top: 0;
@@ -16,39 +16,29 @@ const OpenUpload = styled.div`
 	bottom: 0;
 
 	background-color: rgba(0, 0, 0, 0.6);
-	display: flex;
-	align-items: center;
-	justify-content: center;
 `;
-const Uploadflex = styled.div`
+const Uploadflex = styled(Com.Center)`
 	width: 80%;
 	padding: 2rem 2rem;
 	height: 60%;
 	background-color: #fff;
 	border-radius: 20px;
-	display: flex;
+
 	justify-content: space-between;
-	align-items: center;
 	position: relative;
 `;
 
-const UploadModal = styled.div`
+const UploadModal = styled(Com.Center)`
 	width: 50%;
 	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 `;
 
-const UploadImg = styled.div`
+const UploadImg = styled(Com.Center)`
 	height: 100%;
 	width: 100%;
 	margin-right: 2rem;
 	border-width: 2px;
 	border-style: dashed;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 	border-radius: 20px;
 `;
 
@@ -198,7 +188,7 @@ const Upload = ({ closeModal }: responseType) => {
 								<input
 									type="file"
 									accept="image/*"
-									className="hidden"
+									style={{ display: "none" }}
 									onChange={fileRead}
 								/>
 								<UploadBtnSvg style={{ cursor: "pointer" }} />

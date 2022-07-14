@@ -18,10 +18,11 @@ export const Edit = (key: any) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			className="h-6 w-6"
 			fill="none"
 			viewBox="0 0 24 24"
 			stroke="currentColor"
+			width="1.5rem"
+			height="1.5rem"
 			strokeWidth="2"
 			{...key}
 		>
@@ -43,7 +44,8 @@ export const EditArrow = () => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			className="h-6 w-6"
+			width="1.5rem"
+			height="1.5rem"
 			fill="none"
 			viewBox="0 0 24 24"
 			stroke="#40A940"
@@ -58,13 +60,15 @@ export const EditArrow = () => {
 	);
 };
 
-export const Save = () => {
+export const Save = (key: any) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			className="h-7 w-7"
+			width="1.75rem"
+			height="1.75rem"
 			viewBox="0 0 20 20"
 			fill="#40A940"
+			{...key}
 		>
 			<path
 				fillRule="evenodd"
@@ -78,7 +82,8 @@ export const CheckBox = () => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			className="h-6 w-6"
+			width="1.5rem"
+			height="1.5rem"
 			fill="none"
 			viewBox="0 0 24 24"
 			stroke="#40A940"
@@ -97,7 +102,8 @@ export const UploadSvg = (key: any) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			className="h-6 w-6"
+			width="1.5rem"
+			height="1.5rem"
 			fill="none"
 			viewBox="0 0 24 24"
 			stroke="currentColor"
@@ -113,7 +119,8 @@ export const ProfileSvg = (key: any) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			className="h-7 w-7"
+			width="1.75rem"
+			height="1.75rem"
 			fill="none"
 			viewBox="0 0 24 24"
 			stroke="currentColor"
@@ -134,7 +141,8 @@ export const HomeSvg = (key: any) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			className="h-7 w-7"
+			width="1.75rem"
+			height="1.75rem"
 			fill="none"
 			viewBox="0 0 24 24"
 			stroke="currentColor"
@@ -154,7 +162,8 @@ export const LogoutSvg = (key: any) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			className="h-6 w-6"
+			width="1.5rem"
+			height="1.5rem"
 			fill="none"
 			viewBox="0 0 24 24"
 			stroke="#000"
@@ -174,7 +183,8 @@ export const SearchSvg = () => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			className="h-4 w-4"
+			width="1rem"
+			height="1rem"
 			fill="none"
 			viewBox="0 0 24 24"
 			stroke="currentColor"
@@ -205,7 +215,8 @@ export const CloseSvg = (key: any) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			className="h-6 w-6"
+			width="1.5rem"
+			height="1.5rem"
 			fill="none"
 			viewBox="0 0 24 24"
 			stroke="currentColor"
@@ -225,7 +236,8 @@ export const EditPlusBtn = (key: any) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			className="h-10 w-10"
+			width="2.5rem"
+			height="2.5rem"
 			viewBox="0 0 20 20"
 			fill="#40A940"
 			{...key}
@@ -242,7 +254,8 @@ export const EditPlusBtn = (key: any) => {
 export const UploadBtnSvg = (key: any) => {
 	return (
 		<svg
-			className="h-12 w-12 "
+			width="3rem"
+			height="3rem"
 			stroke="currentColor"
 			fill="none"
 			viewBox="0 0 48 48"

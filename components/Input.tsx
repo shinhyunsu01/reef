@@ -2,26 +2,6 @@ import { UseFormRegisterReturn } from "react-hook-form";
 import styled from "styled-components";
 import { EditArrow } from "./icon";
 
-/*
-interface ReefInput {
-	skimmer?: string;
-	watertank?: string;
-	lamp?: string;
-	watermotor?: string;
-	
-	temp?: number;
-	ph?: number;
-
-	salt?: number;
-	alkalinity?: number; //알칼리키 , 경도
-	calcium?: number; //칼슘
-	mag?: number; //마그네슘
-
-	nitrate?: number; //질산염
-	phosphorus?: number; // 인산염
-}
-*/
-
 interface InputPros {
 	item: string;
 	itemValue: string | number;
@@ -53,7 +33,7 @@ const InfoItem = styled.span<any>`
 		line-height: 8px;
 	}
 	@media only screen and (max-width: 768px) {
-		font-size: 6px
+		font-size: 6px;
 		line-height: 6px;
 	}
 `;
