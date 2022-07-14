@@ -200,11 +200,15 @@ const Index = () => {
 		setEditOpen(false);
 	};
 
-	const fileRead = async (e) => {
+	const fileRead = async (e: React.ChangeEvent) => {
+		const input = e.target as HTMLInputElement;
+		if (!input.files?.length) return;
+		const file = input.files[0];
+
 		e.preventDefault();
-		if (!e.target?.files) return;
+
 		const { uploadURL } = await (await fetch("/api/files")).json();
-		const imageId = await cloudFlareUpload(uploadURL, e.target?.files[0]);
+		const imageId = await cloudFlareUpload(uploadURL, file);
 		e.target.id === "backImg"
 			? uploadFn({ backavatar: imageId })
 			: uploadFn({ avatar: imageId });
