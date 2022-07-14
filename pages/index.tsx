@@ -66,6 +66,7 @@ const Index = () => {
 	const { data, error } = useSWR<ManyUser>(
 		typeof window === "undefined" ? null : "/api/posts"
 	);
+	console.log(data, error);
 
 	return (
 		<Main>
