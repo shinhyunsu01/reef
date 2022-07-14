@@ -1,6 +1,8 @@
+import { User } from ".prisma/client";
 import type { NextPage } from "next";
 
 import styled from "styled-components";
+import useSWR from "swr";
 import Navbar from "../components/navbar";
 
 const Main = styled.div`
@@ -16,10 +18,20 @@ const Pic = styled.div`
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 `;
 
-const PicImage = styled.img`
-	aspect-ratio: 1 / 1;
-	width: 320px;
+const BackImage = styled.img`
+	width: 100%;
+	height: 100%;
+`;
 
+const AvatarImage = styled.img`
+	height: 5rem;
+	width: 5rem;
+	border-radius: 5rem;
+	margin-right: 1rem;
+`;
+
+const MainDiv = styled.div`
+	aspect-ratio: 1 / 1;
 	transition-property: transform, backdrop-filter;
 	transition-duration: 500ms;
 	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -36,14 +48,46 @@ const PicImage = styled.img`
 	}
 `;
 
+const Check = styled.div`
+	height: 5rem;
+
+	display: flex;
+	background-color: rgba(0, 0, 0, 0.5);
+	color: white;
+	position: absolute;
+	border-bottom-right-radius: 20px;
+`;
+interface ManyUser {
+	ok: boolean;
+	users: User[];
+}
+
 const index = () => {
+	const { data, error } = useSWR<ManyUser>("/api/posts");
+
 	return (
 		<Main>
 			<Navbar />
 			<Pic>
-				{[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, i) => (
-					<PicImage key={i} src="/reef_img.jpg" />
-				))}
+				{data?.ok
+					? data?.users.map((data, i) => (
+							<MainDiv>
+								<Check>
+									<AvatarImage
+										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
+									/>
+									{data.nickname}
+								</Check>
+								{data.backavatar ? (
+									<BackImage
+										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
+									/>
+								) : (
+									<BackImage key={i} src="/reef_img.jpg" />
+								)}
+							</MainDiv>
+					  ))
+					: ""}
 			</Pic>
 		</Main>
 	);

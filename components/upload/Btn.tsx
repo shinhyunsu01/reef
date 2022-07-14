@@ -6,21 +6,8 @@ import { Com } from "../styledCom";
 const Line = styled(Com.ColCenter)``;
 
 const Title = styled.div`
+	display: flex;
 	width: 140px;
-	font-weight: 600;
-	font-size: 1.125rem;
-	line-height: 1.75rem;
-
-	@media all and (max-width: 600px) {
-		width: 30px;
-		font-size: 0.7rem;
-		line-height: 0.7rem;
-	}
-	@media all and (min-width: 600px) and (max-width: 768px) {
-		width: 30px;
-		font-size: 0.7rem;
-		line-height: 0.7rem;
-	}
 `;
 const Question = styled(Com.ColCenter)`
 	margin-top: 1rem;

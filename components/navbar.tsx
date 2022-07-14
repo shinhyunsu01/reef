@@ -26,7 +26,7 @@ const Header = styled(Com.ColCenter)`
 	width: 100%;
 	padding-left: 1.5rem;
 	padding-right: 1.5rem;
-	z-index: 5;
+	z-index: 999;
 `;
 
 const Search = styled(Com.ColCenter)`

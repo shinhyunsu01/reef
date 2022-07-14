@@ -1,6 +1,5 @@
-export const cloudFlareUpload = async (url: string, fileData: string) => {
+export const cloudFlareUpload = async (url: string, fileData: any) => {
 	const form = new FormData();
-	console.log("fileData", fileData);
 	form.append("file", fileData);
 	const {
 		result: { id },

@@ -6,6 +6,7 @@ import useMutation from "../../libs/client/useMutation";
 import { CloseSvg, UploadBtnSvg } from "../icon";
 import Btn from "./Btn";
 import { Com } from "../styledCom";
+import LoadingAnimation from "./LoadingAnimation";
 
 const OpenUpload = styled(Com.Center)`
 	z-index: 15;
@@ -19,7 +20,9 @@ const OpenUpload = styled(Com.Center)`
 `;
 const Uploadflex = styled(Com.Center)`
 	width: 80%;
-	padding: 2rem 2rem;
+	padding: 1.2rem 1.2rem;
+	min-height: 200px;
+	overflow: auto;
 	height: 60%;
 	background-color: #fff;
 	border-radius: 20px;
@@ -28,15 +31,17 @@ const Uploadflex = styled(Com.Center)`
 	position: relative;
 `;
 
-const UploadModal = styled(Com.Center)`
-	width: 50%;
+const UploadModal = styled.div`
+	flex-grow: 1;
+	flex-flow: row wrap;
 	height: 100%;
+	width: 50%;
 `;
 
 const UploadImg = styled(Com.Center)`
 	height: 100%;
 	width: 100%;
-	margin-right: 2rem;
+	padding: 10px;
 	border-width: 2px;
 	border-style: dashed;
 	border-radius: 20px;
@@ -46,13 +51,14 @@ const UploadForm = styled.div`
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	height: 100%;
+	padding: 10px;
+	position: relative;
 `;
 
 const TextPost = styled.textarea`
 	margin-top: 1rem;
 	width: 100%;
-	height: 100%;
+
 	border-width: 2px;
 	border-radius: 0.375rem;
 	margin-bottom: 20px;
@@ -85,13 +91,14 @@ const MemoTip = styled.div`
 	}
 `;
 
-const UploadBtn = styled.button`
+const UploadBtn = styled.div`
 	width: 50%;
-	height: 50px;
+	height: 35px;
 	border-radius: 20px;
 	background-color: black;
 	color: white;
 	text-align: center;
+	cursor: pointer;
 
 	&:active {
 		border-width: 4px;
@@ -109,14 +116,16 @@ const PreviewImg = styled.img`
 	object-fit: fill;
 	border-radius: 20px;
 `;
+
 interface responseType {
 	closeModal: () => void;
 }
 const Upload = ({ closeModal }: responseType) => {
-	const [avatarPreview, setAvatarPreview] = useState({
-		preview: "",
-		fileData: "",
-	});
+	const [avatarPreview, setAvatarPreview] =
+		useState<{
+			preview: string | undefined;
+			fileData: object | undefined;
+		}>();
 	const router = useRouter();
 	const [uploadFn, { data, loading, error }] = useMutation(
 		"/api/users/me/upload"
@@ -127,8 +136,10 @@ const Upload = ({ closeModal }: responseType) => {
 		coralType: "연산호",
 		description: "",
 		avatar: "",
+		isLoading: false,
+		error: "",
 	});
-	// React.ChangeEvent<HTMLInputElement>
+
 	const onChangefn = (e: any) => {
 		let data = e.target.value;
 		let keyIndex = 0;
@@ -151,30 +162,37 @@ const Upload = ({ closeModal }: responseType) => {
 		e.preventDefault();
 
 		const { uploadURL } = await (await fetch("/api/files")).json();
-
-		if (avatarPreview.fileData != null) {
-			const imageId = await cloudFlareUpload(uploadURL, avatarPreview.fileData);
+		if (avatarPreview?.fileData != null) {
+			const imageId = await cloudFlareUpload(
+				uploadURL,
+				avatarPreview?.fileData
+			);
 			uploadFn({ ...selected, avatar: imageId });
-		} else uploadFn(selected);
 
-		setSelected({
-			picType: "",
-			animateType: "",
-			coralType: "",
-			description: "",
-			avatar: "",
-		});
-		router.reload();
+			setSelected({
+				picType: "",
+				animateType: "",
+				coralType: "",
+				description: "",
+				avatar: "",
+				isLoading: true,
+				error: "",
+			});
+			router.reload();
+		} else {
+			setSelected((prev) => ({ ...prev, error: "사진을 선택해주세요" }));
+		}
 	};
-	const fileRead = async (e) => {
-		if (!e.target?.files) return;
-		const readData = URL.createObjectURL(e.target?.files[0]);
+	const fileRead = async (e: React.ChangeEvent) => {
+		const input = e.target as HTMLInputElement;
+		if (!input.files?.length) return;
+		const file = input.files[0];
+		const readData = URL.createObjectURL(file);
 		setAvatarPreview({
 			preview: readData,
-			fileData: e.target?.files[0],
+			fileData: file,
 		});
 	};
-
 	return (
 		<OpenUpload>
 			<Uploadflex>
@@ -228,17 +246,22 @@ const Upload = ({ closeModal }: responseType) => {
 							""
 						)}
 
-						<TextPost placeholder="  문구 입력..." onChange={onChangefn} />
-
-						<div
-							style={{
-								display: "flex",
-								alignItems: "center",
-								justifyContent: "center",
-							}}
-						>
-							<UploadBtn onClick={onValid}>Upload...</UploadBtn>
-						</div>
+						<TextPost
+							placeholder="  문구 입력..."
+							onChange={onChangefn}
+							rows={3}
+						/>
+						<Com.Center>
+							<UploadBtn onClick={onValid}>
+								{selected?.error !== "" ? (
+									selected.error
+								) : selected?.isLoading === true ? (
+									<LoadingAnimation />
+								) : (
+									"Upload..."
+								)}
+							</UploadBtn>
+						</Com.Center>
 					</UploadForm>
 				</UploadModal>
 				<CloseModal>
