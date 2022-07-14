@@ -32,6 +32,6 @@ export default withIronSessionApiRoute(
 	withHandler({ methods: ["GET"], handler }),
 	{
 		cookieName: "reef",
-		password: process.env.COOKIE_PASSWORD!,
+		password: process.env.NEXT_PUBLIC_COOKIE_PASSWORD!,
 	}
 );
