@@ -13,12 +13,6 @@ const Init = styled.div`
 function MyApp({ Component, pageProps }: AppProps) {
 	return (
 		<>
-			<Head>
-				<script
-					src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js"
-					async
-				/>
-			</Head>
 			<SWRConfig
 				value={{
 					suspense: true,
@@ -27,6 +21,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 				}}
 			>
 				<Init>
+					<Head>
+						<script
+							src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js"
+							async
+						/>
+					</Head>
 					<Component {...pageProps} />
 				</Init>
 			</SWRConfig>
