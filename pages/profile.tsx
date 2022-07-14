@@ -146,11 +146,13 @@ const index = () => {
 	const { user } = useUser();
 
 	const { data: aquaInfoInitData } = useSWR<resAquaInfoForm>(
-		"/api/users/me/aquaedit"
+		typeof window === "undefined" ? null : "/api/users/me/aquaedit"
 	);
 	const [aquaInfoFn] = useMutation("api/users/me/aquaedit");
 	const [uploadFn] = useMutation("/api/users/me");
-	const { data: manyPost } = useSWR<resPost>("/api/users/me/post");
+	const { data: manyPost } = useSWR<resPost>(
+		typeof window === "undefined" ? null : "/api/users/me/post"
+	);
 	const { register, handleSubmit } = useForm();
 	const [editOpen, setEditOpen] = useState(false);
 

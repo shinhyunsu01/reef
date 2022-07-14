@@ -63,7 +63,9 @@ interface ManyUser {
 }
 
 const index = () => {
-	const { data, error } = useSWR<ManyUser>("/api/posts");
+	const { data, error } = useSWR<ManyUser>(
+		typeof window === "undefined" ? null : "/api/posts"
+	);
 
 	return (
 		<Main>
