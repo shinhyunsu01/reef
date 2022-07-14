@@ -18,14 +18,14 @@ async function handler(
 				backavatar: true,
 			},
 		});
-		if (!manyUser) {
-			res.json({
-				ok: false,
-			});
-		} else {
+		if (manyUser) {
 			res.json({
 				ok: true,
 				users: manyUser,
+			});
+		} else {
+			res.json({
+				ok: false,
 			});
 		}
 	}
