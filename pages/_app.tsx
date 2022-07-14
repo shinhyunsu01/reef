@@ -15,7 +15,6 @@ function MyApp({ Component, pageProps }: AppProps) {
 		<>
 			<SWRConfig
 				value={{
-					suspense: true,
 					fetcher: (url: string) =>
 						fetch(url).then((response) => response.json()),
 				}}
