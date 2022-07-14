@@ -69,7 +69,6 @@ const Index = () => {
 
 	return (
 		<Main>
-			<Navbar />
 			<Pic>
 				<div>affa</div>
 			</Pic>
@@ -80,6 +79,8 @@ const Index = () => {
 export default Index;
 
 /*
+
+<Navbar />
 {data?.ok
 					? data?.users.map((data, i) => (
 							<MainDiv key={i}>
