@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	reactStrictMode: false,
+	reactStrictMode: true,
 	async rewrites() {
 		return [
 			{
@@ -11,6 +11,14 @@ const nextConfig = {
 	},
 	images: {
 		domains: ["imagedelivery.net", "upload.imagedelivery.net"],
+	},
+	env: {
+		DATABASE_URL: process.env.DATABASE_URL,
+		COOKIE_PASSWORD: process.env.COOKIE_PASSWORD,
+		NAVER_LOGIN_ID: process.env.NAVER_LOGIN_ID,
+		NAVER_LOGIN_PASSWORD: process.env.NAVER_LOGIN_PASSWORD,
+		CF_TOKEN: process.env.CF_TOKEN,
+		CF_ID: process.env.CF_ID,
 	},
 };
 
