@@ -71,7 +71,7 @@ const Index = () => {
 	return (
 		<Main>
 			<Pic>
-				<div>affa</div>
+				<Navbar />
 			</Pic>
 		</Main>
 	);
