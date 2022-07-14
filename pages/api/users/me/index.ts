@@ -19,29 +19,31 @@ async function handler(
 	let user;
 
 	if (req.method === "GET") {
-		
 		if (req?.session?.user) {
-			user = await client.user.findUnique({
-				where: {
-					id: req?.session?.user?.id,
-				},
-				select: {
-					id: true,
-					email: true,
-					age: true,
-					birthyear: true,
-					gender: true,
-					nickname: true,
-					avatar: true,
-					backavatar: true,
-				},
-			});
-			res.json({
-				ok: true,
-				user,
-			});
+			client.$queryRaw`SET SESSION sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';`.then(
+				async () => {
+					user = await client.user.findUnique({
+						where: {
+							id: req?.session?.user?.id,
+						},
+						select: {
+							id: true,
+							email: true,
+							age: true,
+							birthyear: true,
+							gender: true,
+							nickname: true,
+							avatar: true,
+							backavatar: true,
+						},
+					});
+					res.json({
+						ok: true,
+						user,
+					});
+				}
+			);
 		} else {
-			
 			res.json({
 				ok: false,
 			});
@@ -68,7 +70,6 @@ async function handler(
 				},
 			});
 		} else if (email) {
-			
 			user = await client.user.upsert({
 				where: {
 					email,
@@ -90,7 +91,6 @@ async function handler(
 		}
 
 		if (req.body === "") {
-			
 			delete req.session.user;
 			await req.session.save();
 		}
