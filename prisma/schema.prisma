@@ -8,7 +8,7 @@ generator client {
 
 datasource db {
   provider             = "mysql"
-  url                  = env("DB_HOST")
+  url                  = env("NEXT_PUBLIC_API_URL")
   referentialIntegrity = "prisma"
 }
 
