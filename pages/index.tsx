@@ -71,7 +71,16 @@ const Index = () => {
 		<Main>
 			<Navbar />
 			<Pic>
-				{data?.ok
+				<div>affa</div>
+			</Pic>
+		</Main>
+	);
+};
+
+export default Index;
+
+/*
+{data?.ok
 					? data?.users.map((data, i) => (
 							<MainDiv key={i}>
 								<Check>
@@ -90,14 +99,5 @@ const Index = () => {
 							</MainDiv>
 					  ))
 					: ""}
-			</Pic>
-		</Main>
-	);
-};
-
-export default Index;
-
-/*
-
 
 */
