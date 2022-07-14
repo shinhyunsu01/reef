@@ -21,7 +21,6 @@ async function handler(
 		if (!manyUser) {
 			res.json({
 				ok: false,
-				users: manyUser,
 			});
 		} else {
 			res.json({
