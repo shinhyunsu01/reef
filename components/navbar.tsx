@@ -15,6 +15,7 @@ import {
 import useUser from "../libs/client/useUser";
 import Upload from "./upload/Upload";
 import { Com } from "../components/styledCom";
+import Link from "next/link";
 
 const Header = styled(Com.ColCenter)`
 	background-color: white;
@@ -137,9 +138,9 @@ export default function Navbar() {
 
 		login();
 		getToken();
-		/*router.push({
+		router.push({
 			pathname: "/",
-		});*/
+		});
 	}, []);
 
 	const handleNaverLogin = () => {
@@ -188,7 +189,11 @@ export default function Navbar() {
 				<Menu>
 					<HomeSvg onClick={() => router.push("/")} />
 					{user?.email || userInfo?.email ? (
-						<ProfileSvg onClick={() => router.push("/profile")} />
+						<Link href={`/users/${user?.id}`}>
+							<a>
+								<ProfileSvg onClick={() => router.push("/profile")} />
+							</a>
+						</Link>
 					) : (
 						<ProfileSvg onClick={() => router.push("/")} />
 					)}
