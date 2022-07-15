@@ -44,7 +44,9 @@ async function handler(
 				userId: user?.id,
 			},
 		});
+		console.log("already", already);
 		if (!already) {
+			delete req.body.nickname;
 			info = await client.aquaInfo.create({
 				data: {
 					...req.body,
@@ -55,6 +57,7 @@ async function handler(
 					},
 				},
 			});
+			console.log("info", info);
 		} else {
 			info = await client.aquaInfo.update({
 				where: {

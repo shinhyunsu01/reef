@@ -1,9 +1,11 @@
 import { User } from ".prisma/client";
 import type { NextPage } from "next";
+import { useRouter } from "next/router";
 
 import styled from "styled-components";
 import useSWR from "swr";
 import Navbar from "../components/navbar";
+import Link from "next/link";
 
 const Main = styled.div`
 	width: 100%;
@@ -11,7 +13,7 @@ const Main = styled.div`
 	justify-content: center;
 `;
 
-const Pic = styled.div`
+const Body = styled.div`
 	padding-top: 64px;
 	display: grid;
 	gap: 16px;
@@ -30,7 +32,15 @@ const AvatarImage = styled.img`
 	margin-right: 1rem;
 `;
 
-const MainDiv = styled.div`
+const AvatarDiv = styled.div`
+	height: 5rem;
+	width: 5rem;
+	border-radius: 5rem;
+	margin-right: 1rem;
+	background-color: blue;
+`;
+
+const Pic = styled.a`
 	aspect-ratio: 1 / 1;
 	transition-property: transform, backdrop-filter;
 	transition-duration: 500ms;
@@ -46,6 +56,7 @@ const MainDiv = styled.div`
 	&:nth-child(3n + 1) {
 		transform-origin: left;
 	}
+	cursor: pointer;
 `;
 
 const Check = styled.div`
@@ -63,63 +74,49 @@ interface ManyUser {
 }
 
 const Index = () => {
-	const { data, error } = useSWR<ManyUser>(
+	/*const { data, error } = useSWR<ManyUser>(
 		typeof window === "undefined" ? null : "/api/posts"
-	);
-	console.log(process.env.NODE_ENV, data, error);
+	);*/
+	const router = useRouter();
+	const { data, error } = useSWR<ManyUser>("/api/posts");
+
+	const onClick = (data: any) => {};
 
 	return (
 		<Main>
 			<Navbar />
 
-			<Pic>
+			<Body>
 				{data?.ok
 					? data?.users.map((data, i) => (
-							<MainDiv key={i}>
-								<Check>
-									<AvatarImage
-										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
-									/>
-									{data.nickname}
-								</Check>
-								{data.backavatar ? (
-									<BackImage
-										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
-									/>
-								) : (
-									<BackImage key={i} src="/reef_img.jpg" />
-								)}
-							</MainDiv>
+							<Pic key={i}>
+								<Link href={`/users/${data.id}`}>
+									<a>
+										<Check>
+											{data?.avatar ? (
+												<AvatarImage
+													src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
+												/>
+											) : (
+												<AvatarDiv />
+											)}
+											{data.nickname}
+										</Check>
+										{data.backavatar ? (
+											<BackImage
+												src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
+											/>
+										) : (
+											<BackImage key={i} src="/reef_img.jpg" />
+										)}
+									</a>
+								</Link>
+							</Pic>
 					  ))
 					: ""}
-			</Pic>
+			</Body>
 		</Main>
 	);
 };
 
 export default Index;
-
-/*
-
-<Navbar />
-{data?.ok
-					? data?.users.map((data, i) => (
-							<MainDiv key={i}>
-								<Check>
-									<AvatarImage
-										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
-									/>
-									{data.nickname}
-								</Check>
-								{data.backavatar ? (
-									<BackImage
-										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
-									/>
-								) : (
-									<BackImage key={i} src="/reef_img.jpg" />
-								)}
-							</MainDiv>
-					  ))
-					: ""}
-
-*/

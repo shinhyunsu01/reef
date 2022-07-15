@@ -52,7 +52,7 @@ model AquaInfo {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([userId])
+  //@@index([userId])
 }
 
 model UploadInfo {
@@ -69,5 +69,5 @@ model UploadInfo {
 
   description String? @db.MediumText
 
-  @@index([userId])
+  //@@index([userId])
 }

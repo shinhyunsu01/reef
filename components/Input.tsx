@@ -3,12 +3,13 @@ import styled from "styled-components";
 import { EditArrow } from "./icon";
 
 interface InputPros {
-	item: string;
+	item?: string;
 	itemValue: string | number;
 	editEnable: boolean;
 	register: UseFormRegisterReturn;
 	required?: boolean;
 	type: string;
+	db: string | number;
 }
 
 const Info = styled.div`
@@ -21,8 +22,9 @@ const Item = styled.div`
 	display: flex;
 	align-items: center;
 `;
-const InfoItem = styled.span<any>`
-	border-bottom-width: 2px;
+const InfoItem = styled.div<any>`
+	border-bottom-width: ${(props) =>
+		props.name === "nickname" ? "0px" : "2px"};
 	color: gray;
 	font-size: 12px;
 
@@ -72,10 +74,13 @@ export default function Input({
 	item,
 	itemValue,
 	type,
+	db,
 }: InputPros) {
 	return (
 		<Info>
-			<InfoItem type={type}>{item}</InfoItem>
+			<InfoItem type={type} name={db}>
+				{item}
+			</InfoItem>
 
 			<Item>
 				{editEnable === true && type !== "number" ? <EditArrow /> : null}

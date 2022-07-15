@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import useSWR from "swr";
-import { Edit, EditPlusBtn, Save } from "../components/icon";
-import Input from "../components/Input";
-import Navbar from "../components/navbar";
-import { cloudFlareUpload } from "../libs/client/cloudFlareUpload";
-import useMutation from "../libs/client/useMutation";
-import useUser from "../libs/client/useUser";
-import { Com } from "../components/styledCom";
+import { Edit, EditPlusBtn, Save } from "../../components/icon";
+import Input from "../../components/Input";
+import Navbar from "../../components/navbar";
+import { Com } from "../../components/styledCom";
+import { cloudFlareUpload } from "../../libs/client/cloudFlareUpload";
+import useMutation from "../../libs/client/useMutation";
+import useUser from "../../libs/client/useUser";
 
 const Main = styled.div`
 	height: 100%;
@@ -397,7 +397,7 @@ const Index = () => {
 			</Season>
 
 			<div className="grid grid-cols-3 gap-2">
-				{manyPost?.post.map((data, i) => (
+				{manyPost?.post?.map((data, i) => (
 					<PostImg
 						key={i}
 						src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
