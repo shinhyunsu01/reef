@@ -35,7 +35,6 @@ async function handler(
 				},
 			},
 		});
-		console.log("post", post);
 
 		res.json({
 			ok: true,

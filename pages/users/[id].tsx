@@ -169,7 +169,6 @@ const Index = () => {
 			? null
 			: `/api/users/${Number(router.query.id)}`
 	);
-	console.log(aquaInfoInitData);
 
 	const [aquaInfoFn] = useMutation(`/api/users/${Number(router.query.id)}`);
 

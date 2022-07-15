@@ -106,7 +106,7 @@ export default function Navbar() {
 		const login = () => {
 			naverLogin = new naver.LoginWithNaverId({
 				clientId: process.env.NEXT_PUBLIC_NAVER_LOGIN_ID, // ClientID
-				callbackUrl: "https://reef-nine.vercel.app", //  URL
+				callbackUrl: "http://localhost:3000", //  URL
 				isPopup: false, // 팝업 형태로 인증 여부
 				loginButton: { color: "green", type: 1, height: 10 },
 			});
@@ -165,7 +165,7 @@ export default function Navbar() {
 				age: "",
 			});
 
-		const res = await axios.get("/oauth2.0/token", {
+		await axios.get("/oauth2.0/token", {
 			params: {
 				grant_type: "delete",
 				client_id: process.env.NEXT_PUBLIC_NAVER_LOGIN_ID, // Client ID
@@ -174,7 +174,7 @@ export default function Navbar() {
 				service_provider: "NAVER",
 			},
 		});
-		router.push("/");
+		router.reload();
 	};
 
 	return (

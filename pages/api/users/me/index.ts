@@ -93,8 +93,9 @@ async function handler(
 		}
 
 		if (req.body === "") {
-			delete req.session.user;
-			await req.session.save();
+			//console.log("check");
+			//delete req.session.user;
+			await req.session.destroy();
 		}
 		res.json({
 			ok: true,
