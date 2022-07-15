@@ -27,7 +27,7 @@ const Header = styled(Com.ColCenter)`
 	width: 100%;
 	padding-left: 1.5rem;
 	padding-right: 1.5rem;
-	z-index: 999;
+	z-index: 100;
 `;
 
 const Search = styled(Com.ColCenter)`
@@ -106,7 +106,7 @@ export default function Navbar() {
 		const login = () => {
 			naverLogin = new naver.LoginWithNaverId({
 				clientId: process.env.NEXT_PUBLIC_NAVER_LOGIN_ID, // ClientID
-				callbackUrl: "https://reef-nine.vercel.app", //  URL
+				callbackUrl: "http://localhost:3000", //  URL
 				isPopup: false, // 팝업 형태로 인증 여부
 				loginButton: { color: "green", type: 1, height: 10 },
 			});

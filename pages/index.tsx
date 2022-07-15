@@ -74,11 +74,8 @@ interface ManyUser {
 }
 
 const Index = () => {
-	/*const { data, error } = useSWR<ManyUser>(
-		typeof window === "undefined" ? null : "/api/posts"
-	);*/
 	const router = useRouter();
-	const { data, error } = useSWR<ManyUser>("/api/posts");
+	const { data, error } = useSWR<ManyUser>("/api/users");
 
 	const onClick = (data: any) => {};
 

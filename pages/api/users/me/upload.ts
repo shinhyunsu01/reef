@@ -2,6 +2,8 @@ import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
 import withHandler, { ResponseType } from "../../../../libs/server/withHandler";
 
+import client from "../../../../libs/server/client";
+
 declare module "iron-session" {
 	interface IronSessionData {
 		user?: {
@@ -20,7 +22,10 @@ async function handler(
 	if (req.method === "GET") {
 	}
 	if (req.method === "POST") {
-		const post = await client?.uploadInfo.create({
+		delete req.body.isLoading;
+		delete req.body.error;
+
+		const post = await client.uploadInfo.create({
 			data: {
 				...req.body,
 				user: {
@@ -30,6 +35,7 @@ async function handler(
 				},
 			},
 		});
+		console.log("post", post);
 
 		res.json({
 			ok: true,

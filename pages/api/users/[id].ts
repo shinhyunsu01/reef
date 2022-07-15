@@ -17,24 +17,31 @@ async function handler(
 	res: NextApiResponse<ResponseType>
 ) {
 	let info;
+	let userInfo;
 
 	if (req.method === "GET") {
-		console.log("gett", req?.query.id);
-
 		info = await client.aquaInfo.findFirst({
 			where: {
 				userId: Number(req?.query.id),
 			},
 		});
+		userInfo = await client.user.findFirst({
+			where: {
+				id: Number(req?.query.id),
+			},
+		});
+
 		res.json({
 			ok: true,
 			info,
+			userInfo,
 		});
 	}
 	if (req.method === "POST") {
 		const {
 			session: { user },
 		} = req;
+
 		const already = await client.aquaInfo.findFirst({
 			where: {
 				userId: user?.id,

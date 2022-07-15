@@ -38,14 +38,14 @@ model AquaInfo {
   lamp       String?
   watermotor String?
 
-  temp       Float?
-  ph         Float?
-  salt       Float?
-  alkalinity Float?
-  calcium    Float?
-  mag        Float?
-  nitrate    Float?
-  phosphorus Float?
+  temp       String?
+  ph         String?
+  salt       String?
+  alkalinity String?
+  calcium    String?
+  mag        String?
+  nitrate    String?
+  phosphorus String?
 
   season Int?
 

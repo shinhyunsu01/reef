@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import withHandler, { ResponseType } from "../../../../libs/server/withHandler";
+import withHandler, { ResponseType } from "../../../libs/server/withHandler";
 import { withIronSessionApiRoute } from "iron-session/next";
 
-import client from "../../../../libs/server/client";
+import client from "../../../libs/server/client";
 
 declare module "iron-session" {
 	interface IronSessionData {
@@ -21,7 +21,7 @@ async function handler(
 	if (req.method === "GET") {
 		user = await client.user.findUnique({
 			where: {
-				id: req?.session?.user?.id,
+				id: Number(req?.query.id),
 			},
 		});
 		const post = await client.uploadInfo.findMany({

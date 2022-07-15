@@ -1,3 +1,4 @@
+import { User } from ".prisma/client";
 import { UploadInfo } from ".prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -120,6 +121,7 @@ const PostImg = styled.img`
 `;
 const End = styled.div`
 	display: flex;
+	align-items: center;
 `;
 const NaverUserInfo = styled.div`
 	font-weight: bold;
@@ -155,6 +157,7 @@ interface resPost {
 interface resAquaInfoForm {
 	ok: boolean;
 	info: AquaInfoForm;
+	userInfo: User;
 }
 
 const Index = () => {
@@ -166,11 +169,15 @@ const Index = () => {
 			? null
 			: `/api/users/${Number(router.query.id)}`
 	);
+	console.log(aquaInfoInitData);
 
 	const [aquaInfoFn] = useMutation(`/api/users/${Number(router.query.id)}`);
+
 	const [uploadFn] = useMutation("/api/users/me");
 	const { data: manyPost } = useSWR<resPost>(
-		typeof window === "undefined" ? null : "/api/users/me/post"
+		typeof window === "undefined"
+			? null
+			: `/api/posts/${Number(router.query.id)}`
 	);
 
 	const { register, handleSubmit } = useForm();
@@ -207,17 +214,17 @@ const Index = () => {
 		{
 			db: "temp",
 			name: "온도",
-			value: aquaInfoInitData?.info?.temp ? aquaInfoInitData?.info?.temp : "",
+			value: aquaInfoInitData?.info?.temp ? aquaInfoInitData?.info?.temp : 0,
 		},
 		{
 			db: "ph",
 			name: "ph",
-			value: aquaInfoInitData?.info?.ph ? aquaInfoInitData?.info?.ph : "",
+			value: aquaInfoInitData?.info?.ph ? aquaInfoInitData?.info?.ph : 0,
 		},
 		{
 			db: "salt",
 			name: "염도",
-			value: aquaInfoInitData?.info?.salt ? aquaInfoInitData?.info?.salt : "",
+			value: aquaInfoInitData?.info?.salt ? aquaInfoInitData?.info?.salt : 0,
 		},
 		{
 			db: "alkalinity",
@@ -229,24 +236,26 @@ const Index = () => {
 			name: "칼슘",
 			value: aquaInfoInitData?.info?.calcium
 				? aquaInfoInitData?.info?.calcium
-				: "",
+				: 0,
 		},
 		{
 			db: "mag",
 			name: "마그네슘",
-			value: aquaInfoInitData?.info?.mag ? aquaInfoInitData?.info?.mag : "",
+			value: aquaInfoInitData?.info?.mag ? aquaInfoInitData?.info?.mag : 0,
 		},
 		{
 			db: "nitrate",
 			name: "질산염",
 			value: aquaInfoInitData?.info?.nitrate
 				? aquaInfoInitData?.info?.nitrate
-				: "",
+				: 0,
 		},
 		{
 			db: "phosphorus",
 			name: "인산염",
-			value: aquaInfoInitData?.info?.ph ? aquaInfoInitData?.info?.ph : "",
+			value: aquaInfoInitData?.info?.phosphorus
+				? aquaInfoInitData?.info?.phosphorus
+				: 0,
 		},
 	];
 
@@ -300,9 +309,9 @@ const Index = () => {
 					) : (
 						""
 					)}
-					{user?.backavatar ? (
+					{aquaInfoInitData?.userInfo?.backavatar ? (
 						<BackProfileImg
-							src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${user?.backavatar}/public`}
+							src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData?.userInfo?.backavatar}/public`}
 						/>
 					) : (
 						<BackProfileImg src="/reef_img.jpg" />
@@ -326,9 +335,9 @@ const Index = () => {
 						) : (
 							""
 						)}
-						{user?.avatar ? (
+						{aquaInfoInitData?.userInfo?.avatar ? (
 							<ProfileImg
-								src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${user?.avatar}/public`}
+								src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData?.userInfo?.avatar}/public`}
 							/>
 						) : (
 							<ProfilePic style={{ backgroundColor: "blue" }} />
@@ -345,7 +354,11 @@ const Index = () => {
 						<ProfileTop>
 							<Input
 								db="nickname"
-								itemValue={user?.nickname ? user?.nickname : ""}
+								itemValue={
+									aquaInfoInitData?.userInfo?.nickname
+										? aquaInfoInitData?.userInfo?.nickname
+										: ""
+								}
 								editEnable={editOpen}
 								register={register("nickname")}
 								type="text"

@@ -9,7 +9,7 @@ import { Com } from "../styledCom";
 import LoadingAnimation from "./LoadingAnimation";
 
 const OpenUpload = styled(Com.Center)`
-	z-index: 15;
+	z-index: 200;
 	position: fixed;
 	top: 0;
 	left: 0;
