@@ -72,7 +72,27 @@ const Index = () => {
 		<Main>
 			<Navbar />
 
-			<Pic></Pic>
+			<Pic>
+				{data?.ok
+					? data?.users.map((data, i) => (
+							<MainDiv key={i}>
+								<Check>
+									<AvatarImage
+										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
+									/>
+									{data.nickname}
+								</Check>
+								{data.backavatar ? (
+									<BackImage
+										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
+									/>
+								) : (
+									<BackImage key={i} src="/reef_img.jpg" />
+								)}
+							</MainDiv>
+					  ))
+					: ""}
+			</Pic>
 		</Main>
 	);
 };
