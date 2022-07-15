@@ -129,7 +129,11 @@ export default function Navbar() {
 								email,
 								gender,
 							});
+
 							loginData({ age, birthyear, email, gender });
+							router.push({
+								pathname: "/",
+							});
 						}
 					});
 				}
@@ -138,9 +142,6 @@ export default function Navbar() {
 
 		login();
 		getToken();
-		router.push({
-			pathname: "/",
-		});
 	}, []);
 
 	const handleNaverLogin = () => {

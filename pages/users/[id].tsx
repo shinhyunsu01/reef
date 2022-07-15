@@ -162,14 +162,17 @@ const Index = () => {
 	const { user } = useUser();
 
 	const { data: aquaInfoInitData } = useSWR<resAquaInfoForm>(
-		typeof window === "undefined" ? null : "/api/users/me/aquaedit"
+		typeof window === "undefined"
+			? null
+			: `/api/users/${Number(router.query.id)}`
 	);
 
-	const [aquaInfoFn] = useMutation("api/users/me/aquaedit");
+	const [aquaInfoFn] = useMutation(`/api/users/${Number(router.query.id)}`);
 	const [uploadFn] = useMutation("/api/users/me");
 	const { data: manyPost } = useSWR<resPost>(
 		typeof window === "undefined" ? null : "/api/users/me/post"
 	);
+
 	const { register, handleSubmit } = useForm();
 	const [editOpen, setEditOpen] = useState(false);
 
@@ -348,16 +351,23 @@ const Index = () => {
 								type="text"
 							/>
 							<End>
-								<NaverUserInfo>
-									{user?.gender}/{user?.age}/{user?.email}
-								</NaverUserInfo>
-								<Edit onClick={editFn} style={{ cursor: "pointer" }} />
+								{user ? (
+									<>
+										<NaverUserInfo>
+											{user?.gender}/{user?.age}/{user?.email}
+										</NaverUserInfo>
 
-								{editOpen ? (
-									<button type="submit">
-										<Save style={{ cursor: "pointer" }} />
-									</button>
-								) : null}
+										<Edit onClick={editFn} style={{ cursor: "pointer" }} />
+
+										{editOpen ? (
+											<button type="submit">
+												<Save style={{ cursor: "pointer" }} />
+											</button>
+										) : null}
+									</>
+								) : (
+									""
+								)}
 							</End>
 						</ProfileTop>
 
