@@ -191,7 +191,7 @@ export default function Navbar() {
 					{user?.email || userInfo?.email ? (
 						<Link href={`/users/${user?.id}`}>
 							<a>
-								<ProfileSvg onClick={() => router.push("/profile")} />
+								<ProfileSvg />
 							</a>
 						</Link>
 					) : (
