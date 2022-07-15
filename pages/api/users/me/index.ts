@@ -19,7 +19,6 @@ async function handler(
 	let user;
 
 	if (req.method === "GET") {
-		console.log("get ", req?.session?.user, process.env.NEXT_PUBLIC_API_COOKIE);
 		if (req?.session?.user) {
 			//client.$queryRaw`SET SESSION sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';`.then(
 			//	async () => {
@@ -89,9 +88,8 @@ async function handler(
 			req.session.user = {
 				id: user.id,
 			};
-			console.log("save", user);
+
 			await req.session.save();
-			console.log("ssesion", req.session.user);
 		}
 
 		if (req.body === "") {

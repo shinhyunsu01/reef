@@ -19,7 +19,7 @@ async function handler(
 				backavatar: true,
 			},
 		});
-		console.log("api post", manyUser);
+		
 		if (manyUser) {
 			res.json({
 				ok: true,
