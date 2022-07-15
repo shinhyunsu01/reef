@@ -364,6 +364,7 @@ const Index = () => {
 						<ProductInfo>
 							{productData.map((v, i) => (
 								<Input
+									key={i}
 									db={i}
 									item={v.name}
 									itemValue={v.value ? v.value : ""}
@@ -376,6 +377,7 @@ const Index = () => {
 						<WaterInfo>
 							{waterData.map((v, i) => (
 								<Input
+									key={i}
 									db={i}
 									item={v.name}
 									itemValue={v.value ? v.value : ""}
