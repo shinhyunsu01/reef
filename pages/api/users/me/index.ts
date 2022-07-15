@@ -19,6 +19,7 @@ async function handler(
 	let user;
 
 	if (req.method === "GET") {
+		console.log("get ", req?.session, process.env.NEXT_PUBLIC_API_COOKIE);
 		if (req?.session?.user) {
 			client.$queryRaw`SET SESSION sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';`.then(
 				async () => {
@@ -53,6 +54,7 @@ async function handler(
 		const {
 			body: { age, birthyear, email, gender, avatar, backavatar },
 		} = req;
+		console.log("post", email, avatar, backavatar);
 
 		if (avatar || backavatar) {
 			user = await client.user.findUnique({
@@ -70,7 +72,16 @@ async function handler(
 				},
 			});
 		} else if (email) {
-			user = await client.user.upsert({
+			console.log("check");
+			console.log(
+				await client.user.findFirst({
+					where: {
+						email,
+					},
+				})
+			);
+
+			/*user = await client.user.upsert({
 				where: {
 					email,
 				},
@@ -83,11 +94,14 @@ async function handler(
 					backavatar,
 				},
 				update: {},
-			});
+			});*/
+			/*
 			req.session.user = {
 				id: user.id,
 			};
+			console.log("save", user);
 			await req.session.save();
+			console.log("ssesion", req.session.user);*/
 		}
 
 		if (req.body === "") {
@@ -104,6 +118,6 @@ export default withIronSessionApiRoute(
 	withHandler({ methods: ["GET", "POST"], handler }),
 	{
 		cookieName: "reef",
-		password: process.env.NEXT_PUBLIC_COOKIE_PASSWORD!,
+		password: process.env.NEXT_PUBLIC_API_COOKIE!,
 	}
 );

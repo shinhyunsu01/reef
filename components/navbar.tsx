@@ -100,11 +100,12 @@ export default function Navbar() {
 	useEffect(() => {
 		const naver = (window as any).naver;
 		let naverLogin: any;
-
+		// http://localhost:3000
+		// https://reef-nine.vercel.app/#
 		const login = () => {
 			naverLogin = new naver.LoginWithNaverId({
 				clientId: process.env.NEXT_PUBLIC_NAVER_LOGIN_ID, // ClientID
-				callbackUrl: "https://reef-nine.vercel.app/#", // Callback URL
+				callbackUrl: "http://localhost:3000", // Callback URL
 				isPopup: false, // 팝업 형태로 인증 여부
 				loginButton: { color: "green", type: 1, height: 10 },
 			});
@@ -116,28 +117,29 @@ export default function Navbar() {
 			const hash = Router.asPath.split("#")[1]; // 네이버 로그인을 통해 전달받은 hash 값
 			if (hash) {
 				const token = hash.split("=")[1].split("&")[0]; // token값 확인
-				naverLogin.getLoginStatus((status: any) => {
-					if (status) {
-						// 로그인 상태 값이 있을 경우
-						const { age, birthyear, email, gender } = naverLogin.user;
-						setUserinfo({
-							age,
-							birthyear,
-							email,
-							gender,
-						});
-						loginData({ age, birthyear, email, gender });
-
-						Router.push({
-							pathname: "/",
-						});
-					}
-				});
+				if (token) {
+					naverLogin.getLoginStatus((status: any) => {
+						if (status) {
+							// 로그인 상태 값이 있을 경우
+							const { age, birthyear, email, gender } = naverLogin.user;
+							setUserinfo({
+								age,
+								birthyear,
+								email,
+								gender,
+							});
+							loginData({ age, birthyear, email, gender });
+						}
+					});
+				}
 			}
 		};
 
 		login();
 		getToken();
+		/*router.push({
+			pathname: "/",
+		});*/
 	}, []);
 
 	const handleNaverLogin = () => {
