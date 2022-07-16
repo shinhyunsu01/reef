@@ -130,8 +130,10 @@ const ProductInfo = styled.div`
 	}
 `;
 
-const PostImg = styled.img`
-	aspect-ratio: 1 / 1;
+const PostImg = styled.div`
+	img {
+		aspect-ratio: 1 / 1;
+	}
 `;
 const End = styled.div`
 	display: flex;
@@ -444,10 +446,14 @@ const Index = () => {
 
 				<div className="grid grid-cols-3 gap-2">
 					{manyPost?.post?.map((data, i) => (
-						<PostImg
-							key={i}
-							src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
-						/>
+						<PostImg key={i}>
+							<Image
+								layout="responsive"
+								width={100}
+								height={100}
+								src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
+							/>
+						</PostImg>
 					))}
 				</div>
 			</Main>
