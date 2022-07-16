@@ -88,6 +88,15 @@ async function handler(
 			req.session.user = {
 				id: user.id,
 			};
+			await client.aquaInfo.create({
+				data: {
+					user: {
+						connect: {
+							id: user?.id,
+						},
+					},
+				},
+			});
 
 			await req.session.save();
 			await res.revalidate("/");

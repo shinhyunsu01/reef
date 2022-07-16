@@ -14,6 +14,8 @@ import useMutation from "../../libs/client/useMutation";
 import useUser from "../../libs/client/useUser";
 import Image from "next/image";
 import backInitImg from "../../public/reef_img.jpg";
+import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import client from "../../libs/server/client";
 
 const Main = styled.div`
 	height: 100vh;
@@ -171,15 +173,15 @@ interface resPost {
 	post: UploadInfo[];
 }
 interface resAquaInfoForm {
-	ok: boolean;
 	info: AquaInfoForm;
 	userInfo: User;
+	posts: UploadInfo[];
 }
 
-const Index = () => {
+const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 	const router = useRouter();
 	const { user } = useUser(); // middleware
-
+	/*
 	const { data: aquaInfoInitData } = useSWR<resAquaInfoForm>(
 		typeof window === "undefined"
 			? null
@@ -189,7 +191,7 @@ const Index = () => {
 		typeof window === "undefined"
 			? null
 			: `/api/posts/${Number(router.query.id)}`
-	);
+	);*/
 
 	const [aquaInfoFn] = useMutation(`/api/users/${Number(router.query.id)}`);
 	const [uploadFn] = useMutation("/api/users/me");
@@ -198,26 +200,22 @@ const Index = () => {
 		{
 			db: "skimmer",
 			name: "스키머 / 제조사",
-			value: aquaInfoInitData?.info?.skimmer
-				? aquaInfoInitData?.info.skimmer
-				: "",
+			value: info?.skimmer ? info.skimmer : "",
 		},
 		{
 			db: "watertank",
 			name: "수조 / 하단 섬프(O,X) / 제조사",
-			value: aquaInfoInitData?.info?.watertank,
+			value: info?.watertank,
 		},
 		{
 			db: "lamp",
 			name: "조명",
-			value: aquaInfoInitData?.info?.lamp ? aquaInfoInitData?.info?.lamp : "",
+			value: info?.lamp ? info?.lamp : "",
 		},
 		{
 			db: "watermotor",
 			name: "수류모터 / 제조사",
-			value: aquaInfoInitData?.info?.watermotor
-				? aquaInfoInitData?.info?.watermotor
-				: "",
+			value: info?.watermotor ? info?.watermotor : "",
 		},
 	];
 
@@ -225,48 +223,42 @@ const Index = () => {
 		{
 			db: "temp",
 			name: "온도",
-			value: aquaInfoInitData?.info?.temp ? aquaInfoInitData?.info?.temp : 0,
+			value: info?.temp ? info?.temp : 0,
 		},
 		{
 			db: "ph",
 			name: "ph",
-			value: aquaInfoInitData?.info?.ph ? aquaInfoInitData?.info?.ph : 0,
+			value: info?.ph ? info?.ph : 0,
 		},
 		{
 			db: "salt",
 			name: "염도",
-			value: aquaInfoInitData?.info?.salt ? aquaInfoInitData?.info?.salt : 0,
+			value: info?.salt ? info?.salt : 0,
 		},
 		{
 			db: "alkalinity",
 			name: "경도",
-			value: aquaInfoInitData?.info?.alkalinity,
+			value: info?.alkalinity,
 		},
 		{
 			db: "calcium",
 			name: "칼슘",
-			value: aquaInfoInitData?.info?.calcium
-				? aquaInfoInitData?.info?.calcium
-				: 0,
+			value: info?.calcium ? info?.calcium : 0,
 		},
 		{
 			db: "mag",
 			name: "마그네슘",
-			value: aquaInfoInitData?.info?.mag ? aquaInfoInitData?.info?.mag : 0,
+			value: info?.mag ? info?.mag : 0,
 		},
 		{
 			db: "nitrate",
 			name: "질산염",
-			value: aquaInfoInitData?.info?.nitrate
-				? aquaInfoInitData?.info?.nitrate
-				: 0,
+			value: info?.nitrate ? info?.nitrate : 0,
 		},
 		{
 			db: "phosphorus",
 			name: "인산염",
-			value: aquaInfoInitData?.info?.phosphorus
-				? aquaInfoInitData?.info?.phosphorus
-				: 0,
+			value: info?.phosphorus ? info?.phosphorus : 0,
 		},
 	];
 	const { register, handleSubmit } = useForm();
@@ -321,11 +313,11 @@ const Index = () => {
 						) : (
 							""
 						)}
-						{aquaInfoInitData?.userInfo?.backavatar ? (
+						{userInfo?.backavatar ? (
 							<BackProfileImg>
 								<Image
 									layout="fill"
-									src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData?.userInfo?.backavatar}/public`}
+									src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${userInfo?.backavatar}/public`}
 								/>
 							</BackProfileImg>
 						) : (
@@ -352,13 +344,13 @@ const Index = () => {
 							) : (
 								""
 							)}
-							{aquaInfoInitData?.userInfo?.avatar ? (
+							{userInfo?.avatar ? (
 								<ProfileImg>
 									<Image
 										layout="responsive"
 										width={100}
 										height={100}
-										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData?.userInfo?.avatar}/public`}
+										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${userInfo?.avatar}/public`}
 									/>
 								</ProfileImg>
 							) : (
@@ -375,11 +367,7 @@ const Index = () => {
 							<ProfileTop>
 								<Input
 									db="nickname"
-									itemValue={
-										aquaInfoInitData?.userInfo?.nickname
-											? aquaInfoInitData?.userInfo?.nickname
-											: ""
-									}
+									itemValue={userInfo?.nickname ? userInfo?.nickname : ""}
 									editEnable={editOpen}
 									register={register("nickname")}
 									type="text"
@@ -442,7 +430,7 @@ const Index = () => {
 				</Season>
 
 				<div className="grid grid-cols-3 gap-2">
-					{manyPost?.post?.map((data, i) => (
+					{posts?.map((data, i) => (
 						<PostImg key={i}>
 							<Image
 								layout="responsive"
@@ -457,8 +445,45 @@ const Index = () => {
 		</>
 	);
 };
+export const getStaticPaths: GetStaticPaths = () => {
+	return {
+		paths: [],
+		fallback: "blocking",
+	};
+};
+export const getStaticProps: GetStaticProps = async (ctx) => {
+	console.log("BUILDING ID INDEX");
+	if (!ctx?.params?.id) {
+		return {
+			props: {},
+		};
+	}
+	let queryId = +ctx.params.id.toString();
+	const info = await client.aquaInfo.findFirst({
+		where: {
+			userId: queryId,
+		},
+	});
+	const userInfo = await client.user.findFirst({
+		where: {
+			id: queryId,
+		},
+	});
+	const posts = await client.uploadInfo.findMany({
+		where: {
+			userId: queryId,
+		},
+	});
+	return {
+		props: {
+			info: JSON.parse(JSON.stringify(info)),
+			userInfo: JSON.parse(JSON.stringify(userInfo)),
+			posts: JSON.parse(JSON.stringify(posts)),
+		},
+	};
+};
 
-export default Index;
+export default Page;
 /*<UserProfile>
 				
 					<UserProfileDivision>

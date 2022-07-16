@@ -127,7 +127,7 @@ export default function Navbar() {
 		const login = () => {
 			naverLogin = new naver.LoginWithNaverId({
 				clientId: process.env.NEXT_PUBLIC_NAVER_LOGIN_ID, // ClientID
-				callbackUrl: "https://reef-nine.vercel.app/",
+				callbackUrl: "http://localhost:3000",
 				isPopup: false, // 팝업 형태로 인증 여부
 				loginButton: { color: "green", type: 1, height: 10 },
 			});
@@ -153,7 +153,7 @@ export default function Navbar() {
 
 							loginData({ age, birthyear, email, gender });
 							router.push({
-								pathname: "/",
+								pathname: `/users/${user?.id}`,
 							});
 						}
 					});
