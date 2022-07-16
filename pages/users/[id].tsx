@@ -80,13 +80,14 @@ const ProfileTop = styled.div`
 
 const Season = styled.div`
 	display: flex;
-	justify-content: space-around;
+	justify-content: center;
 	font-weight: bold;
 	font-size: 12px;
 	border-top-width: 2px;
 	margin-top: 50px;
 	background-color: #fafafa;
 	height: 40px;
+	width: 100%;
 `;
 const SeasonItem = styled.div`
 	padding-top: 7px;

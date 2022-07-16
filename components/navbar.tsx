@@ -33,7 +33,6 @@ const Header = styled(Com.ColCenter)`
 const Search = styled(Com.ColCenter)`
 	position: relative;
 	cursor: text;
-
 	&:focus-within {
 		div {
 			display: none;
@@ -54,6 +53,15 @@ const SearchInput = styled.input`
 		color: black;
 		padding-left: 16px;
 	}
+	@media only screen and (max-width: 500px) {
+		width: 150px;
+	}
+	@media only screen and (max-width: 480px) {
+		width: 100px;
+	}
+	@media only screen and (max-width: 320px) {
+		width: 50px;
+	}
 `;
 
 const SearchLogo = styled.div`
@@ -68,7 +76,6 @@ const Reef = styled.div`
 `;
 const Menu = styled(Com.ColCenter)`
 	justify-content: flex-end;
-
 	svg,
 	img {
 		margin-right: 10px;

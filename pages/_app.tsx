@@ -9,6 +9,7 @@ const Init = styled.div`
 	max-width: 64rem;
 	margin-left: auto;
 	margin-right: auto;
+	padding: 0 0.5em;
 `;
 function MyApp({ Component, pageProps }: AppProps) {
 	return (

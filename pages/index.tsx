@@ -13,34 +13,17 @@ const Main = styled.div`
 	justify-content: center;
 `;
 
-const Body = styled.div`
-	padding-top: 64px;
+const PicBody = styled.div`
+	width: 100%;
+	margin-top: 64px;
+	margin-left: 0;
 	display: grid;
 	gap: 16px;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 `;
 
-const BackImage = styled.img`
-	width: 100%;
-	height: 100%;
-`;
-
-const AvatarImage = styled.img`
-	height: 5rem;
-	width: 5rem;
-	border-radius: 5rem;
-	margin-right: 1rem;
-`;
-
-const AvatarDiv = styled.div`
-	height: 5rem;
-	width: 5rem;
-	border-radius: 5rem;
-	margin-right: 1rem;
-	background-color: blue;
-`;
-
 const Pic = styled.a`
+	width: 100%;
 	aspect-ratio: 1 / 1;
 	transition-property: transform, backdrop-filter;
 	transition-duration: 500ms;
@@ -58,13 +41,43 @@ const Pic = styled.a`
 	}
 	cursor: pointer;
 `;
+const BackImage = styled.img`
+	width: 100%;
+	height: 100%;
+`;
 
-const Check = styled.div`
+const AvatarImage = styled.img`
 	height: 5rem;
+	width: 5rem;
+	border-radius: 5rem;
+	margin-right: 1rem;
 
+	@media only screen and (max-width: 450px) {
+		height: 2rem;
+		width: 2rem;
+		border-radius: 2rem;
+	}
+`;
+
+const AvatarDiv = styled.div`
+	height: 5rem;
+	width: 5rem;
+	border-radius: 5rem;
+	margin-right: 1rem;
+	background-color: blue;
+
+	@media only screen and (max-width: 450px) {
+		height: 2rem;
+		width: 2rem;
+		border-radius: 2rem;
+	}
+`;
+
+const PicTitle = styled.div`
 	display: flex;
-	background-color: rgba(0, 0, 0, 0.5);
-	color: white;
+	padding: 5px;
+	background-color: rgba(255, 255, 255, 0.5);
+	color: black;
 	position: absolute;
 	border-bottom-right-radius: 20px;
 `;
@@ -81,6 +94,76 @@ const Index = () => {
 
 	return (
 		<Main>
+			<Navbar />
+
+			<PicBody>
+				{data?.ok
+					? data?.users.map((data, i) => (
+							<Pic key={i}>
+								<Link href={`/users/${data.id}`}>
+									<a>
+										<PicTitle>
+											{data?.avatar ? (
+												<AvatarImage
+													src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
+												/>
+											) : (
+												<AvatarDiv />
+											)}
+											{data.nickname}
+										</PicTitle>
+										{data.backavatar ? (
+											<BackImage
+												src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
+											/>
+										) : (
+											<BackImage key={i} src="/reef_img.jpg" />
+										)}
+									</a>
+								</Link>
+							</Pic>
+					  ))
+					: ""}
+			</PicBody>
+		</Main>
+	);
+};
+
+export default Index;
+/*
+
+{data?.ok
+					? data?.users.map((data, i) => (
+							<Pic key={i}>
+								<Link href={`/users/${data.id}`}>
+									<a>
+										<Check>
+											{data?.avatar ? (
+												<AvatarImage
+													src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
+												/>
+											) : (
+												<AvatarDiv />
+											)}
+											{data.nickname}
+										</Check>
+										{data.backavatar ? (
+											<BackImage
+												src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
+											/>
+										) : (
+											<BackImage key={i} src="/reef_img.jpg" />
+										)}
+									</a>
+								</Link>
+							</Pic>
+					  ))
+					: ""}
+
+*/
+
+/*
+<Main>
 			<Navbar />
 
 			<Body>
@@ -113,7 +196,4 @@ const Index = () => {
 					: ""}
 			</Body>
 		</Main>
-	);
-};
-
-export default Index;
+*/
