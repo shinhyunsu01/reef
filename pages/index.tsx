@@ -1,11 +1,11 @@
 import { User } from ".prisma/client";
-import type { NextPage } from "next";
-import { useRouter } from "next/router";
 
 import styled from "styled-components";
 import useSWR from "swr";
 import Navbar from "../components/navbar";
 import Link from "next/link";
+import backInitImg from "../public/reef_img.jpg";
+import Image from "next/image";
 
 const Main = styled.div`
 	height: 100vh;
@@ -43,10 +43,6 @@ const Pic = styled.a`
 		transform-origin: left;
 	}
 	cursor: pointer;
-`;
-const BackImage = styled.img`
-	width: 100%;
-	height: 100%;
 `;
 
 const AvatarImage = styled.img`
@@ -105,7 +101,9 @@ const PicTitle = styled.div`
 		border-width: 2px;
 		border-radius: 5px 5px 0 0;
 	}
+	z-index: 1;
 `;
+
 interface ManyUser {
 	ok: boolean;
 	users: User[];
@@ -117,7 +115,6 @@ const Index = () => {
 	return (
 		<Main>
 			<Navbar />
-
 			<PicBody>
 				{data?.ok
 					? data?.users.map((data, i) => (
@@ -134,12 +131,22 @@ const Index = () => {
 											)}
 											{data.nickname}
 										</PicTitle>
+
 										{data.backavatar ? (
-											<BackImage
+											<Image
+												layout="responsive"
+												width={100}
+												height={100}
 												src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
 											/>
 										) : (
-											<BackImage key={i} src="/reef_img.jpg" />
+											<Image
+												layout="responsive"
+												width={100}
+												height={100}
+												src={backInitImg}
+												placeholder="blur"
+											/>
 										)}
 									</a>
 								</Link>
@@ -152,70 +159,3 @@ const Index = () => {
 };
 
 export default Index;
-/*
-
-{data?.ok
-					? data?.users.map((data, i) => (
-							<Pic key={i}>
-								<Link href={`/users/${data.id}`}>
-									<a>
-										<Check>
-											{data?.avatar ? (
-												<AvatarImage
-													src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
-												/>
-											) : (
-												<AvatarDiv />
-											)}
-											{data.nickname}
-										</Check>
-										{data.backavatar ? (
-											<BackImage
-												src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
-											/>
-										) : (
-											<BackImage key={i} src="/reef_img.jpg" />
-										)}
-									</a>
-								</Link>
-							</Pic>
-					  ))
-					: ""}
-
-*/
-
-/*
-<Main>
-			<Navbar />
-
-			<Body>
-				{data?.ok
-					? data?.users.map((data, i) => (
-							<Pic key={i}>
-								<Link href={`/users/${data.id}`}>
-									<a>
-										<Check>
-											{data?.avatar ? (
-												<AvatarImage
-													src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
-												/>
-											) : (
-												<AvatarDiv />
-											)}
-											{data.nickname}
-										</Check>
-										{data.backavatar ? (
-											<BackImage
-												src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
-											/>
-										) : (
-											<BackImage key={i} src="/reef_img.jpg" />
-										)}
-									</a>
-								</Link>
-							</Pic>
-					  ))
-					: ""}
-			</Body>
-		</Main>
-*/

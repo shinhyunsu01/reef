@@ -12,6 +12,8 @@ import { Com } from "../../components/styledCom";
 import { cloudFlareUpload } from "../../libs/client/cloudFlareUpload";
 import useMutation from "../../libs/client/useMutation";
 import useUser from "../../libs/client/useUser";
+import Image from "next/image";
+import backInitImg from "../../public/reef_img.jpg";
 
 const Main = styled.div`
 	height: 100vh;
@@ -47,17 +49,21 @@ const ProfilePic = styled.div`
 	z-index: 5;
 	position: relative;
 `;
-const ProfileImg = styled.img`
-	width: 100%;
-	height: 100%;
-	border-radius: 8rem;
+const ProfileImg = styled.div`
+	img {
+		width: 100%;
+		height: 100%;
+		border-radius: 8rem;
+	}
 `;
-const BackProfileImg = styled.img`
-	opacity: 30%;
-	width: 100%;
-	height: 100%;
-	border-radius: 20px;
-	position: absolute;
+const BackProfileImg = styled.div`
+	img {
+		opacity: 30%;
+		width: 100%;
+		height: 100%;
+		border-radius: 20px;
+		position: absolute;
+	}
 `;
 
 const BackEditPlus = styled.div`
@@ -317,11 +323,16 @@ const Index = () => {
 							""
 						)}
 						{aquaInfoInitData?.userInfo?.backavatar ? (
-							<BackProfileImg
-								src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData?.userInfo?.backavatar}/public`}
-							/>
+							<BackProfileImg>
+								<Image
+									layout="fill"
+									src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData?.userInfo?.backavatar}/public`}
+								/>
+							</BackProfileImg>
 						) : (
-							<BackProfileImg src="/reef_img.jpg" />
+							<BackProfileImg>
+								<Image layout="fill" src={backInitImg} placeholder="blur" />
+							</BackProfileImg>
 						)}
 
 						<ProfilePic>
@@ -343,9 +354,14 @@ const Index = () => {
 								""
 							)}
 							{aquaInfoInitData?.userInfo?.avatar ? (
-								<ProfileImg
-									src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData?.userInfo?.avatar}/public`}
-								/>
+								<ProfileImg>
+									<Image
+										layout="responsive"
+										width={100}
+										height={100}
+										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData?.userInfo?.avatar}/public`}
+									/>
+								</ProfileImg>
 							) : (
 								<ProfilePic style={{ backgroundColor: "blue" }} />
 							)}
