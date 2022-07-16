@@ -13,6 +13,7 @@ interface InputPros {
 }
 
 const Info = styled.div`
+	width: 100%;
 	margin-right: 5px;
 	display: flex;
 	flex-direction: column;
@@ -37,10 +38,13 @@ const InfoItem = styled.div<any>`
 	@media only screen and (max-width: 600px) {
 		font-size: 6px;
 		line-height: 6px;
+		margin-bottom: 5px;
+		padding-bottom: 5px;
 	}
 `;
 
 const ReefInput = styled.input`
+	width: 100%;
 	appearance: none;
 	outline: 2px solid transparent;
 	outline-offset: 2px;

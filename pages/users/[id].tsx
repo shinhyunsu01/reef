@@ -14,18 +14,18 @@ import useMutation from "../../libs/client/useMutation";
 import useUser from "../../libs/client/useUser";
 
 const Main = styled.div`
+	height: 100vh;
 	width: 100%;
-	height: 100%;
 	display: flex;
-	justify-content: center;
-	align-items: center;
+	margin: 0;
+	padding: 0;
 	flex-direction: column;
 `;
 
 const UserProfile = styled(Com.Center)`
 	height: 18rem;
 	padding: 10px;
-	padding-top: 80px;
+	margin-top: 40px;
 	width: 100%;
 `;
 
@@ -34,6 +34,10 @@ const UserProfileDivision = styled(Com.Center)`
 	width: 50%;
 	position: relative;
 	padding: 0 20px;
+
+	@media only screen and (max-width: 320px) {
+		padding: 0 5px;
+	}
 `;
 
 const ProfilePic = styled.div`
@@ -110,9 +114,14 @@ const WaterInfo = styled.div`
 `;
 
 const ProductInfo = styled.div`
+	width: 100%;
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 1rem;
+
+	@media only screen and (max-width: 480px) {
+		grid-template-columns: repeat(1, minmax(0, 1fr));
+	}
 `;
 
 const PostImg = styled.img`
@@ -286,149 +295,288 @@ const Index = () => {
 		router.reload();
 	};
 	return (
-		<Main>
-			<Navbar />
-			<UserProfile>
-				{/*왼쪽 유저 사진 */}
-				<UserProfileDivision>
-					{editOpen ? (
-						<BackEditPlus>
-							<label>
-								<input
-									type="file"
-									accept="image/*"
-									style={{ display: "none" }}
-									onChange={fileRead}
-									id="backImg"
-								/>
-								<EditPlusBtn style={{ cursor: "pointer" }} />
-							</label>
-						</BackEditPlus>
-					) : (
-						""
-					)}
-					{aquaInfoInitData?.userInfo?.backavatar ? (
-						<BackProfileImg
-							src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData?.userInfo?.backavatar}/public`}
-						/>
-					) : (
-						<BackProfileImg src="/reef_img.jpg" />
-					)}
-
-					<ProfilePic>
+		<>
+			<Main>
+				<Navbar />
+				<UserProfile>
+					<UserProfileDivision>
 						{editOpen ? (
-							<EditPlus>
+							<BackEditPlus>
 								<label>
 									<input
 										type="file"
 										accept="image/*"
 										style={{ display: "none" }}
 										onChange={fileRead}
-										id="profileImg"
+										id="backImg"
 									/>
-
 									<EditPlusBtn style={{ cursor: "pointer" }} />
 								</label>
-							</EditPlus>
+							</BackEditPlus>
 						) : (
 							""
 						)}
-						{aquaInfoInitData?.userInfo?.avatar ? (
-							<ProfileImg
-								src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData?.userInfo?.avatar}/public`}
+						{aquaInfoInitData?.userInfo?.backavatar ? (
+							<BackProfileImg
+								src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData?.userInfo?.backavatar}/public`}
 							/>
 						) : (
-							<ProfilePic style={{ backgroundColor: "blue" }} />
+							<BackProfileImg src="/reef_img.jpg" />
 						)}
-					</ProfilePic>
-				</UserProfileDivision>
 
-				{/*오른쪽 form */}
-				<UserProfileDivision>
-					<form
-						onSubmit={handleSubmit(onValid)}
-						style={{ width: "100%", height: "100%" }}
-					>
-						<ProfileTop>
-							<Input
-								db="nickname"
-								itemValue={
-									aquaInfoInitData?.userInfo?.nickname
-										? aquaInfoInitData?.userInfo?.nickname
-										: ""
-								}
-								editEnable={editOpen}
-								register={register("nickname")}
-								type="text"
-							/>
-							<End>
-								{user ? (
-									<>
-										<NaverUserInfo>
-											{user?.gender}/{user?.age}/{user?.email}
-										</NaverUserInfo>
+						<ProfilePic>
+							{editOpen ? (
+								<EditPlus>
+									<label>
+										<input
+											type="file"
+											accept="image/*"
+											style={{ display: "none" }}
+											onChange={fileRead}
+											id="profileImg"
+										/>
 
-										<Edit onClick={editFn} style={{ cursor: "pointer" }} />
+										<EditPlusBtn style={{ cursor: "pointer" }} />
+									</label>
+								</EditPlus>
+							) : (
+								""
+							)}
+							{aquaInfoInitData?.userInfo?.avatar ? (
+								<ProfileImg
+									src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData?.userInfo?.avatar}/public`}
+								/>
+							) : (
+								<ProfilePic style={{ backgroundColor: "blue" }} />
+							)}
+						</ProfilePic>
+					</UserProfileDivision>
 
-										{editOpen ? (
-											<button type="submit">
-												<Save style={{ cursor: "pointer" }} />
-											</button>
-										) : null}
-									</>
-								) : (
-									""
-								)}
-							</End>
-						</ProfileTop>
-
-						<ProductInfo>
-							{productData.map((v, i) => (
+					<UserProfileDivision>
+						<form
+							onSubmit={handleSubmit(onValid)}
+							style={{ width: "100%", height: "100%" }}
+						>
+							<ProfileTop>
 								<Input
-									key={i}
-									db={i}
-									item={v.name}
-									itemValue={v.value ? v.value : ""}
+									db="nickname"
+									itemValue={
+										aquaInfoInitData?.userInfo?.nickname
+											? aquaInfoInitData?.userInfo?.nickname
+											: ""
+									}
 									editEnable={editOpen}
-									register={register(v.db)}
+									register={register("nickname")}
 									type="text"
 								/>
-							))}
-						</ProductInfo>
-						<WaterInfo>
-							{waterData.map((v, i) => (
-								<Input
-									key={i}
-									db={i}
-									item={v.name}
-									itemValue={v.value ? v.value : ""}
-									editEnable={editOpen}
-									register={register(v.db)}
-									type="number"
-								/>
-							))}
-						</WaterInfo>
-					</form>
-				</UserProfileDivision>
-			</UserProfile>
+								<End>
+									{user ? (
+										<>
+											<NaverUserInfo>
+												{user?.gender}/{user?.age}/{user?.email}
+											</NaverUserInfo>
 
-			{/*추후 선택 할수 있게 할 예정 */}
-			<Season>
-				{[1].map((_, i) => (
-					<SeasonItem key={i}>Season {i + 1}</SeasonItem>
-				))}
-			</Season>
+											<Edit onClick={editFn} style={{ cursor: "pointer" }} />
 
-			<div className="grid grid-cols-3 gap-2">
-				{manyPost?.post?.map((data, i) => (
-					<PostImg
-						key={i}
-						src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
-					/>
-				))}
-			</div>
-		</Main>
+											{editOpen ? (
+												<button type="submit">
+													<Save style={{ cursor: "pointer" }} />
+												</button>
+											) : null}
+										</>
+									) : (
+										""
+									)}
+								</End>
+							</ProfileTop>
+
+							<ProductInfo>
+								{productData.map((v, i) => (
+									<Input
+										key={i}
+										db={i}
+										item={v.name}
+										itemValue={v.value ? v.value : ""}
+										editEnable={editOpen}
+										register={register(v.db)}
+										type="text"
+									/>
+								))}
+							</ProductInfo>
+							<WaterInfo>
+								{waterData.map((v, i) => (
+									<Input
+										key={i}
+										db={i}
+										item={v.name}
+										itemValue={v.value ? v.value : ""}
+										editEnable={editOpen}
+										register={register(v.db)}
+										type="number"
+									/>
+								))}
+							</WaterInfo>
+						</form>
+					</UserProfileDivision>
+				</UserProfile>
+
+				<Season>
+					{[1].map((_, i) => (
+						<SeasonItem key={i}>Season {i + 1}</SeasonItem>
+					))}
+				</Season>
+
+				<div className="grid grid-cols-3 gap-2">
+					{manyPost?.post?.map((data, i) => (
+						<PostImg
+							key={i}
+							src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
+						/>
+					))}
+				</div>
+			</Main>
+		</>
 	);
 };
 
 export default Index;
+/*<UserProfile>
+				
+					<UserProfileDivision>
+						{editOpen ? (
+							<BackEditPlus>
+								<label>
+									<input
+										type="file"
+										accept="image/*"
+										style={{ display: "none" }}
+										onChange={fileRead}
+										id="backImg"
+									/>
+									<EditPlusBtn style={{ cursor: "pointer" }} />
+								</label>
+							</BackEditPlus>
+						) : (
+							""
+						)}
+						{aquaInfoInitData?.userInfo?.backavatar ? (
+							<BackProfileImg
+								src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData?.userInfo?.backavatar}/public`}
+							/>
+						) : (
+							<BackProfileImg src="/reef_img.jpg" />
+						)}
+
+						<ProfilePic>
+							{editOpen ? (
+								<EditPlus>
+									<label>
+										<input
+											type="file"
+											accept="image/*"
+											style={{ display: "none" }}
+											onChange={fileRead}
+											id="profileImg"
+										/>
+
+										<EditPlusBtn style={{ cursor: "pointer" }} />
+									</label>
+								</EditPlus>
+							) : (
+								""
+							)}
+							{aquaInfoInitData?.userInfo?.avatar ? (
+								<ProfileImg
+									src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData?.userInfo?.avatar}/public`}
+								/>
+							) : (
+								<ProfilePic style={{ backgroundColor: "blue" }} />
+							)}
+						</ProfilePic>
+					</UserProfileDivision>
+
+					
+					<UserProfileDivision>
+						<form
+							onSubmit={handleSubmit(onValid)}
+							style={{ width: "100%", height: "100%" }}
+						>
+							<ProfileTop>
+								<Input
+									db="nickname"
+									itemValue={
+										aquaInfoInitData?.userInfo?.nickname
+											? aquaInfoInitData?.userInfo?.nickname
+											: ""
+									}
+									editEnable={editOpen}
+									register={register("nickname")}
+									type="text"
+								/>
+								<End>
+									{user ? (
+										<>
+											<NaverUserInfo>
+												{user?.gender}/{user?.age}/{user?.email}
+											</NaverUserInfo>
+
+											<Edit onClick={editFn} style={{ cursor: "pointer" }} />
+
+											{editOpen ? (
+												<button type="submit">
+													<Save style={{ cursor: "pointer" }} />
+												</button>
+											) : null}
+										</>
+									) : (
+										""
+									)}
+								</End>
+							</ProfileTop>
+
+							<ProductInfo>
+								{productData.map((v, i) => (
+									<Input
+										key={i}
+										db={i}
+										item={v.name}
+										itemValue={v.value ? v.value : ""}
+										editEnable={editOpen}
+										register={register(v.db)}
+										type="text"
+									/>
+								))}
+							</ProductInfo>
+							<WaterInfo>
+								{waterData.map((v, i) => (
+									<Input
+										key={i}
+										db={i}
+										item={v.name}
+										itemValue={v.value ? v.value : ""}
+										editEnable={editOpen}
+										register={register(v.db)}
+										type="number"
+									/>
+								))}
+							</WaterInfo>
+						</form>
+					</UserProfileDivision>
+				</UserProfile>
+
+				
+				<Season>
+					{[1].map((_, i) => (
+						<SeasonItem key={i}>Season {i + 1}</SeasonItem>
+					))}
+				</Season>
+
+				<div className="grid grid-cols-3 gap-2">
+					{manyPost?.post?.map((data, i) => (
+						<PostImg
+							key={i}
+							src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
+						/>
+					))}
+				</div>
+*/
