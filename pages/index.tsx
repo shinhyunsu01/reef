@@ -6,6 +6,9 @@ import Navbar from "../components/navbar";
 import Link from "next/link";
 import backInitImg from "../public/reef_img.jpg";
 import Image from "next/image";
+import { NextPage } from "next";
+
+import client from "../libs/server/client";
 
 const Main = styled.div`
 	height: 100vh;
@@ -105,57 +108,71 @@ const PicTitle = styled.div`
 `;
 
 interface ManyUser {
-	ok: boolean;
 	users: User[];
 }
 
-const Index = () => {
-	const { data, error } = useSWR<ManyUser>("/api/users");
-
+const Page: NextPage<ManyUser> = ({ users }) => {
+	//const { data, error } = useSWR<ManyUser>("/api/users");
 	return (
 		<Main>
 			<Navbar />
 			<PicBody>
-				{data?.ok
-					? data?.users.map((data, i) => (
-							<Pic key={i}>
-								<Link href={`/users/${data.id}`}>
-									<a>
-										<PicTitle>
-											{data?.avatar ? (
-												<AvatarImage
-													src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
-												/>
-											) : (
-												<AvatarDiv />
-											)}
-											{data.nickname}
-										</PicTitle>
+				{users.map((data, i) => (
+					<Pic key={i}>
+						<Link href={`/users/${data.id}`}>
+							<a>
+								<PicTitle>
+									{data?.avatar ? (
+										<AvatarImage
+											src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
+										/>
+									) : (
+										<AvatarDiv />
+									)}
+									{data.nickname}
+								</PicTitle>
 
-										{data.backavatar ? (
-											<Image
-												layout="responsive"
-												width={100}
-												height={100}
-												src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
-											/>
-										) : (
-											<Image
-												layout="responsive"
-												width={100}
-												height={100}
-												src={backInitImg}
-												placeholder="blur"
-											/>
-										)}
-									</a>
-								</Link>
-							</Pic>
-					  ))
-					: ""}
+								{data.backavatar ? (
+									<Image
+										layout="responsive"
+										width={100}
+										height={100}
+										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
+									/>
+								) : (
+									<Image
+										layout="responsive"
+										width={100}
+										height={100}
+										src={backInitImg}
+										placeholder="blur"
+									/>
+								)}
+							</a>
+						</Link>
+					</Pic>
+				))}
 			</PicBody>
 		</Main>
 	);
 };
 
-export default Index;
+export async function getStaticProps() {
+	console.log("BUILDING MAIN INDEX");
+	const manyUser = await client.user.findMany({
+		select: {
+			id: true,
+			nickname: true,
+			avatar: true,
+			backavatar: true,
+		},
+	});
+
+	return {
+		props: {
+			users: JSON.parse(JSON.stringify(manyUser)),
+		},
+	};
+}
+
+export default Page;

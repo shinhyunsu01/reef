@@ -178,25 +178,21 @@ interface resAquaInfoForm {
 
 const Index = () => {
 	const router = useRouter();
-	const { user } = useUser();
+	const { user } = useUser(); // middleware
 
 	const { data: aquaInfoInitData } = useSWR<resAquaInfoForm>(
 		typeof window === "undefined"
 			? null
 			: `/api/users/${Number(router.query.id)}`
 	);
-
-	const [aquaInfoFn] = useMutation(`/api/users/${Number(router.query.id)}`);
-
-	const [uploadFn] = useMutation("/api/users/me");
 	const { data: manyPost } = useSWR<resPost>(
 		typeof window === "undefined"
 			? null
 			: `/api/posts/${Number(router.query.id)}`
 	);
 
-	const { register, handleSubmit } = useForm();
-	const [editOpen, setEditOpen] = useState(false);
+	const [aquaInfoFn] = useMutation(`/api/users/${Number(router.query.id)}`);
+	const [uploadFn] = useMutation("/api/users/me");
 
 	const productData = [
 		{
@@ -273,6 +269,8 @@ const Index = () => {
 				: 0,
 		},
 	];
+	const { register, handleSubmit } = useForm();
+	const [editOpen, setEditOpen] = useState(false);
 
 	const editFn = () => {
 		if (editOpen === true) setEditOpen(false);
@@ -288,11 +286,10 @@ const Index = () => {
 	};
 
 	const fileRead = async (e: React.ChangeEvent) => {
+		e.preventDefault();
 		const input = e.target as HTMLInputElement;
 		if (!input.files?.length) return;
 		const file = input.files[0];
-
-		e.preventDefault();
 
 		const { uploadURL } = await (await fetch("/api/files")).json();
 		const imageId = await cloudFlareUpload(uploadURL, file);

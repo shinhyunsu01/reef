@@ -90,6 +90,7 @@ async function handler(
 			};
 
 			await req.session.save();
+			await res.revalidate("/");
 		}
 
 		if (req.body === "") {
