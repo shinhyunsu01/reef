@@ -61,12 +61,23 @@ const SearchInput = styled.input`
 	}
 	@media only screen and (max-width: 320px) {
 		width: 50px;
+		margin: 0 10px;
+
+		&:focus {
+			z-index: 1000;
+			width: 100px;
+			color: black;
+			padding-left: 16px;
+		}
 	}
 `;
 
 const SearchLogo = styled.div`
 	position: absolute;
 	padding-left: 8px;
+	@media only screen and (max-width: 320px) {
+		padding-left: 16px;
+	}
 `;
 
 const Reef = styled.div`
