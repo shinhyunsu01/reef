@@ -55,7 +55,7 @@ const AvatarImage = styled.img`
 	border-radius: 5rem;
 	margin-right: 0.2rem;
 
-	@media only screen and (max-width: 450px) {
+	@media only screen and (max-width: 480px) {
 		padding: 3px;
 		height: 1.8rem;
 		width: 1.8rem;
@@ -70,7 +70,7 @@ const AvatarDiv = styled.div`
 	margin-right: 1rem;
 	background-color: blue;
 
-	@media only screen and (max-width: 450px) {
+	@media only screen and (max-width: 480px) {
 		height: 1.8rem;
 		width: 1.8rem;
 		border-radius: 1.8rem;
@@ -88,6 +88,16 @@ const PicTitle = styled.div`
 	border-bottom-right-radius: 20px;
 
 	@media only screen and (max-width: 320px) {
+		font-size: 5px;
+		position: static;
+		color: black;
+		background-color: white;
+		align-items: end;
+		border-width: 2px;
+		border-radius: 5px 5px 0 0;
+	}
+
+	@media only screen and (max-width: 480px) {
 		font-size: 5px;
 		position: static;
 		color: black;

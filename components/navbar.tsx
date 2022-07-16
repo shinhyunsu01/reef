@@ -87,6 +87,7 @@ const Reef = styled.div`
 	cursor: pointer;
 	height: 48px;
 `;
+
 const Menu = styled(Com.ColCenter)`
 	justify-content: flex-end;
 	svg,
