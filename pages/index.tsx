@@ -24,6 +24,7 @@ const PicBody = styled.div`
 
 const Pic = styled.a`
 	width: 100%;
+
 	aspect-ratio: 1 / 1;
 	transition-property: transform, backdrop-filter;
 	transition-duration: 500ms;
@@ -50,12 +51,13 @@ const AvatarImage = styled.img`
 	height: 5rem;
 	width: 5rem;
 	border-radius: 5rem;
-	margin-right: 1rem;
+	margin-right: 0.2rem;
 
 	@media only screen and (max-width: 450px) {
-		height: 2rem;
-		width: 2rem;
-		border-radius: 2rem;
+		padding: 3px;
+		height: 1.8rem;
+		width: 1.8rem;
+		border-radius: 1.8rem;
 	}
 `;
 
@@ -67,19 +69,31 @@ const AvatarDiv = styled.div`
 	background-color: blue;
 
 	@media only screen and (max-width: 450px) {
-		height: 2rem;
-		width: 2rem;
-		border-radius: 2rem;
+		height: 1.8rem;
+		width: 1.8rem;
+		border-radius: 1.8rem;
 	}
 `;
 
 const PicTitle = styled.div`
+	width: 100%;
+
 	display: flex;
-	padding: 5px;
-	background-color: rgba(255, 255, 255, 0.5);
-	color: black;
+
+	background-color: rgba(0, 0, 0, 0.5);
+	color: white;
 	position: absolute;
 	border-bottom-right-radius: 20px;
+
+	@media only screen and (max-width: 320px) {
+		font-size: 5px;
+		position: static;
+		color: black;
+		background-color: white;
+		align-items: end;
+		border-width: 2px;
+		border-radius: 5px 5px 0 0;
+	}
 `;
 interface ManyUser {
 	ok: boolean;
