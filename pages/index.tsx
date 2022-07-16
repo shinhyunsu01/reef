@@ -78,14 +78,13 @@ const AvatarDiv = styled.div`
 `;
 
 const PicTitle = styled.div`
-	width: 100%;
-
 	display: flex;
 
 	background-color: rgba(0, 0, 0, 0.5);
 	color: white;
 	position: absolute;
 	border-bottom-right-radius: 20px;
+	padding-right: 10px;
 
 	@media only screen and (max-width: 320px) {
 		font-size: 5px;
@@ -113,10 +112,7 @@ interface ManyUser {
 }
 
 const Index = () => {
-	const router = useRouter();
 	const { data, error } = useSWR<ManyUser>("/api/users");
-
-	const onClick = (data: any) => {};
 
 	return (
 		<Main>
