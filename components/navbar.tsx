@@ -20,11 +20,12 @@ import Link from "next/link";
 const Header = styled(Com.ColCenter)`
 	background-color: white;
 	top: 0px;
-	height: 48px;
+	width: 100%;
+	height: 55px;
 	justify-content: space-between;
+
 	position: fixed;
 	max-width: 1024px;
-	width: 100%;
 	padding-left: 1.5rem;
 	padding-right: 1.5rem;
 	z-index: 100;
@@ -84,6 +85,7 @@ const Reef = styled.div`
 	font-weight: bold;
 	font-size: 27px;
 	cursor: pointer;
+	height: 48px;
 `;
 const Menu = styled(Com.ColCenter)`
 	justify-content: flex-end;

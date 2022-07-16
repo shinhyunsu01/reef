@@ -8,6 +8,7 @@ import Navbar from "../components/navbar";
 import Link from "next/link";
 
 const Main = styled.div`
+	height: 100%;
 	width: 100%;
 	display: flex;
 	justify-content: center;

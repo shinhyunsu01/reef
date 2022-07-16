@@ -14,9 +14,11 @@ import useMutation from "../../libs/client/useMutation";
 import useUser from "../../libs/client/useUser";
 
 const Main = styled.div`
-	height: 100%;
 	width: 100%;
+	height: 100%;
 	display: flex;
+	justify-content: center;
+	align-items: center;
 	flex-direction: column;
 `;
 
@@ -24,6 +26,7 @@ const UserProfile = styled(Com.Center)`
 	height: 18rem;
 	padding: 10px;
 	padding-top: 80px;
+	width: 100%;
 `;
 
 const UserProfileDivision = styled(Com.Center)`
@@ -64,11 +67,6 @@ const EditPlus = styled.div`
 	position: absolute;
 	cursor: pointer;
 	z-index: 50;
-`;
-const Name = styled.span`
-	font-size: 20px;
-	font-weight: bold;
-	margin-right: 20px;
 `;
 
 const ProfileTop = styled.div`

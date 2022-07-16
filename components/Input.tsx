@@ -30,11 +30,11 @@ const InfoItem = styled.div<any>`
 
 	text-align: ${(props) => (props.type === "number" ? "center" : null)};
 
-	@media only screen and (max-width: 600px) {
-		font-size: 8px;
-		line-height: 8px;
-	}
 	@media only screen and (max-width: 768px) {
+		font-size: 6px;
+		line-height: 6px;
+	}
+	@media only screen and (max-width: 600px) {
 		font-size: 6px;
 		line-height: 6px;
 	}
@@ -62,8 +62,8 @@ const ReefInput = styled.input`
 	text-align: ${(props) => (props.type === "number" ? "center" : null)};
 
 	@media only screen and (max-width: 600px) {
-		font-size: 0.7rem;
-		line-height: 0.7rem;
+		font-size: 8px;
+		line-height: 8px;
 	}
 `;
 
