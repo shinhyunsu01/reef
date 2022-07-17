@@ -14,7 +14,12 @@ import useMutation from "../../libs/client/useMutation";
 import useUser from "../../libs/client/useUser";
 import Image from "next/image";
 import backInitImg from "../../public/reef_img.jpg";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import {
+	GetServerSideProps,
+	GetStaticPaths,
+	GetStaticProps,
+	NextPage,
+} from "next";
 import client from "../../libs/server/client";
 
 const Main = styled.div`
@@ -181,6 +186,7 @@ interface resAquaInfoForm {
 const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 	const router = useRouter();
 	const { user } = useUser(); // middleware
+
 	/*
 	const { data: aquaInfoInitData } = useSWR<resAquaInfoForm>(
 		typeof window === "undefined"
@@ -291,6 +297,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 
 		router.reload();
 	};
+
 	return (
 		<>
 			<Main>
@@ -373,7 +380,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 									type="text"
 								/>
 								<End>
-									{user ? (
+									{user?.id === Number(router?.query?.id) ? (
 										<>
 											<NaverUserInfo>
 												{user?.gender}/{user?.age}/{user?.email}
@@ -445,6 +452,9 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		</>
 	);
 };
+
+//export const getServerSideProps: GetServerSideProps = () => {};
+
 export const getStaticPaths: GetStaticPaths = () => {
 	return {
 		paths: [],

@@ -35,7 +35,8 @@ async function handler(
 				},
 			},
 		});
-
+		await res.revalidate("/");
+		await res.revalidate(`/users/${user?.id}`);
 		res.json({
 			ok: true,
 			post,
