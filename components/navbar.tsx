@@ -284,7 +284,61 @@ export default function Navbar() {
 
 	return (
 		<>
-			<Header></Header>
+			<Header>
+				<Reef onClick={() => router.push("/")}>REEF</Reef>
+				<SearchTool>
+					<Search>
+						<SearchInput required type="text" onChange={onChange} />
+						<SearchLogo>
+							<SearchSvg />
+						</SearchLogo>
+					</Search>
+					{searchFlag ? (
+						<SearchMiniOpen>
+							{searchInput
+								? searchInput.map((ee: any, i: any) => (
+										<HashTagBtn
+											onClick={() => {
+												hashbtn(ee.name);
+											}}
+											id={ee.name}
+											key={i}
+										>
+											<div>#{ee.name}</div>
+											<div style={{ display: "flex" }}>{ee.value}</div>
+										</HashTagBtn>
+								  ))
+								: ""}
+						</SearchMiniOpen>
+					) : (
+						""
+					)}
+				</SearchTool>
+
+				<Menu>
+					<HomeSvg onClick={() => router.push("/")} />
+					{user?.email || userInfo?.email ? (
+						<Link href={`/users/${user?.id}`}>
+							<a>
+								<ProfileSvg />
+							</a>
+						</Link>
+					) : (
+						<ProfileSvg onClick={loginopenFn} />
+					)}
+					{user?.email || userInfo?.email ? (
+						<UploadSvg onClick={opnUpload} />
+					) : null}
+					{user?.email || userInfo?.email ? (
+						<NaverSvg onClick={handleNaverLogin} style={{ display: "none" }} />
+					) : (
+						<NaverSvg onClick={handleNaverLogin} />
+					)}
+					{user?.email || userInfo?.email ? (
+						<LogoutSvg onClick={NaverLogout} />
+					) : null}
+				</Menu>
+			</Header>
 			{uploadopen ? <Upload closeModal={closeUpload} /> : null}
 			<LoginModal
 				state={loginopen}
