@@ -287,16 +287,6 @@ export default function Navbar() {
 	return (
 		<>
 			<Header>
-				<Reef onClick={() => router.push("/")}>REEF</Reef>
-				<SearchTool>
-					<Search>
-						<SearchInput required type="text" onChange={onChange} />
-						<SearchLogo>
-							<SearchSvg />
-						</SearchLogo>
-					</Search>
-				</SearchTool>
-
 				<Menu>
 					<HomeSvg onClick={() => router.push("/")} />
 					{user?.email || userInfo?.email ? (
