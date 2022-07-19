@@ -19,6 +19,7 @@ import { Com, Modal } from "../components/styledCom";
 import Link from "next/link";
 import LoginModal from "./LoginModal";
 import useSWR from "swr";
+import useSearch from "../libs/client/useSearch";
 
 const Header = styled(Com.ColCenter)`
 	background-color: white;
@@ -145,7 +146,7 @@ interface MutationResult {
 
 export default function Navbar() {
 	const { user } = useUser();
-	const { data: searchData } = useSWR("/api/search");
+	const { data: searchData, isLoading } = useSearch();
 	const router = useRouter();
 	const [uploadopen, setUploadopen] = useState(false);
 	const [loginopen, setLoginopen] = useState(false);
@@ -161,18 +162,19 @@ export default function Navbar() {
 	}*/
 
 	useEffect(() => {
-		console.log("searchData", searchData);
-		hashtagArr = searchData?.hashtags
-			.map((strData: any) => {
-				return strData.hashtag;
-			})
-			.toString()
-			.split(",")
-			.map((d: any) => d.slice(1));
+		if (isLoading) {
+			hashtagArr = searchData?.hashtags
+				.map((strData: any) => {
+					return strData.hashtag;
+				})
+				.toString()
+				.split(",")
+				.map((d: any) => d.slice(1));
 
-		hashtagArr?.forEach((x: any) => {
-			hashtag[x] = (hashtag[x] || 0) + 1;
-		});
+			hashtagArr?.forEach((x: any) => {
+				hashtag[x] = (hashtag[x] || 0) + 1;
+			});
+		}
 	});
 
 	let outtput: any = [];
