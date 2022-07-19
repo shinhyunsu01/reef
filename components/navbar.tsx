@@ -200,7 +200,7 @@ export default function Navbar() {
 		const naver = (window as any).naver;
 		let naverLogin: any;
 		// http://localhost:3000
-		// https://reef-nine.vercel.app dd
+		// https://reef-nine.vercel.app
 		const login = () => {
 			naverLogin = new naver.LoginWithNaverId({
 				clientId: process.env.NEXT_PUBLIC_NAVER_LOGIN_ID, // ClientID
