@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import Image from "Next/image";
+import Image from "next/image";
 
 const AvatarImage = styled.div`
 	height: 4rem;
