@@ -156,7 +156,11 @@ export default function Navbar() {
 
 	let hashtag: any[] = [];
 	let hashtagArr;
-	if (searchData) {
+	/*if (searchData) {
+		
+	}*/
+
+	useEffect(() => {
 		console.log("searchData", searchData);
 		hashtagArr = searchData?.hashtags
 			.map((strData: any) => {
@@ -169,7 +173,7 @@ export default function Navbar() {
 		hashtagArr?.forEach((x: any) => {
 			hashtag[x] = (hashtag[x] || 0) + 1;
 		});
-	}
+	});
 
 	let outtput: any = [];
 	const onChange = (e: any) => {
