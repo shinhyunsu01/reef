@@ -155,18 +155,21 @@ export default function Navbar() {
 
 	const { data: searchData } = useSWR("/api/search");
 
-	let hashtagArr = searchData?.hashtags
-		.map((strData: any) => {
-			return strData.hashtag;
-		})
-		.toString()
-		.split(",")
-		.map((d: any) => d.slice(1));
-
 	let hashtag: any[] = [];
-	hashtagArr?.forEach((x: any) => {
-		hashtag[x] = (hashtag[x] || 0) + 1;
-	});
+	let hashtagArr;
+	if (searchData) {
+		hashtagArr = searchData?.hashtags
+			.map((strData: any) => {
+				return strData.hashtag;
+			})
+			.toString()
+			.split(",")
+			.map((d: any) => d.slice(1));
+
+		hashtagArr?.forEach((x: any) => {
+			hashtag[x] = (hashtag[x] || 0) + 1;
+		});
+	}
 
 	let outtput: any = [];
 	const onChange = (e: any) => {
