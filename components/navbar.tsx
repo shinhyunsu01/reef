@@ -324,7 +324,34 @@ export default function Navbar() {
 		<>
 			<Header>
 				<Reef onClick={() => router.push("/")}>REEF</Reef>
-
+				<SearchTool>
+					<Search>
+						<SearchInput required type="text" onChange={onChange} />
+						<SearchLogo>
+							<SearchSvg />
+						</SearchLogo>
+					</Search>
+					{searchFlag ? (
+						<SearchMiniOpen>
+							{searchInput
+								? searchInput.map((ee: any, i: any) => (
+										<HashTagBtn
+											onClick={() => {
+												hashbtn(ee.name);
+											}}
+											id={ee.name}
+											key={i}
+										>
+											<div>#{ee.name}</div>
+											<div style={{ display: "flex" }}>{ee.value}</div>
+										</HashTagBtn>
+								  ))
+								: ""}
+						</SearchMiniOpen>
+					) : (
+						""
+					)}
+				</SearchTool>
 				<Menu>
 					<HomeSvg onClick={() => router.push("/")} />
 					{user?.email || userInfo?.email ? (
