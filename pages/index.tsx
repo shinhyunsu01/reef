@@ -97,36 +97,38 @@ const Page: NextPage<ManyUser> = ({ users }) => {
 		<Main>
 			<Navbar />
 			<PicBody>
-				{users.map((data, i) => (
-					<Pic key={i}>
-						<PicTitle>
-							<ShowAvatar
-								data={data?.avatar}
-								layout="responsive"
-								width={100}
-								height={100}
-							/>
-							{data.nickname}
-						</PicTitle>
+				{users
+					? users.map((data, i) => (
+							<Pic key={i}>
+								<PicTitle>
+									<ShowAvatar
+										data={data?.avatar}
+										layout="responsive"
+										width={100}
+										height={100}
+									/>
+									{data.nickname}
+								</PicTitle>
 
-						{data.backavatar ? (
-							<Image
-								layout="responsive"
-								width={100}
-								height={100}
-								src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
-							/>
-						) : (
-							<Image
-								layout="responsive"
-								width={100}
-								height={100}
-								src={backInitImg}
-								placeholder="blur"
-							/>
-						)}
-					</Pic>
-				))}
+								{data.backavatar ? (
+									<Image
+										layout="responsive"
+										width={100}
+										height={100}
+										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
+									/>
+								) : (
+									<Image
+										layout="responsive"
+										width={100}
+										height={100}
+										src={backInitImg}
+										placeholder="blur"
+									/>
+								)}
+							</Pic>
+					  ))
+					: ""}
 			</PicBody>
 		</Main>
 	);

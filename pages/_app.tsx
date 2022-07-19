@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 				<Init>
 					<Head>
 						<script
-							src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js"
+							src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2-nopolyfill.js"
 							defer
 						/>
 					</Head>
