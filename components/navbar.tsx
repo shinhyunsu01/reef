@@ -287,7 +287,6 @@ export default function Navbar() {
 		router.reload();
 	};
 	const hashbtn = (e: any) => {
-		console.log("e", e);
 		router.push(`/search/${e}`);
 	};
 	/*
