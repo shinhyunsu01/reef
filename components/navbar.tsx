@@ -147,7 +147,7 @@ interface MutationResult {
 
 export default function Navbar() {
 	const { user } = useUser();
-	//const { data: searchData, isLoading } = useSearch();
+	const { data: searchData, isLoading } = useSearch();
 	const router = useRouter();
 	const [uploadopen, setUploadopen] = useState(false);
 	const [loginopen, setLoginopen] = useState(false);
@@ -161,26 +161,24 @@ export default function Navbar() {
 	/*if (searchData) {
 		
 	}*/
-	/*
-	useEffect(() => {
-		if (isLoading) {
-			hashtagArr = searchData?.hashtags
-				.map((strData: any) => {
-					return strData.hashtag;
-				})
-				.toString()
-				.split(",")
-				.map((d: any) => d.slice(1));
 
-			hashtagArr?.forEach((x: any) => {
-				hashtag[x] = (hashtag[x] || 0) + 1;
-			});
-		}
-	}, [isLoading]);*/
+	if (isLoading) {
+		hashtagArr = searchData?.hashtags
+			.map((strData: any) => {
+				return strData.hashtag;
+			})
+			.toString()
+			.split(",")
+			.map((d: any) => d.slice(1));
+
+		hashtagArr?.forEach((x: any) => {
+			hashtag[x] = (hashtag[x] || 0) + 1;
+		});
+	}
 
 	let outtput: any = [];
 	const onChange = (e: any) => {
-		/*if (hashtag) {
+		if (hashtag) {
 			let check: any[] = Object.keys(hashtag).filter((inputdata) =>
 				inputdata.includes(e.target.value)
 			);
@@ -194,7 +192,7 @@ export default function Navbar() {
 			if (e.target.value != "") setsearchFlag(true);
 			else setsearchFlag(false);
 			setSearchinput(outtput);
-		}*/
+		}
 	};
 
 	const opnUpload = () => {

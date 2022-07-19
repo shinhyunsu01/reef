@@ -87,8 +87,6 @@ interface ManyUser {
 }
 
 const Page: NextPage<ManyUser> = ({ users }) => {
-	const { data: searchData, isLoading } = useSearch();
-	console.log("searchData", searchData);
 	//const Page = () => {
 	//const { data: manyUser, error } = useSWR<ManyUser>("/api/users");
 
