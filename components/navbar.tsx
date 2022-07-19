@@ -316,8 +316,6 @@ export default function Navbar() {
 						""
 					)}
 				</SearchTool>
-
-				<Menu></Menu>
 			</Header>
 			{uploadopen ? <Upload closeModal={closeUpload} /> : null}
 			<LoginModal
