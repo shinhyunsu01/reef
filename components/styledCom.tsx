@@ -11,27 +11,6 @@ export const Com = {
 		align-items: center;
 	`,
 };
-/*
-const Uploadflex = styled(Com.Center)`
-	width: 80%;
-	height: 60%;
-	padding: 1.2rem 1.2rem;
-	min-height: 200px;
-	overflow: auto;
-	background-color: #fff;
-	border-radius: 20px;
-
-	justify-content: space-between;
-	position: relative;
-`;
-
-const UploadModal = styled.div`
-	flex-grow: 1;
-	flex-flow: row wrap;
-	height: 100%;
-	width: 50%;
-`;
-*/
 export const Modal = {
 	Init: styled(Com.Center)`
 		display: flex;

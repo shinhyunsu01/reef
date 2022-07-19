@@ -22,6 +22,7 @@ async function handler(
 	if (req.method === "GET") {
 	}
 	if (req.method === "POST") {
+		console.log("afs");
 		delete req.body.isLoading;
 		delete req.body.error;
 		let hashtagStr = "";
@@ -41,8 +42,9 @@ async function handler(
 				},
 			},
 		});
+		console.log(post, req.body);
+		await res.revalidate(`/users/${user?.id}`);
 		//await res.revalidate("/");
-		//await res.revalidate(`/users/${user?.id}`);
 		res.json({
 			ok: true,
 			post,

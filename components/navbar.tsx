@@ -200,11 +200,11 @@ export default function Navbar() {
 		const naver = (window as any).naver;
 		let naverLogin: any;
 		// http://localhost:3000
-		// https://reef-nine.vercel.app/#
+		// https://reef-nine.vercel.app
 		const login = () => {
 			naverLogin = new naver.LoginWithNaverId({
 				clientId: process.env.NEXT_PUBLIC_NAVER_LOGIN_ID, // ClientID
-				callbackUrl: "http://localhost:3000",
+				callbackUrl: "https://reef-nine.vercel.app",
 				isPopup: false, // 팝업 형태로 인증 여부
 				loginButton: { color: "green", type: 1, height: 10 },
 			});
@@ -275,7 +275,8 @@ export default function Navbar() {
 		router.reload();
 	};
 	const hashbtn = (e: any) => {
-		router.push(`/search/${e.target.id}`);
+		console.log("e", e);
+		router.push(`/search/${e}`);
 	};
 
 	return (
@@ -292,8 +293,14 @@ export default function Navbar() {
 					{searchFlag ? (
 						<SearchMiniOpen>
 							{searchInput
-								? searchInput.map((ee: any) => (
-										<HashTagBtn onClick={hashbtn} id={ee.name}>
+								? searchInput.map((ee: any, i: any) => (
+										<HashTagBtn
+											onClick={() => {
+												hashbtn(ee.name);
+											}}
+											id={ee.name}
+											key={i}
+										>
 											<div>#{ee.name}</div>
 											<div style={{ display: "flex" }}>{ee.value}</div>
 										</HashTagBtn>
@@ -338,18 +345,3 @@ export default function Navbar() {
 		</>
 	);
 }
-/*
-{loginopen ? (
-				<PlzLoginModal ref={modalRef}>
-					<LoginModal>
-						<div>로그인</div>
-						<p>REEF에 오신걸 환영합니다</p>
-						<NaverSvg onClick={handleNaverLogin} style={{ width: "80px" }} />
-						<CloseModal>
-							<CloseSvg onClick={loginopenFn} />
-						</CloseModal>
-					</LoginModal>
-				</PlzLoginModal>
-			) : null}
-
-*/

@@ -70,9 +70,11 @@ const MemoTip = styled.div`
 `;
 
 const UploadBtn = styled.div`
-	width: 50%;
-	height: 35px;
+	width: 60%;
+	height: 100%;
+	padding: 5px;
 	border-radius: 20px;
+
 	background-color: black;
 	color: white;
 	text-align: center;
@@ -83,8 +85,15 @@ const UploadBtn = styled.div`
 		background-color: white;
 		color: black;
 	}
-	@media all and (max-width: 600px) {
-		height: 30px;
+
+	@media all and (max-width: 768px) {
+		font-size: 10px;
+	}
+	@media all and (max-width: 480px) {
+		font-size: 8px;
+	}
+	@media all and (min-width: 768px) {
+		font-size: 16px;
 	}
 `;
 const PreviewImg = styled.img`

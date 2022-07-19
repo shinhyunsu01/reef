@@ -20,7 +20,7 @@ const AvatarImage = styled.div`
 `;
 interface inputType {
 	data: string | null;
-	layout: "fill" | "fixed" | "intrinsic" | "responsive" | "undefined";
+	layout: any;
 	width: number;
 	height: number;
 }

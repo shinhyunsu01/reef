@@ -81,58 +81,56 @@ const PicTitle = styled.div`
 `;
 
 interface ManyUser {
-	ok: boolean;
+	//ok: boolean;
 	users: User[];
 }
 
-//const Page: NextPage<ManyUser> = ({ users }) => {
-const Page = () => {
-	const { data: manyUser, error } = useSWR<ManyUser>("/api/users");
+const Page: NextPage<ManyUser> = ({ users }) => {
+	//const Page = () => {
+	//const { data: manyUser, error } = useSWR<ManyUser>("/api/users");
 	return (
 		<Main>
 			<Navbar />
 			<PicBody>
-				{manyUser
-					? manyUser.users.map((data, i) => (
-							<Pic key={i}>
-								<Link href={`/users/${data.id}`}>
-									<a>
-										<PicTitle>
-											<ShowAvatar
-												data={data?.avatar}
-												layout="responsive"
-												width={100}
-												height={100}
-											/>
-											{data.nickname}
-										</PicTitle>
+				{users.map((data, i) => (
+					<Pic key={i}>
+						<Link href={`/users/${data.id}`}>
+							<a>
+								<PicTitle>
+									<ShowAvatar
+										data={data?.avatar}
+										layout="responsive"
+										width={100}
+										height={100}
+									/>
+									{data.nickname}
+								</PicTitle>
 
-										{data.backavatar ? (
-											<Image
-												layout="responsive"
-												width={100}
-												height={100}
-												src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
-											/>
-										) : (
-											<Image
-												layout="responsive"
-												width={100}
-												height={100}
-												src={backInitImg}
-												placeholder="blur"
-											/>
-										)}
-									</a>
-								</Link>
-							</Pic>
-					  ))
-					: ""}
+								{data.backavatar ? (
+									<Image
+										layout="responsive"
+										width={100}
+										height={100}
+										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
+									/>
+								) : (
+									<Image
+										layout="responsive"
+										width={100}
+										height={100}
+										src={backInitImg}
+										placeholder="blur"
+									/>
+								)}
+							</a>
+						</Link>
+					</Pic>
+				))}
 			</PicBody>
 		</Main>
 	);
 };
-/*
+
 export async function getStaticProps() {
 	console.log("BUILDING MAIN INDEX");
 	const manyUser = await client.user.findMany({
@@ -149,6 +147,6 @@ export async function getStaticProps() {
 			users: JSON.parse(JSON.stringify(manyUser)),
 		},
 	};
-}*/
+}
 
 export default Page;

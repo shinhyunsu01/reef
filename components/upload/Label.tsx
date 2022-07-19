@@ -29,14 +29,14 @@ const Text = styled(Com.Center)`
 	height: 2.25rem;
 	font-weight: 600;
 
-	@media all and (max-width: 600px) {
-		font-size: 8px;
-		padding: 0.7rem;
+	@media all and (max-width: 768px) {
+		font-size: 10px;
+		padding: 0.5rem;
 		height: 1rem;
 	}
-	@media all and (min-width: 600px) and (max-width: 768px) {
-		font-size: 10px;
-		padding: 0.8rem;
+	@media all and (max-width: 480px) {
+		font-size: 8px;
+		padding: 0.4rem;
 		height: 1rem;
 	}
 `;

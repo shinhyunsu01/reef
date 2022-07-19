@@ -95,12 +95,11 @@ async function handler(
 			});
 
 			await req.session.save();
-			//await res.revalidate("/");
+			await res.revalidate("/");
 		}
 
 		if (req.body === "") {
-			//console.log("check");
-			//delete req.session.user;
+			delete req.session.user;
 			await req.session.destroy();
 		}
 		res.json({

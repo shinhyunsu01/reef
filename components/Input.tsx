@@ -24,6 +24,9 @@ const Item = styled.div`
 	align-items: center;
 `;
 const InfoItem = styled.div<any>`
+	display: flex;
+	align-items: center;
+	text-align: center;
 	border-bottom-width: ${(props) =>
 		props.name === "nickname" ? "0px" : "2px"};
 	color: gray;

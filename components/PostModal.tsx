@@ -100,7 +100,7 @@ const PostModal = ({ handler, post }: any) => {
 								{post.data.hashtag
 									? post.data.hashtag
 											.split(",")
-											.map((hash: any) => <Kind>{hash}</Kind>)
+											.map((hash: any, i: any) => <Kind key={i}>{hash}</Kind>)
 									: ""}
 							</Flex>
 						</NickName>

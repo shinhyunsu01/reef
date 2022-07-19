@@ -8,6 +8,19 @@ const Line = styled(Com.ColCenter)``;
 const Title = styled.div`
 	display: flex;
 	width: 140px;
+	font-size: 12px;
+	@media all and (max-width: 768px) {
+		font-size: 10px;
+		width: 40px;
+	}
+	@media all and (max-width: 480px) {
+		font-size: 8px;
+		width: 20px;
+	}
+	@media all and (min-width: 768px) {
+		font-size: 16px;
+		width: 60px;
+	}
 `;
 const Question = styled(Com.ColCenter)`
 	margin-top: 1rem;

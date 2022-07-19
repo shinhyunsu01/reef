@@ -217,17 +217,17 @@ interface stateModal {
 	data: UploadInfo;
 }
 
-/*
 interface resAquaInfoForm {
 	info: AquaInfoForm;
 	userInfo: User;
 	posts: UploadInfo[];
 }
-const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {*/
-const Page = () => {
+const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
+	//const Page = () => {
 	const router = useRouter();
 	const { user } = useUser(); // middleware
 
+	/*
 	const { data: aquaInfoInitData } = useSWR<resAquaInfoForm>(
 		typeof window === "undefined"
 			? null
@@ -237,7 +237,7 @@ const Page = () => {
 		typeof window === "undefined"
 			? null
 			: `/api/posts/${Number(router.query.id)}`
-	);
+	);*/
 
 	const [aquaInfoFn] = useMutation(`/api/users/${Number(router.query.id)}`);
 	const [uploadFn] = useMutation("/api/users/me");
@@ -246,26 +246,22 @@ const Page = () => {
 		{
 			db: "skimmer",
 			name: "스키머 / 제조사",
-			value: aquaInfoInitData?.info?.skimmer
-				? aquaInfoInitData?.info?.skimmer
-				: "",
+			value: info?.skimmer ? info?.skimmer : "",
 		},
 		{
 			db: "watertank",
 			name: "수조 / 하단 섬프(O,X) / 제조사",
-			value: aquaInfoInitData?.info?.watertank,
+			value: info?.watertank,
 		},
 		{
 			db: "lamp",
 			name: "조명",
-			value: aquaInfoInitData?.info?.lamp ? aquaInfoInitData?.info?.lamp : "",
+			value: info?.lamp ? info?.lamp : "",
 		},
 		{
 			db: "watermotor",
 			name: "수류모터 / 제조사",
-			value: aquaInfoInitData?.info?.watermotor
-				? aquaInfoInitData?.info?.watermotor
-				: "",
+			value: info?.watermotor ? info?.watermotor : "",
 		},
 	];
 
@@ -273,48 +269,42 @@ const Page = () => {
 		{
 			db: "temp",
 			name: "온도",
-			value: aquaInfoInitData?.info?.temp ? aquaInfoInitData?.info?.temp : 0,
+			value: info?.temp ? info?.temp : 0,
 		},
 		{
 			db: "ph",
 			name: "ph",
-			value: aquaInfoInitData?.info?.ph ? aquaInfoInitData?.info?.ph : 0,
+			value: info?.ph ? info?.ph : 0,
 		},
 		{
 			db: "salt",
 			name: "염도",
-			value: aquaInfoInitData?.info?.salt ? aquaInfoInitData?.info?.salt : 0,
+			value: info?.salt ? info?.salt : 0,
 		},
 		{
 			db: "alkalinity",
 			name: "경도",
-			value: aquaInfoInitData?.info?.alkalinity,
+			value: info?.alkalinity,
 		},
 		{
 			db: "calcium",
 			name: "칼슘",
-			value: aquaInfoInitData?.info?.calcium
-				? aquaInfoInitData?.info?.calcium
-				: 0,
+			value: info?.calcium ? info?.calcium : 0,
 		},
 		{
 			db: "mag",
 			name: "마그네슘",
-			value: aquaInfoInitData?.info?.mag ? aquaInfoInitData?.info?.mag : 0,
+			value: info?.mag ? info?.mag : 0,
 		},
 		{
 			db: "nitrate",
 			name: "질산염",
-			value: aquaInfoInitData?.info?.nitrate
-				? aquaInfoInitData?.info?.nitrate
-				: 0,
+			value: info?.nitrate ? info?.nitrate : 0,
 		},
 		{
 			db: "phosphorus",
 			name: "인산염",
-			value: aquaInfoInitData?.info?.phosphorus
-				? aquaInfoInitData?.info?.phosphorus
-				: 0,
+			value: info?.phosphorus ? info?.phosphorus : 0,
 		},
 	];
 	const { register, handleSubmit } = useForm();
@@ -352,14 +342,14 @@ const Page = () => {
 		router.reload();
 	};
 	const postImgClick = (resData?: UploadInfo) => {
-		if (resData && aquaInfoInitData) {
+		if (resData) {
 			//const userInfoData = aquaInfoInitData?.userInfo;
 			//const data = { ...resData, userInfoData };
 			//setPostModal((prev) => ({ ...prev, data }));
 			const data = {
 				postavatar: resData.avatar,
-				avatar: aquaInfoInitData?.userInfo.avatar,
-				nickname: aquaInfoInitData?.userInfo.nickname,
+				avatar: userInfo.avatar,
+				nickname: userInfo.nickname,
 				coralType: resData?.coralType,
 				hashtag: resData?.hashtag,
 				description: resData?.description,
@@ -393,11 +383,11 @@ const Page = () => {
 						) : (
 							""
 						)}
-						{aquaInfoInitData?.userInfo?.backavatar ? (
+						{userInfo?.backavatar ? (
 							<BackProfileImg>
 								<Image
 									layout="fill"
-									src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData.userInfo?.backavatar}/public`}
+									src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${userInfo?.backavatar}/public`}
 								/>
 							</BackProfileImg>
 						) : (
@@ -424,13 +414,13 @@ const Page = () => {
 							) : (
 								""
 							)}
-							{aquaInfoInitData?.userInfo?.avatar ? (
+							{userInfo?.avatar ? (
 								<ProfileImg>
 									<Image
 										layout="responsive"
 										width={100}
 										height={100}
-										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData.userInfo?.avatar}/public`}
+										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${userInfo?.avatar}/public`}
 									/>
 								</ProfileImg>
 							) : (
@@ -447,11 +437,7 @@ const Page = () => {
 							<ProfileTop>
 								<Input
 									db="nickname"
-									itemValue={
-										aquaInfoInitData?.userInfo?.nickname
-											? aquaInfoInitData?.userInfo?.nickname
-											: ""
-									}
+									itemValue={userInfo?.nickname ? userInfo?.nickname : ""}
 									editEnable={editOpen}
 									register={register("nickname")}
 									type="text"
@@ -515,7 +501,7 @@ const Page = () => {
 				</Season>
 
 				<PicBody>
-					{manyPost?.post?.map((data, i) => (
+					{posts?.map((data, i) => (
 						<Pic
 							key={i}
 							onClick={() => {
@@ -537,10 +523,8 @@ const Page = () => {
 	);
 };
 
-// <PostModal state={postopen} handler={postImgClick} />
-
 //export const getServerSideProps: GetServerSideProps = () => {};
-/*
+
 export const getStaticPaths: GetStaticPaths = () => {
 	return {
 		paths: [],
@@ -577,6 +561,6 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 			posts: JSON.parse(JSON.stringify(posts)),
 		},
 	};
-};*/
+};
 
 export default Page;
