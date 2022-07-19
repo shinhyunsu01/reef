@@ -177,19 +177,21 @@ export default function Navbar() {
 
 	let outtput: any = [];
 	const onChange = (e: any) => {
-		let check: any[] = Object.keys(hashtag).filter((inputdata) =>
-			inputdata.includes(e.target.value)
-		);
+		if (hashtag) {
+			let check: any[] = Object.keys(hashtag).filter((inputdata) =>
+				inputdata.includes(e.target.value)
+			);
 
-		for (let cnt = 0; cnt < check.length; cnt++) {
-			outtput[cnt] = {
-				name: check[cnt],
-				value: hashtag[check[cnt]],
-			};
+			for (let cnt = 0; cnt < check.length; cnt++) {
+				outtput[cnt] = {
+					name: check[cnt],
+					value: hashtag[check[cnt]],
+				};
+			}
+			if (e.target.value != "") setsearchFlag(true);
+			else setsearchFlag(false);
+			setSearchinput(outtput);
 		}
-		if (e.target.value != "") setsearchFlag(true);
-		else setsearchFlag(false);
-		setSearchinput(outtput);
 	};
 
 	const opnUpload = () => {
