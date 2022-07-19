@@ -103,7 +103,7 @@ onClick={() => {
 			<Navbar />
 			<PicBody>
 				{users.map((data, i) => (
-					<Link href={`/users/${data.id}`} key={i}>
+					<Link href={`/users/${encodeURIComponent(data.id)}`} key={i}>
 						<a>
 							<Pic>
 								<PicTitle>
