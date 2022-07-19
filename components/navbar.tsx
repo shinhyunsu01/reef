@@ -21,6 +21,7 @@ import LoginModal from "./LoginModal";
 import useSWR from "swr";
 import useSearch from "../libs/client/useSearch";
 import { NextPage } from "next";
+import client from "../libs/server/client";
 
 const Header = styled(Com.ColCenter)`
 	background-color: white;
@@ -145,9 +146,15 @@ interface MutationResult {
 	ok: boolean;
 }
 
+interface SearchResult {
+	ok: boolean;
+	users: string[];
+	hashtags: string[];
+}
+//const Navbar: NextPage<SearchResult> = ({ users, hashtags }) => {
 export default function Navbar() {
 	const { user } = useUser();
-	const { data: searchData, isLoading } = useSearch();
+	const { data: searchData } = useSWR<SearchResult>("/api/search");
 	const router = useRouter();
 	const [uploadopen, setUploadopen] = useState(false);
 	const [loginopen, setLoginopen] = useState(false);
@@ -158,23 +165,18 @@ export default function Navbar() {
 
 	let hashtag: any[] = [];
 	let hashtagArr;
-	/*if (searchData) {
-		
-	}*/
 
-	if (isLoading) {
-		hashtagArr = searchData?.hashtags
-			.map((strData: any) => {
-				return strData.hashtag;
-			})
-			.toString()
-			.split(",")
-			.map((d: any) => d.slice(1));
+	hashtagArr = searchData?.hashtags
+		.map((strData: any) => {
+			return strData.hashtag;
+		})
+		.toString()
+		.split(",")
+		.map((d: any) => d.slice(1));
 
-		hashtagArr?.forEach((x: any) => {
-			hashtag[x] = (hashtag[x] || 0) + 1;
-		});
-	}
+	hashtagArr?.forEach((x: any) => {
+		hashtag[x] = (hashtag[x] || 0) + 1;
+	});
 
 	let outtput: any = [];
 	const onChange = (e: any) => {
