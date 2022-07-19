@@ -3,7 +3,10 @@ import withHandler, { ResponseType } from "../../../libs/server/withHandler";
 
 import client from "../../../libs/server/client";
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(
+	req: NextApiRequest,
+	res: NextApiResponse<ResponseType>
+) {
 	if (req.method === "GET") {
 		const users = await client.user.findMany({
 			select: {
