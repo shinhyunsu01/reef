@@ -20,6 +20,7 @@ import Link from "next/link";
 import LoginModal from "./LoginModal";
 import useSWR from "swr";
 import useSearch from "../libs/client/useSearch";
+import { NextPage } from "next";
 
 const Header = styled(Com.ColCenter)`
 	background-color: white;
@@ -146,7 +147,7 @@ interface MutationResult {
 
 export default function Navbar() {
 	const { user } = useUser();
-	const { data: searchData, isLoading } = useSearch();
+	//const { data: searchData, isLoading } = useSearch();
 	const router = useRouter();
 	const [uploadopen, setUploadopen] = useState(false);
 	const [loginopen, setLoginopen] = useState(false);
@@ -160,7 +161,7 @@ export default function Navbar() {
 	/*if (searchData) {
 		
 	}*/
-
+	/*
 	useEffect(() => {
 		if (isLoading) {
 			hashtagArr = searchData?.hashtags
@@ -175,11 +176,11 @@ export default function Navbar() {
 				hashtag[x] = (hashtag[x] || 0) + 1;
 			});
 		}
-	}, [isLoading]);
+	}, [isLoading]);*/
 
 	let outtput: any = [];
 	const onChange = (e: any) => {
-		if (hashtag) {
+		/*if (hashtag) {
 			let check: any[] = Object.keys(hashtag).filter((inputdata) =>
 				inputdata.includes(e.target.value)
 			);
@@ -193,7 +194,7 @@ export default function Navbar() {
 			if (e.target.value != "") setsearchFlag(true);
 			else setsearchFlag(false);
 			setSearchinput(outtput);
-		}
+		}*/
 	};
 
 	const opnUpload = () => {
