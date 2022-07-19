@@ -153,13 +153,11 @@ export default function Navbar() {
 	const [searchFlag, setsearchFlag] = useState(false);
 	const [loginData] = useMutation<MutationResult>("/api/users/me");
 
-	const { data: searchData } = useSWR(
-		typeof window === "undefined" ? null : "/api/search"
-	);
+	const { data: searchData } = useSWR("/api/search");
 
 	let hashtag: any[] = [];
 	let hashtagArr;
-	/*if (searchData) {
+	if (searchData) {
 		hashtagArr = searchData?.hashtags
 			.map((strData: any) => {
 				return strData.hashtag;
@@ -171,7 +169,7 @@ export default function Navbar() {
 		hashtagArr?.forEach((x: any) => {
 			hashtag[x] = (hashtag[x] || 0) + 1;
 		});
-	}*/
+	}
 
 	let outtput: any = [];
 	const onChange = (e: any) => {
@@ -283,10 +281,42 @@ export default function Navbar() {
 		console.log("e", e);
 		router.push(`/search/${e}`);
 	};
+	/*
+<SearchTool>
+					<Search>
+						<SearchInput required type="text" onChange={onChange} />
+						<SearchLogo>
+							<SearchSvg />
+						</SearchLogo>
+					</Search>
+					{searchFlag ? (
+						<SearchMiniOpen>
+							{searchInput
+								? searchInput.map((ee: any, i: any) => (
+										<HashTagBtn
+											onClick={() => {
+												hashbtn(ee.name);
+											}}
+											id={ee.name}
+											key={i}
+										>
+											<div>#{ee.name}</div>
+											<div style={{ display: "flex" }}>{ee.value}</div>
+										</HashTagBtn>
+								  ))
+								: ""}
+						</SearchMiniOpen>
+					) : (
+						""
+					)}
+				</SearchTool>
 
+*/
 	return (
 		<>
 			<Header>
+				<Reef onClick={() => router.push("/")}>REEF</Reef>
+
 				<Menu>
 					<HomeSvg onClick={() => router.push("/")} />
 					{user?.email || userInfo?.email ? (
