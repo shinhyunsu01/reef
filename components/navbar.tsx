@@ -156,7 +156,7 @@ export default function Navbar() {
 	const { data: searchData } = useSWR(
 		typeof window === "undefined" ? null : "/api/search"
 	);
-
+	/*
 	let hashtag: any[] = [];
 	let hashtagArr;
 	if (searchData) {
@@ -171,7 +171,7 @@ export default function Navbar() {
 		hashtagArr?.forEach((x: any) => {
 			hashtag[x] = (hashtag[x] || 0) + 1;
 		});
-	}
+	}*/
 
 	let outtput: any = [];
 	const onChange = (e: any) => {
