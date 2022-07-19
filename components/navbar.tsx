@@ -316,6 +316,26 @@ export default function Navbar() {
 						""
 					)}
 				</SearchTool>
+
+				<Menu>
+					<HomeSvg onClick={() => router.push("/")} />
+					{user?.email || userInfo?.email ? (
+						<ProfileSvg onClick={() => router.push(`/users/${user?.id}`)} />
+					) : (
+						<ProfileSvg onClick={loginopenFn} />
+					)}
+					{user?.email || userInfo?.email ? (
+						<UploadSvg onClick={opnUpload} />
+					) : null}
+					{user?.email || userInfo?.email ? (
+						<NaverSvg onClick={handleNaverLogin} style={{ display: "none" }} />
+					) : (
+						<NaverSvg onClick={handleNaverLogin} />
+					)}
+					{user?.email || userInfo?.email ? (
+						<LogoutSvg onClick={NaverLogout} />
+					) : null}
+				</Menu>
 			</Header>
 			{uploadopen ? <Upload closeModal={closeUpload} /> : null}
 			<LoginModal
