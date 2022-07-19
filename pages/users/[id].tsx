@@ -21,6 +21,8 @@ import {
 	NextPage,
 } from "next";
 import client from "../../libs/server/client";
+import Link from "next/link";
+import PostModal from "../../components/PostModal";
 
 const Main = styled.div`
 	height: 100vh;
@@ -137,12 +139,37 @@ const ProductInfo = styled.div`
 	}
 `;
 
-const PostImg = styled.div`
-	img {
-		aspect-ratio: 1 / 1;
+const Pic = styled.a`
+	width: 100%;
+
+	aspect-ratio: 1 / 1;
+	transition-property: transform, backdrop-filter;
+	transition-duration: 500ms;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	transition: transform 1;
+
+	&:hover {
+		transform: scale(1.1);
 	}
+	&:nth-child(3n) {
+		transform-origin: right;
+	}
+	&:nth-child(3n + 1) {
+		transform-origin: left;
+	}
+	cursor: pointer;
 `;
-const End = styled.div`
+
+const PicBody = styled.div`
+	width: 100%;
+	margin-top: 10px;
+	margin-left: 0;
+	display: grid;
+	gap: 8px;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+`;
+
+const MiniProfile = styled.div`
 	display: flex;
 	align-items: center;
 `;
@@ -150,7 +177,10 @@ const NaverUserInfo = styled.div`
 	font-weight: bold;
 	font-size: 14px;
 	text-align: center;
+	display: flex;
+	flex-direction: column;
 	@media only screen and (max-width: 600px) {
+		display: none;
 		font-size: 0.7rem;
 		line-height: 0.7rem;
 	}
@@ -178,16 +208,26 @@ interface resPost {
 	post: UploadInfo[];
 }
 interface resAquaInfoForm {
+	ok: boolean;
+	info: AquaInfoForm;
+	userInfo: User;
+}
+interface stateModal {
+	isLoading: boolean;
+	data: UploadInfo;
+}
+
+/*
+interface resAquaInfoForm {
 	info: AquaInfoForm;
 	userInfo: User;
 	posts: UploadInfo[];
 }
-
-const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
+const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {*/
+const Page = () => {
 	const router = useRouter();
 	const { user } = useUser(); // middleware
 
-	/*
 	const { data: aquaInfoInitData } = useSWR<resAquaInfoForm>(
 		typeof window === "undefined"
 			? null
@@ -197,7 +237,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		typeof window === "undefined"
 			? null
 			: `/api/posts/${Number(router.query.id)}`
-	);*/
+	);
 
 	const [aquaInfoFn] = useMutation(`/api/users/${Number(router.query.id)}`);
 	const [uploadFn] = useMutation("/api/users/me");
@@ -206,22 +246,26 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		{
 			db: "skimmer",
 			name: "스키머 / 제조사",
-			value: info?.skimmer ? info.skimmer : "",
+			value: aquaInfoInitData?.info?.skimmer
+				? aquaInfoInitData?.info?.skimmer
+				: "",
 		},
 		{
 			db: "watertank",
 			name: "수조 / 하단 섬프(O,X) / 제조사",
-			value: info?.watertank,
+			value: aquaInfoInitData?.info?.watertank,
 		},
 		{
 			db: "lamp",
 			name: "조명",
-			value: info?.lamp ? info?.lamp : "",
+			value: aquaInfoInitData?.info?.lamp ? aquaInfoInitData?.info?.lamp : "",
 		},
 		{
 			db: "watermotor",
 			name: "수류모터 / 제조사",
-			value: info?.watermotor ? info?.watermotor : "",
+			value: aquaInfoInitData?.info?.watermotor
+				? aquaInfoInitData?.info?.watermotor
+				: "",
 		},
 	];
 
@@ -229,46 +273,55 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		{
 			db: "temp",
 			name: "온도",
-			value: info?.temp ? info?.temp : 0,
+			value: aquaInfoInitData?.info?.temp ? aquaInfoInitData?.info?.temp : 0,
 		},
 		{
 			db: "ph",
 			name: "ph",
-			value: info?.ph ? info?.ph : 0,
+			value: aquaInfoInitData?.info?.ph ? aquaInfoInitData?.info?.ph : 0,
 		},
 		{
 			db: "salt",
 			name: "염도",
-			value: info?.salt ? info?.salt : 0,
+			value: aquaInfoInitData?.info?.salt ? aquaInfoInitData?.info?.salt : 0,
 		},
 		{
 			db: "alkalinity",
 			name: "경도",
-			value: info?.alkalinity,
+			value: aquaInfoInitData?.info?.alkalinity,
 		},
 		{
 			db: "calcium",
 			name: "칼슘",
-			value: info?.calcium ? info?.calcium : 0,
+			value: aquaInfoInitData?.info?.calcium
+				? aquaInfoInitData?.info?.calcium
+				: 0,
 		},
 		{
 			db: "mag",
 			name: "마그네슘",
-			value: info?.mag ? info?.mag : 0,
+			value: aquaInfoInitData?.info?.mag ? aquaInfoInitData?.info?.mag : 0,
 		},
 		{
 			db: "nitrate",
 			name: "질산염",
-			value: info?.nitrate ? info?.nitrate : 0,
+			value: aquaInfoInitData?.info?.nitrate
+				? aquaInfoInitData?.info?.nitrate
+				: 0,
 		},
 		{
 			db: "phosphorus",
 			name: "인산염",
-			value: info?.phosphorus ? info?.phosphorus : 0,
+			value: aquaInfoInitData?.info?.phosphorus
+				? aquaInfoInitData?.info?.phosphorus
+				: 0,
 		},
 	];
 	const { register, handleSubmit } = useForm();
 	const [editOpen, setEditOpen] = useState(false);
+	const [postModal, setPostModal] = useState({
+		isLoading: false,
+	});
 
 	const editFn = () => {
 		if (editOpen === true) setEditOpen(false);
@@ -291,11 +344,31 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 
 		const { uploadURL } = await (await fetch("/api/files")).json();
 		const imageId = await cloudFlareUpload(uploadURL, file);
+
 		e.target.id === "backImg"
 			? uploadFn({ backavatar: imageId })
 			: uploadFn({ avatar: imageId });
 
 		router.reload();
+	};
+	const postImgClick = (resData?: UploadInfo) => {
+		if (resData && aquaInfoInitData) {
+			//const userInfoData = aquaInfoInitData?.userInfo;
+			//const data = { ...resData, userInfoData };
+			//setPostModal((prev) => ({ ...prev, data }));
+			const data = {
+				postavatar: resData.avatar,
+				avatar: aquaInfoInitData?.userInfo.avatar,
+				nickname: aquaInfoInitData?.userInfo.nickname,
+				coralType: resData?.coralType,
+				hashtag: resData?.hashtag,
+				description: resData?.description,
+			};
+			setPostModal((prev) => ({ ...prev, data }));
+		}
+
+		if (postModal?.isLoading === true) setPostModal({ isLoading: false });
+		else setPostModal((prev) => ({ ...prev, isLoading: true }));
 	};
 
 	return (
@@ -320,11 +393,11 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 						) : (
 							""
 						)}
-						{userInfo?.backavatar ? (
+						{aquaInfoInitData?.userInfo?.backavatar ? (
 							<BackProfileImg>
 								<Image
 									layout="fill"
-									src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${userInfo?.backavatar}/public`}
+									src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData.userInfo?.backavatar}/public`}
 								/>
 							</BackProfileImg>
 						) : (
@@ -351,13 +424,13 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 							) : (
 								""
 							)}
-							{userInfo?.avatar ? (
+							{aquaInfoInitData?.userInfo?.avatar ? (
 								<ProfileImg>
 									<Image
 										layout="responsive"
 										width={100}
 										height={100}
-										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${userInfo?.avatar}/public`}
+										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData.userInfo?.avatar}/public`}
 									/>
 								</ProfileImg>
 							) : (
@@ -374,16 +447,21 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 							<ProfileTop>
 								<Input
 									db="nickname"
-									itemValue={userInfo?.nickname ? userInfo?.nickname : ""}
+									itemValue={
+										aquaInfoInitData?.userInfo?.nickname
+											? aquaInfoInitData?.userInfo?.nickname
+											: ""
+									}
 									editEnable={editOpen}
 									register={register("nickname")}
 									type="text"
 								/>
-								<End>
+								<MiniProfile>
 									{user?.id === Number(router?.query?.id) ? (
 										<>
 											<NaverUserInfo>
-												{user?.gender}/{user?.age}/{user?.email}
+												{user?.gender}/{user?.age}
+												<div>{user?.email}</div>
 											</NaverUserInfo>
 
 											<Edit onClick={editFn} style={{ cursor: "pointer" }} />
@@ -397,7 +475,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 									) : (
 										""
 									)}
-								</End>
+								</MiniProfile>
 							</ProfileTop>
 
 							<ProductInfo>
@@ -432,29 +510,37 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 
 				<Season>
 					{[1].map((_, i) => (
-						<SeasonItem key={i}>Season {i + 1}</SeasonItem>
+						<SeasonItem key={i}></SeasonItem>
 					))}
 				</Season>
 
-				<div className="grid grid-cols-3 gap-2">
-					{posts?.map((data, i) => (
-						<PostImg key={i}>
+				<PicBody>
+					{manyPost?.post?.map((data, i) => (
+						<Pic
+							key={i}
+							onClick={() => {
+								postImgClick(data);
+							}}
+						>
 							<Image
 								layout="responsive"
 								width={100}
 								height={100}
 								src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
 							/>
-						</PostImg>
+						</Pic>
 					))}
-				</div>
+				</PicBody>
+				<PostModal post={postModal} handler={postImgClick} />
 			</Main>
 		</>
 	);
 };
 
-//export const getServerSideProps: GetServerSideProps = () => {};
+// <PostModal state={postopen} handler={postImgClick} />
 
+//export const getServerSideProps: GetServerSideProps = () => {};
+/*
 export const getStaticPaths: GetStaticPaths = () => {
 	return {
 		paths: [],
@@ -491,146 +577,6 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 			posts: JSON.parse(JSON.stringify(posts)),
 		},
 	};
-};
+};*/
 
 export default Page;
-/*<UserProfile>
-				
-					<UserProfileDivision>
-						{editOpen ? (
-							<BackEditPlus>
-								<label>
-									<input
-										type="file"
-										accept="image/*"
-										style={{ display: "none" }}
-										onChange={fileRead}
-										id="backImg"
-									/>
-									<EditPlusBtn style={{ cursor: "pointer" }} />
-								</label>
-							</BackEditPlus>
-						) : (
-							""
-						)}
-						{aquaInfoInitData?.userInfo?.backavatar ? (
-							<BackProfileImg
-								src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData?.userInfo?.backavatar}/public`}
-							/>
-						) : (
-							<BackProfileImg src="/reef_img.jpg" />
-						)}
-
-						<ProfilePic>
-							{editOpen ? (
-								<EditPlus>
-									<label>
-										<input
-											type="file"
-											accept="image/*"
-											style={{ display: "none" }}
-											onChange={fileRead}
-											id="profileImg"
-										/>
-
-										<EditPlusBtn style={{ cursor: "pointer" }} />
-									</label>
-								</EditPlus>
-							) : (
-								""
-							)}
-							{aquaInfoInitData?.userInfo?.avatar ? (
-								<ProfileImg
-									src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${aquaInfoInitData?.userInfo?.avatar}/public`}
-								/>
-							) : (
-								<ProfilePic style={{ backgroundColor: "blue" }} />
-							)}
-						</ProfilePic>
-					</UserProfileDivision>
-
-					
-					<UserProfileDivision>
-						<form
-							onSubmit={handleSubmit(onValid)}
-							style={{ width: "100%", height: "100%" }}
-						>
-							<ProfileTop>
-								<Input
-									db="nickname"
-									itemValue={
-										aquaInfoInitData?.userInfo?.nickname
-											? aquaInfoInitData?.userInfo?.nickname
-											: ""
-									}
-									editEnable={editOpen}
-									register={register("nickname")}
-									type="text"
-								/>
-								<End>
-									{user ? (
-										<>
-											<NaverUserInfo>
-												{user?.gender}/{user?.age}/{user?.email}
-											</NaverUserInfo>
-
-											<Edit onClick={editFn} style={{ cursor: "pointer" }} />
-
-											{editOpen ? (
-												<button type="submit">
-													<Save style={{ cursor: "pointer" }} />
-												</button>
-											) : null}
-										</>
-									) : (
-										""
-									)}
-								</End>
-							</ProfileTop>
-
-							<ProductInfo>
-								{productData.map((v, i) => (
-									<Input
-										key={i}
-										db={i}
-										item={v.name}
-										itemValue={v.value ? v.value : ""}
-										editEnable={editOpen}
-										register={register(v.db)}
-										type="text"
-									/>
-								))}
-							</ProductInfo>
-							<WaterInfo>
-								{waterData.map((v, i) => (
-									<Input
-										key={i}
-										db={i}
-										item={v.name}
-										itemValue={v.value ? v.value : ""}
-										editEnable={editOpen}
-										register={register(v.db)}
-										type="number"
-									/>
-								))}
-							</WaterInfo>
-						</form>
-					</UserProfileDivision>
-				</UserProfile>
-
-				
-				<Season>
-					{[1].map((_, i) => (
-						<SeasonItem key={i}>Season {i + 1}</SeasonItem>
-					))}
-				</Season>
-
-				<div className="grid grid-cols-3 gap-2">
-					{manyPost?.post?.map((data, i) => (
-						<PostImg
-							key={i}
-							src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
-						/>
-					))}
-				</div>
-*/

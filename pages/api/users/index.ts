@@ -9,8 +9,6 @@ async function handler(
 ) {
 	let manyUser;
 	if (req.method === "GET") {
-		//client.$queryRaw`SET SESSION sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';`.then(
-		//	async () => {
 		manyUser = await client.user.findMany({
 			select: {
 				id: true,
@@ -19,7 +17,7 @@ async function handler(
 				backavatar: true,
 			},
 		});
-		
+
 		if (manyUser) {
 			res.json({
 				ok: true,
@@ -30,9 +28,6 @@ async function handler(
 				ok: false,
 			});
 		}
-
-		//	}
-		//);
 	}
 }
 

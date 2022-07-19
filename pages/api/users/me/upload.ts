@@ -24,10 +24,16 @@ async function handler(
 	if (req.method === "POST") {
 		delete req.body.isLoading;
 		delete req.body.error;
-
+		let hashtagStr = "";
+		if (req.body?.description) {
+			const hashtag = req.body?.description;
+			const regexp = /\#[A-Za-z0-9가-힣]+/g; // \s <- 공백
+			hashtagStr = hashtag.match(regexp)?.toString();
+		}
 		const post = await client.uploadInfo.create({
 			data: {
 				...req.body,
+				hashtag: hashtagStr,
 				user: {
 					connect: {
 						id: user?.id,
@@ -35,8 +41,8 @@ async function handler(
 				},
 			},
 		});
-		await res.revalidate("/");
-		await res.revalidate(`/users/${user?.id}`);
+		//await res.revalidate("/");
+		//await res.revalidate(`/users/${user?.id}`);
 		res.json({
 			ok: true,
 			post,

@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+  previewFeatures = ["referentialIntegrity", "fullTextSearch"]
 }
 
 datasource db {
@@ -68,6 +68,6 @@ model UploadInfo {
   avatar      String?
 
   description String? @db.MediumText
-
+  hashtag     String?
   //@@index([userId])
 }

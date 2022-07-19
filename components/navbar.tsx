@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Router, { useRouter } from "next/router";
 import styled from "styled-components";
 import axios from "axios";
 import useMutation from "../libs/client/useMutation";
 
 import {
+	CloseSvg,
 	HomeSvg,
 	LogoutSvg,
 	NaverSvg,
@@ -14,14 +15,17 @@ import {
 } from "./icon";
 import useUser from "../libs/client/useUser";
 import Upload from "./upload/Upload";
-import { Com } from "../components/styledCom";
+import { Com, Modal } from "../components/styledCom";
 import Link from "next/link";
+import LoginModal from "./LoginModal";
+import useSWR from "swr";
 
 const Header = styled(Com.ColCenter)`
 	background-color: white;
 	top: 0px;
 	width: 100%;
 	height: 55px;
+
 	justify-content: space-between;
 
 	position: fixed;
@@ -32,7 +36,8 @@ const Header = styled(Com.ColCenter)`
 `;
 
 const Search = styled(Com.ColCenter)`
-	position: relative;
+	position: absolute;
+
 	cursor: text;
 	&:focus-within {
 		div {
@@ -96,7 +101,38 @@ const Menu = styled(Com.ColCenter)`
 		cursor: pointer;
 	}
 `;
+const SearchTool = styled.div`
+	display: flex;
+	height: 100%;
+	align-items: center;
+	justify-content: center;
+`;
+const HashTagBtn = styled.button`
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 5px 15px;
 
+	&:hover {
+		color: blue;
+		cursor: pointer;
+	}
+
+	div:nth-child(1) {
+		font-weight: bold;
+	}
+`;
+const SearchMiniOpen = styled.div`
+	width: 256px;
+	height: 100px;
+	overflow: auto;
+
+	margin-top: 150px;
+	border-bottom-left-radius: 15px;
+	border-bottom-right-radius: 15px;
+	background-color: rgb(244 244 246);
+`;
 interface UserInfo {
 	age: string;
 	birthyear: string;
@@ -106,12 +142,48 @@ interface UserInfo {
 interface MutationResult {
 	ok: boolean;
 }
+
 export default function Navbar() {
 	const { user } = useUser();
 	const router = useRouter();
 	const [uploadopen, setUploadopen] = useState(false);
+	const [loginopen, setLoginopen] = useState(false);
 	const [userInfo, setUserinfo] = useState<UserInfo>();
+	const [searchInput, setSearchinput] = useState([]);
+	const [searchFlag, setsearchFlag] = useState(false);
 	const [loginData] = useMutation<MutationResult>("/api/users/me");
+
+	const { data: searchData } = useSWR("/api/search");
+
+	let hashtagArr = searchData?.hashtags
+		.map((strData: any) => {
+			return strData.hashtag;
+		})
+		.toString()
+		.split(",")
+		.map((d: any) => d.slice(1));
+
+	let hashtag: any[] = [];
+	hashtagArr?.forEach((x: any) => {
+		hashtag[x] = (hashtag[x] || 0) + 1;
+	});
+
+	let outtput: any = [];
+	const onChange = (e: any) => {
+		let check: any[] = Object.keys(hashtag).filter((inputdata) =>
+			inputdata.includes(e.target.value)
+		);
+
+		for (let cnt = 0; cnt < check.length; cnt++) {
+			outtput[cnt] = {
+				name: check[cnt],
+				value: hashtag[check[cnt]],
+			};
+		}
+		if (e.target.value != "") setsearchFlag(true);
+		else setsearchFlag(false);
+		setSearchinput(outtput);
+	};
 
 	const opnUpload = () => {
 		setUploadopen(true);
@@ -119,6 +191,11 @@ export default function Navbar() {
 	const closeUpload = () => {
 		setUploadopen(false);
 	};
+	const loginopenFn = () => {
+		if (loginopen === false) setLoginopen(true);
+		else setLoginopen(false);
+	};
+
 	useEffect(() => {
 		const naver = (window as any).naver;
 		let naverLogin: any;
@@ -197,17 +274,37 @@ export default function Navbar() {
 		});
 		router.reload();
 	};
+	const hashbtn = (e: any) => {
+		router.push(`/search/${e.target.id}`);
+	};
 
 	return (
 		<>
 			<Header>
 				<Reef onClick={() => router.push("/")}>REEF</Reef>
-				<Search>
-					<SearchInput required type="text" />
-					<SearchLogo>
-						<SearchSvg />
-					</SearchLogo>
-				</Search>
+				<SearchTool>
+					<Search>
+						<SearchInput required type="text" onChange={onChange} />
+						<SearchLogo>
+							<SearchSvg />
+						</SearchLogo>
+					</Search>
+					{searchFlag ? (
+						<SearchMiniOpen>
+							{searchInput
+								? searchInput.map((ee: any) => (
+										<HashTagBtn onClick={hashbtn} id={ee.name}>
+											<div>#{ee.name}</div>
+											<div style={{ display: "flex" }}>{ee.value}</div>
+										</HashTagBtn>
+								  ))
+								: ""}
+						</SearchMiniOpen>
+					) : (
+						""
+					)}
+				</SearchTool>
+
 				<Menu>
 					<HomeSvg onClick={() => router.push("/")} />
 					{user?.email || userInfo?.email ? (
@@ -217,7 +314,7 @@ export default function Navbar() {
 							</a>
 						</Link>
 					) : (
-						<ProfileSvg onClick={() => router.push("/")} />
+						<ProfileSvg onClick={loginopenFn} />
 					)}
 					{user?.email || userInfo?.email ? (
 						<UploadSvg onClick={opnUpload} />
@@ -232,7 +329,27 @@ export default function Navbar() {
 					) : null}
 				</Menu>
 			</Header>
-			`{uploadopen ? <Upload closeModal={closeUpload} /> : null}
+			{uploadopen ? <Upload closeModal={closeUpload} /> : null}
+			<LoginModal
+				state={loginopen}
+				naverCallback={handleNaverLogin}
+				loginCallback={loginopenFn}
+			/>
 		</>
 	);
 }
+/*
+{loginopen ? (
+				<PlzLoginModal ref={modalRef}>
+					<LoginModal>
+						<div>로그인</div>
+						<p>REEF에 오신걸 환영합니다</p>
+						<NaverSvg onClick={handleNaverLogin} style={{ width: "80px" }} />
+						<CloseModal>
+							<CloseSvg onClick={loginopenFn} />
+						</CloseModal>
+					</LoginModal>
+				</PlzLoginModal>
+			) : null}
+
+*/

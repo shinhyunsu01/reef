@@ -11,3 +11,49 @@ export const Com = {
 		align-items: center;
 	`,
 };
+/*
+const Uploadflex = styled(Com.Center)`
+	width: 80%;
+	height: 60%;
+	padding: 1.2rem 1.2rem;
+	min-height: 200px;
+	overflow: auto;
+	background-color: #fff;
+	border-radius: 20px;
+
+	justify-content: space-between;
+	position: relative;
+`;
+
+const UploadModal = styled.div`
+	flex-grow: 1;
+	flex-flow: row wrap;
+	height: 100%;
+	width: 50%;
+`;
+*/
+export const Modal = {
+	Init: styled(Com.Center)`
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 200;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+
+		background-color: rgba(0, 0, 0, 0.6);
+	`,
+	Flex: styled(Com.Center)`
+		padding: 1.2rem 1.2rem;
+		min-height: 200px;
+		overflow: auto;
+		background-color: #fff;
+		border-radius: 20px;
+
+		justify-content: space-between;
+		position: relative;
+	`,
+};

@@ -20,8 +20,6 @@ async function handler(
 
 	if (req.method === "GET") {
 		if (req?.session?.user) {
-			//client.$queryRaw`SET SESSION sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';`.then(
-			//	async () => {
 			user = await client.user.findUnique({
 				where: {
 					id: req?.session?.user?.id,
@@ -41,8 +39,6 @@ async function handler(
 				ok: true,
 				user,
 			});
-			//	}
-			//);
 		} else {
 			res.json({
 				ok: false,
@@ -99,7 +95,7 @@ async function handler(
 			});
 
 			await req.session.save();
-			await res.revalidate("/");
+			//await res.revalidate("/");
 		}
 
 		if (req.body === "") {

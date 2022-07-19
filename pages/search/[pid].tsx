@@ -1,16 +1,13 @@
 import { User } from ".prisma/client";
-
+import Link from "next/link";
 import styled from "styled-components";
 import useSWR from "swr";
-import Navbar from "../components/navbar";
-import Link from "next/link";
-import backInitImg from "../public/reef_img.jpg";
 import Image from "next/image";
+import Navbar from "../../components/navbar";
 import { NextPage } from "next";
-
-import client from "../libs/server/client";
-import ShowAvatar from "../components/User/avatar";
-
+import Router, { useRouter } from "next/router";
+import PostModal from "../../components/PostModal";
+import { useState } from "react";
 const Main = styled.div`
 	height: 100vh;
 	width: 100%;
@@ -28,7 +25,7 @@ const PicBody = styled.div`
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 `;
 
-const Pic = styled.a`
+const Pic = styled.div`
 	width: 100%;
 
 	aspect-ratio: 1 / 1;
@@ -87,51 +84,62 @@ interface ManyUser {
 
 //const Page: NextPage<ManyUser> = ({ users }) => {
 const Page = () => {
-	const { data: manyUser, error } = useSWR<ManyUser>("/api/users");
+	const router = useRouter();
+	const { data: hashtagData, error } = useSWR(
+		`/api/search/${router.query.pid}`
+	);
+	const [postModal, setPostModal] = useState({
+		isLoading: false,
+	});
+
+	const postImgClick = (hashtagData: any) => {
+		if (hashtagData) {
+			const data = {
+				postavatar: hashtagData.avatar,
+				avatar: hashtagData?.user?.avatar,
+				nickname: hashtagData?.user?.nickname,
+				coralType: hashtagData?.coralType,
+				hashtag: hashtagData?.hashtag,
+				description: hashtagData?.description,
+			};
+			setPostModal((prev) => ({ ...prev, data }));
+		}
+
+		if (postModal?.isLoading === true) setPostModal({ isLoading: false });
+		else setPostModal((prev) => ({ ...prev, isLoading: true }));
+	};
+
 	return (
 		<Main>
 			<Navbar />
 			<PicBody>
-				{manyUser
-					? manyUser.users.map((data, i) => (
-							<Pic key={i}>
-								<Link href={`/users/${data.id}`}>
-									<a>
-										<PicTitle>
-											<ShowAvatar
-												data={data?.avatar}
-												layout="responsive"
-												width={100}
-												height={100}
-											/>
-											{data.nickname}
-										</PicTitle>
-
-										{data.backavatar ? (
-											<Image
-												layout="responsive"
-												width={100}
-												height={100}
-												src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
-											/>
-										) : (
-											<Image
-												layout="responsive"
-												width={100}
-												height={100}
-												src={backInitImg}
-												placeholder="blur"
-											/>
-										)}
-									</a>
-								</Link>
+				{hashtagData
+					? hashtagData.hashtag.map((data: any, i: any) => (
+							<Pic
+								key={i}
+								onClick={() => {
+									postImgClick(data);
+								}}
+							>
+								<Image
+									layout="responsive"
+									width={100}
+									height={100}
+									src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
+								/>
 							</Pic>
 					  ))
 					: ""}
 			</PicBody>
+			<PostModal post={postModal} handler={postImgClick} />
 		</Main>
 	);
 };
+/*
+
+
+*/
+
 /*
 export async function getStaticProps() {
 	console.log("BUILDING MAIN INDEX");

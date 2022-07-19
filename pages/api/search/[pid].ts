@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import withHandler, { ResponseType } from "../../../../libs/server/withHandler";
+import withHandler, { ResponseType } from "../../../libs/server/withHandler";
 import { withIronSessionApiRoute } from "iron-session/next";
 
-import client from "../../../../libs/server/client";
+import client from "../../../libs/server/client";
 
 declare module "iron-session" {
 	interface IronSessionData {
@@ -16,41 +16,34 @@ async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse<ResponseType>
 ) {
-	let info;
-	const {
-		session: { user },
-	} = req;
-
 	if (req.method === "GET") {
-		if (req?.session?.user) {
-			info = await client.aquaInfo.findFirst({
-				where: {
-					userId: user?.id,
-				},
-			});
-			res.json({
-				ok: true,
-				info,
-			});
-		} else {
-			res.json({
-				ok: false,
-			});
-		}
-	}
-	if (req.method === "POST") {
-		info = await client.aquaInfo.update({
+		let arr: any = [];
+		const path: any = req.query?.pid || "";
+		const hashtags = await client.uploadInfo.findMany({
 			where: {
-				id: user?.id,
+				hashtag: {
+					not: null,
+				},
 			},
-			data: {
-				...req.body,
+			include: {
+				user: {
+					select: {
+						avatar: true,
+						nickname: true,
+					},
+				},
 			},
+		});
+
+		hashtags.map((data) => {
+			if (data.hashtag?.includes(path)) {
+				arr.push(data);
+			}
 		});
 
 		res.json({
 			ok: true,
-			info,
+			hashtag: arr,
 		});
 	}
 }

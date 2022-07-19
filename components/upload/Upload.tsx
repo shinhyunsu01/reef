@@ -5,39 +5,17 @@ import { cloudFlareUpload } from "../../libs/client/cloudFlareUpload";
 import useMutation from "../../libs/client/useMutation";
 import { CloseSvg, UploadBtnSvg } from "../icon";
 import Btn from "./Btn";
-import { Com } from "../styledCom";
+import { Com, Modal } from "../styledCom";
 import LoadingAnimation from "./LoadingAnimation";
 
-const OpenUpload = styled(Com.Center)`
-	z-index: 200;
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-
-	background-color: rgba(0, 0, 0, 0.6);
-`;
-const Uploadflex = styled(Com.Center)`
+const ModalFlex = styled(Modal.Flex)`
 	width: 80%;
-	padding: 1.2rem 1.2rem;
-	min-height: 200px;
-	overflow: auto;
 	height: 60%;
-	background-color: #fff;
-	border-radius: 20px;
-
-	justify-content: space-between;
-	position: relative;
 `;
-
 const UploadModal = styled.div`
-	flex-grow: 1;
-	flex-flow: row wrap;
 	height: 100%;
 	width: 50%;
 `;
-
 const UploadImg = styled(Com.Center)`
 	height: 100%;
 	width: 100%;
@@ -131,7 +109,7 @@ const Upload = ({ closeModal }: responseType) => {
 		"/api/users/me/upload"
 	);
 	const [selected, setSelected] = useState({
-		picType: "All",
+		picType: "Memo",
 		animateType: "Fish",
 		coralType: "연산호",
 		description: "",
@@ -142,6 +120,7 @@ const Upload = ({ closeModal }: responseType) => {
 
 	const onChangefn = (e: any) => {
 		let data = e.target.value;
+
 		let keyIndex = 0;
 		if (data === "All" || data === "Memo") {
 			keyIndex = 0;
@@ -152,10 +131,19 @@ const Upload = ({ closeModal }: responseType) => {
 		} else {
 			keyIndex = 3;
 		}
-		setSelected((prev) => ({
-			...prev,
-			[Object.keys(selected)[keyIndex]]: data,
-		}));
+		if (data === "All") {
+			setSelected((prev) => ({
+				...prev,
+				picType: "All",
+				coralType: "",
+				animateType: "",
+			}));
+		} else {
+			setSelected((prev) => ({
+				...prev,
+				[Object.keys(selected)[keyIndex]]: data,
+			}));
+		}
 	};
 
 	const onValid = async (e: any) => {
@@ -167,6 +155,9 @@ const Upload = ({ closeModal }: responseType) => {
 				uploadURL,
 				avatarPreview?.fileData
 			);
+
+			// teest
+
 			uploadFn({ ...selected, avatar: imageId });
 
 			setSelected({
@@ -184,9 +175,11 @@ const Upload = ({ closeModal }: responseType) => {
 		}
 	};
 	const fileRead = async (e: React.ChangeEvent) => {
+		e.preventDefault();
 		const input = e.target as HTMLInputElement;
 		if (!input.files?.length) return;
 		const file = input.files[0];
+
 		const readData = URL.createObjectURL(file);
 		setAvatarPreview({
 			preview: readData,
@@ -194,8 +187,8 @@ const Upload = ({ closeModal }: responseType) => {
 		});
 	};
 	return (
-		<OpenUpload>
-			<Uploadflex>
+		<Modal.Init>
+			<ModalFlex>
 				{/* 왼쪽 업로드 사진 버튼 */}
 				<UploadModal>
 					<UploadImg>
@@ -221,19 +214,23 @@ const Upload = ({ closeModal }: responseType) => {
 						<Btn
 							title="사진"
 							labelName="picType"
-							textArr={["All", "Memo"]}
+							textArr={["Memo", "All"]}
 							handler={onChangefn}
 						/>
 						<MemoTip>
 							All : 수조, 2점 이상 | Memo : 1점 에 대한 기록,노하우,메모
 						</MemoTip>
 
-						<Btn
-							title="Fish or Coral"
-							labelName="animateType"
-							textArr={["Fish", "Coral"]}
-							handler={onChangefn}
-						/>
+						{selected.picType === "Memo" ? (
+							<Btn
+								title="Fish or Coral"
+								labelName="animateType"
+								textArr={["Fish", "Coral"]}
+								handler={onChangefn}
+							/>
+						) : (
+							""
+						)}
 
 						{selected.animateType === "Coral" ? (
 							<Btn
@@ -267,8 +264,8 @@ const Upload = ({ closeModal }: responseType) => {
 				<CloseModal>
 					<CloseSvg onClick={closeModal} />
 				</CloseModal>
-			</Uploadflex>
-		</OpenUpload>
+			</ModalFlex>
+		</Modal.Init>
 	);
 };
 
