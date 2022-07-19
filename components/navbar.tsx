@@ -175,7 +175,7 @@ export default function Navbar() {
 				hashtag[x] = (hashtag[x] || 0) + 1;
 			});
 		}
-	});
+	}, [isLoading]);
 
 	let outtput: any = [];
 	const onChange = (e: any) => {
