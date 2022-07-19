@@ -103,9 +103,9 @@ onClick={() => {
 			<Navbar />
 			<PicBody>
 				{users.map((data, i) => (
-					<Pic key={i}>
-						<Link href={`/users/${data.id}`}>
-							<a>
+					<Link href={`/users/${data.id}`} key={i}>
+						<a>
+							<Pic>
 								<PicTitle>
 									<ShowAvatar
 										data={data?.avatar}
@@ -132,9 +132,9 @@ onClick={() => {
 										placeholder="blur"
 									/>
 								)}
-							</a>
-						</Link>
-					</Pic>
+							</Pic>
+						</a>
+					</Link>
 				))}
 			</PicBody>
 		</Main>
