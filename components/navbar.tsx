@@ -295,26 +295,6 @@ export default function Navbar() {
 							<SearchSvg />
 						</SearchLogo>
 					</Search>
-					{searchFlag ? (
-						<SearchMiniOpen>
-							{searchInput
-								? searchInput.map((ee: any, i: any) => (
-										<HashTagBtn
-											onClick={() => {
-												hashbtn(ee.name);
-											}}
-											id={ee.name}
-											key={i}
-										>
-											<div>#{ee.name}</div>
-											<div style={{ display: "flex" }}>{ee.value}</div>
-										</HashTagBtn>
-								  ))
-								: ""}
-						</SearchMiniOpen>
-					) : (
-						""
-					)}
 				</SearchTool>
 
 				<Menu>
