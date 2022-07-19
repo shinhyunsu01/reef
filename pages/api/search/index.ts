@@ -25,7 +25,7 @@ async function handler(
 		const hashtags = await client.uploadInfo.findMany({
 			where: {
 				hashtag: {
-					not: null,
+					not: "",
 				},
 			},
 			select: {

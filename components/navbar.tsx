@@ -145,6 +145,7 @@ interface MutationResult {
 
 export default function Navbar() {
 	const { user } = useUser();
+	const { data: searchData } = useSWR("/api/search");
 	const router = useRouter();
 	const [uploadopen, setUploadopen] = useState(false);
 	const [loginopen, setLoginopen] = useState(false);
@@ -153,11 +154,10 @@ export default function Navbar() {
 	const [searchFlag, setsearchFlag] = useState(false);
 	const [loginData] = useMutation<MutationResult>("/api/users/me");
 
-	const { data: searchData } = useSWR("/api/search");
-
 	let hashtag: any[] = [];
 	let hashtagArr;
 	if (searchData) {
+		console.log("searchData", searchData);
 		hashtagArr = searchData?.hashtags
 			.map((strData: any) => {
 				return strData.hashtag;
