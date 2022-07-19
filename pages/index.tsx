@@ -95,6 +95,7 @@ const Page: NextPage<ManyUser> = ({ users }) => {
 	};
 	return (
 		<Main>
+			<Navbar />
 			<PicBody>
 				{users
 					? users.map((data, i) => (
