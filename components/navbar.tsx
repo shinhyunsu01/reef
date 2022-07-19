@@ -153,7 +153,9 @@ export default function Navbar() {
 	const [searchFlag, setsearchFlag] = useState(false);
 	const [loginData] = useMutation<MutationResult>("/api/users/me");
 
-	const { data: searchData } = useSWR("/api/search");
+	const { data: searchData } = useSWR(
+		typeof window === "undefined" ? null : "/api/search"
+	);
 
 	let hashtag: any[] = [];
 	let hashtagArr;

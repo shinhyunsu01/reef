@@ -7,9 +7,7 @@ interface UserRespones {
 }
 
 export default function useUser() {
-	const { data, error } = useSWR<UserRespones>(
-		typeof window === "undefined" ? null : "/api/users/me"
-	);
+	const { data, error } = useSWR<UserRespones>("/api/users/me");
 
 	return { user: data?.user, isLoading: !data && !error };
 }

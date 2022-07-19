@@ -360,6 +360,13 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		if (postModal?.isLoading === true) setPostModal({ isLoading: false });
 		else setPostModal((prev) => ({ ...prev, isLoading: true }));
 	};
+	if (router.isFallback) {
+		return (
+			<div>
+				<span>I love you</span>
+			</div>
+		);
+	}
 
 	return (
 		<>
@@ -528,7 +535,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 export const getStaticPaths: GetStaticPaths = () => {
 	return {
 		paths: [],
-		fallback: "blocking",
+		fallback: true, //"blocking"
 	};
 };
 export const getStaticProps: GetStaticProps = async (ctx) => {

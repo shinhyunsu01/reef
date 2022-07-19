@@ -1,5 +1,5 @@
 import { User } from ".prisma/client";
-
+import { useRouter } from "next/router";
 import styled from "styled-components";
 import useSWR from "swr";
 import Navbar from "../components/navbar";
@@ -88,46 +88,45 @@ interface ManyUser {
 const Page: NextPage<ManyUser> = ({ users }) => {
 	//const Page = () => {
 	//const { data: manyUser, error } = useSWR<ManyUser>("/api/users");
+
+	const router = useRouter();
+	const onClick = (id: number) => {
+		router.push(`/users/${id.toString()}`);
+	};
 	return (
 		<Main>
 			<Navbar />
 			<PicBody>
-				{users
-					? users.map((data, i) => (
-							<Pic key={i}>
-								<Link href={`/users/${data.id}`}>
-									<a>
-										<PicTitle>
-											<ShowAvatar
-												data={data?.avatar}
-												layout="responsive"
-												width={100}
-												height={100}
-											/>
-											{data.nickname}
-										</PicTitle>
+				{users.map((data, i) => (
+					<Pic key={i} onClick={() => onClick(data.id)}>
+						<PicTitle>
+							<ShowAvatar
+								data={data?.avatar}
+								layout="responsive"
+								width={100}
+								height={100}
+							/>
+							{data.nickname}
+						</PicTitle>
 
-										{data.backavatar ? (
-											<Image
-												layout="responsive"
-												width={100}
-												height={100}
-												src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
-											/>
-										) : (
-											<Image
-												layout="responsive"
-												width={100}
-												height={100}
-												src={backInitImg}
-												placeholder="blur"
-											/>
-										)}
-									</a>
-								</Link>
-							</Pic>
-					  ))
-					: ""}
+						{data.backavatar ? (
+							<Image
+								layout="responsive"
+								width={100}
+								height={100}
+								src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
+							/>
+						) : (
+							<Image
+								layout="responsive"
+								width={100}
+								height={100}
+								src={backInitImg}
+								placeholder="blur"
+							/>
+						)}
+					</Pic>
+				))}
 			</PicBody>
 		</Main>
 	);
