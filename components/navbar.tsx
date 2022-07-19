@@ -156,10 +156,10 @@ export default function Navbar() {
 	const { data: searchData } = useSWR(
 		typeof window === "undefined" ? null : "/api/search"
 	);
-	/*
+
 	let hashtag: any[] = [];
 	let hashtagArr;
-	if (searchData) {
+	/*if (searchData) {
 		hashtagArr = searchData?.hashtags
 			.map((strData: any) => {
 				return strData.hashtag;
