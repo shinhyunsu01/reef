@@ -98,7 +98,7 @@ const Page: NextPage<ManyUser> = ({ users }) => {
 			<Navbar />
 			<PicBody>
 				{users.map((data, i) => (
-					<Pic key={i} onClick={() => onClick(data.id)}>
+					<Pic key={i}>
 						<PicTitle>
 							<ShowAvatar
 								data={data?.avatar}
