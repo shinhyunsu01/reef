@@ -23,12 +23,17 @@ async function handler(
 				hashtag: true,
 			},
 		});
-
-		res.json({
-			ok: true,
-			users,
-			hashtags,
-		});
+		if (hashtags && users) {
+			res.json({
+				ok: true,
+				users,
+				hashtags,
+			});
+		} else {
+			res.json({
+				ok: false,
+			});
+		}
 	}
 }
 
