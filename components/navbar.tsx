@@ -279,6 +279,7 @@ export default function Navbar() {
 	};
 
 	const NaverLogout = async () => {
+		console.log("logout ok");
 		loginData("");
 		if (userInfo)
 			setUserinfo({
