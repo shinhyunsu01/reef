@@ -347,26 +347,32 @@ export default function Navbar() {
 							<HomeSvg />
 						</a>
 					</Link>
-
-					{user?.email || userInfo?.email ? (
-						<Link href={`/${user?.id}`}>
-							<a>
-								<ProfileSvg />
-							</a>
-						</Link>
-					) : (
-						<ProfileSvg onClick={loginopenFn} />
-					)}
-					{user?.email || userInfo?.email ? (
-						<UploadSvg onClick={opnUpload} />
-					) : null}
-					{user?.email || userInfo?.email ? (
-						<NaverSvg onClick={handleNaverLogin} style={{ display: "none" }} />
-					) : (
-						<NaverSvg onClick={handleNaverLogin} />
-					)}
-					{user?.email || userInfo?.email ? (
-						<LogoutSvg onClick={NaverLogout} />
+					{!isLoading ? (
+						<div>
+							{user?.email || userInfo?.email ? (
+								<Link href={`/${user?.id}`}>
+									<a>
+										<ProfileSvg />
+									</a>
+								</Link>
+							) : (
+								<ProfileSvg onClick={loginopenFn} />
+							)}
+							{user?.email || userInfo?.email ? (
+								<UploadSvg onClick={opnUpload} />
+							) : null}
+							{user?.email || userInfo?.email ? (
+								<NaverSvg
+									onClick={handleNaverLogin}
+									style={{ display: "none" }}
+								/>
+							) : (
+								<NaverSvg onClick={handleNaverLogin} />
+							)}
+							{user?.email || userInfo?.email ? (
+								<LogoutSvg onClick={NaverLogout} />
+							) : null}
+						</div>
 					) : null}
 				</Menu>
 			</Header>
