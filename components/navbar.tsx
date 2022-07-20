@@ -253,7 +253,7 @@ export default function Navbar() {
 
 							loginData({ age, birthyear, email, gender });
 							router.push({
-								pathname: `/users/${user?.id}`,
+								pathname: `/${user?.id}`,
 							});
 						}
 					});
