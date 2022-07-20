@@ -281,13 +281,13 @@ export default function Navbar() {
 	const NaverLogout = async () => {
 		console.log("logout ok");
 		loginData("");
-		if (userInfo)
-			setUserinfo({
-				birthyear: "",
-				email: "",
-				gender: "",
-				age: "",
-			});
+
+		setUserinfo({
+			birthyear: "",
+			email: "",
+			gender: "",
+			age: "",
+		});
 
 		await axios.get("/oauth2.0/token", {
 			params: {
