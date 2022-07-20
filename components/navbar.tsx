@@ -297,7 +297,7 @@ export default function Navbar() {
 				service_provider: "NAVER",
 			},
 		});
-		router.reload();
+		router.push("/");
 	};
 
 	return (
