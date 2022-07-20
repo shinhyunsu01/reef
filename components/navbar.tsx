@@ -300,7 +300,7 @@ export default function Navbar() {
 		console.log("check", user?.email, userInfo?.email);
 		loginData("");
 	};
-	console.log("fff", user?.email, userInfo?.email);
+	console.log("fff", user?.email, "bbb", userInfo?.email);
 	/*
 	useEffect(() => {
 		console.log("effect");
