@@ -4,6 +4,12 @@ import Head from "next/head";
 import styled from "styled-components";
 import { SWRConfig } from "swr";
 
+import Router from "next/router";
+
+Router.events.on("routeChangeError", (err, url, { shallow }) => {
+	console.log("Navigating to: " + "url: " + url, { cancelled: err.cancelled });
+});
+
 const Init = styled.div`
 	width: 100%;
 	max-width: 64rem;
