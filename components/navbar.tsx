@@ -144,7 +144,7 @@ const SearchMiniOpen = styled.div`
 		width: 100px;
 	}
 	@media only screen and (max-width: 320px) {
-		width: 50px;
+		width: 100px;
 	}
 `;
 interface UserInfo {
