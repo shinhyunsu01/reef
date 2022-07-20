@@ -16,6 +16,7 @@ const Frame = styled(Modal.Flex)`
 	padding: 10px;
 
 	@media only screen and (max-width: 480px) {
+		width: 95%;
 		height: 50%;
 	}
 `;
@@ -41,13 +42,14 @@ const Flex = styled.div`
 `;
 const HashTag = styled.div`
 	font-size: 22px;
-	width: 100px;
+	width: 150px;
 	font-weight: bold;
 	display: flex;
 `;
 const Kind = styled.div`
 	font-size: 12px;
-
+	width: 100%;
+	text-align: center;
 	border-radius: 5px;
 	margin-top: 5px;
 	margin-right: 5px;
@@ -57,7 +59,13 @@ const Kind = styled.div`
 `;
 const PostText = styled.div`
 	padding: 10px 30px;
+	width: 100%;
 	border-bottom-width: 2px;
+
+	@media only screen and (max-width: 480px) {
+		width: 150px;
+		padding: 10px 5px;
+	}
 `;
 
 const PicTitle = styled.div`
