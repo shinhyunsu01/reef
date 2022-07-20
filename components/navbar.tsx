@@ -299,11 +299,11 @@ export default function Navbar() {
 			},
 		});
 	};
-
+	/*
 	useEffect(() => {
 		console.log("effect");
 		router.push("/");
-	}, [userInfo]);
+	}, [userInfo]);*/
 
 	return (
 		<>
