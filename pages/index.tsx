@@ -91,14 +91,15 @@ const Page: NextPage<ManyUser> = ({ users }) => {
 	//const { data: manyUser, error } = useSWR<ManyUser>("/api/users");
 
 	const router = useRouter();
-	const onClick = (id: number) => {
+	/*	const onClick = (id: number) => {
 		router.push(`/users/${id.toString()}`);
 	}; /*
 onClick={() => {
 									onClick(data.id);
 								}}
 	*/
-	console.log(users);
+	// console.log("users", users);
+
 	return (
 		<Main>
 			<Navbar />
@@ -106,34 +107,7 @@ onClick={() => {
 				{users.map((data, i) => (
 					<Link href={`/${data.id}`} key={i}>
 						<a>
-							<Pic>
-								<PicTitle>
-									<ShowAvatar
-										data={data?.avatar}
-										layout="responsive"
-										width={100}
-										height={100}
-									/>
-									{data.nickname}
-								</PicTitle>
-
-								{data.backavatar ? (
-									<Image
-										layout="responsive"
-										width={100}
-										height={100}
-										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
-									/>
-								) : (
-									<Image
-										layout="responsive"
-										width={100}
-										height={100}
-										src={backInitImg}
-										placeholder="blur"
-									/>
-								)}
-							</Pic>
+							<div>af</div>
 						</a>
 					</Link>
 				))}
@@ -155,7 +129,7 @@ export async function getStaticProps() {
 
 	return {
 		props: {
-			users: JSON.parse(JSON.stringify(manyUser)),
+			users: manyUser, //JSON.parse(JSON.stringify(manyUser)),
 		},
 	};
 }
