@@ -98,12 +98,13 @@ onClick={() => {
 									onClick(data.id);
 								}}
 	*/
+	console.log(users);
 	return (
 		<Main>
 			<Navbar />
 			<PicBody>
 				{users.map((data, i) => (
-					<Link href={`/users/${encodeURIComponent(data.id)}`} key={i}>
+					<Link href={`/${data.id}`} key={i}>
 						<a>
 							<Pic>
 								<PicTitle>
