@@ -165,7 +165,7 @@ interface SearchResult {
 //const Navbar: NextPage<SearchResult> = ({ users, hashtags }) => {
 export default function Navbar() {
 	const { user } = useUser();
-	const { data: searchData } = useSWR<SearchResult>("/api/search");
+	const { data: searchData, error } = useSWR<SearchResult>("/api/search");
 	const router = useRouter();
 	const [uploadopen, setUploadopen] = useState(false);
 	const [loginopen, setLoginopen] = useState(false);
@@ -177,17 +177,19 @@ export default function Navbar() {
 	let hashtag: any[] = [];
 	let hashtagArr;
 
-	hashtagArr = searchData?.hashtags
-		.map((strData: any) => {
-			return strData.hashtag;
-		})
-		.toString()
-		.split(",")
-		.map((d: any) => d.slice(1));
+	if (!(searchData && error)) {
+		hashtagArr = searchData?.hashtags
+			.map((strData: any) => {
+				return strData.hashtag;
+			})
+			.toString()
+			.split(",")
+			.map((d: any) => d.slice(1));
 
-	hashtagArr?.forEach((x: any) => {
-		hashtag[x] = (hashtag[x] || 0) + 1;
-	});
+		hashtagArr?.forEach((x: any) => {
+			hashtag[x] = (hashtag[x] || 0) + 1;
+		});
+	}
 
 	let output: any = [];
 	const onChange = (e: any) => {
