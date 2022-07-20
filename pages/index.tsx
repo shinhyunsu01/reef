@@ -92,9 +92,9 @@ const Page: NextPage<ManyUser> = ({ users }) => {
 			<Navbar />
 			<PicBody>
 				{users.map((data, i) => (
-					<Link href={`/${data.id}`} key={i}>
-						<a>
-							<Pic>
+					<Pic key={i}>
+						<Link href={`/${data.id}`}>
+							<a>
 								<PicTitle>
 									<ShowAvatar
 										data={data?.avatar}
@@ -121,9 +121,9 @@ const Page: NextPage<ManyUser> = ({ users }) => {
 										placeholder="blur"
 									/>
 								)}
-							</Pic>
-						</a>
-					</Link>
+							</a>
+						</Link>
+					</Pic>
 				))}
 			</PicBody>
 		</Main>
