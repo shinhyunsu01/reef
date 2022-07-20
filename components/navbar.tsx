@@ -347,32 +347,26 @@ export default function Navbar() {
 							<HomeSvg />
 						</a>
 					</Link>
-					{!isLoading ? (
-						<div>
-							{user?.email || userInfo?.email ? (
-								<Link href={`/${user?.id}`}>
-									<a>
-										<ProfileSvg />
-									</a>
-								</Link>
-							) : (
-								<ProfileSvg onClick={loginopenFn} />
-							)}
-							{user?.email || userInfo?.email ? (
-								<UploadSvg onClick={opnUpload} />
-							) : null}
-							{user?.email || userInfo?.email ? (
-								<NaverSvg
-									onClick={handleNaverLogin}
-									style={{ display: "none" }}
-								/>
-							) : (
-								<NaverSvg onClick={handleNaverLogin} />
-							)}
-							{user?.email || userInfo?.email ? (
-								<LogoutSvg onClick={NaverLogout} />
-							) : null}
-						</div>
+
+					{!isLoading && (user?.email || userInfo?.email) ? (
+						<Link href={`/${user?.id}`}>
+							<a>
+								<ProfileSvg />
+							</a>
+						</Link>
+					) : (
+						<ProfileSvg onClick={loginopenFn} />
+					)}
+					{!isLoading && (user?.email || userInfo?.email) ? (
+						<UploadSvg onClick={opnUpload} />
+					) : null}
+					{!isLoading && (user?.email || userInfo?.email) ? (
+						<NaverSvg onClick={handleNaverLogin} style={{ display: "none" }} />
+					) : (
+						<NaverSvg onClick={handleNaverLogin} />
+					)}
+					{!isLoading && (user?.email || userInfo?.email) ? (
+						<LogoutSvg onClick={NaverLogout} />
 					) : null}
 				</Menu>
 			</Header>
