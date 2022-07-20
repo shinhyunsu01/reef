@@ -164,7 +164,7 @@ interface SearchResult {
 }
 //const Navbar: NextPage<SearchResult> = ({ users, hashtags }) => {
 export default function Navbar() {
-	const { user } = useUser();
+	const { user, isLoading } = useUser();
 	const { data: searchData, error } = useSWR<SearchResult>("/api/search");
 	const router = useRouter();
 	const [uploadopen, setUploadopen] = useState(false);

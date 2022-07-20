@@ -11,5 +11,5 @@ export default function useUser() {
 		typeof window === "undefined" ? null : "/api/users/me"
 	);
 
-	return { user: data?.user, isLoading: !data && !error };
+	return { user: data?.user, isLoading: !data?.ok && !error };
 }
