@@ -136,6 +136,16 @@ const SearchMiniOpen = styled.div`
 	border-bottom-left-radius: 15px;
 	border-bottom-right-radius: 15px;
 	background-color: rgb(244 244 246);
+
+	@media only screen and (max-width: 500px) {
+		width: 150px;
+	}
+	@media only screen and (max-width: 480px) {
+		width: 100px;
+	}
+	@media only screen and (max-width: 320px) {
+		width: 50px;
+	}
 `;
 interface UserInfo {
 	age: string;
@@ -287,40 +297,7 @@ export default function Navbar() {
 		});
 		router.reload();
 	};
-	const hashbtn = (e: any) => {
-		router.push(`/search/${e}`);
-	};
-	/*
-<SearchTool>
-					<Search>
-						<SearchInput required type="text" onChange={onChange} />
-						<SearchLogo>
-							<SearchSvg />
-						</SearchLogo>
-					</Search>
-					{searchFlag ? (
-						<SearchMiniOpen>
-							{searchInput
-								? searchInput.map((ee: any, i: any) => (
-										<HashTagBtn
-											onClick={() => {
-												hashbtn(ee.name);
-											}}
-											id={ee.name}
-											key={i}
-										>
-											<div>#{ee.name}</div>
-											<div style={{ display: "flex" }}>{ee.value}</div>
-										</HashTagBtn>
-								  ))
-								: ""}
-						</SearchMiniOpen>
-					) : (
-						""
-					)}
-				</SearchTool>
 
-*/
 	return (
 		<>
 			<Header>
