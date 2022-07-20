@@ -14,7 +14,7 @@ import useMutation from "../libs/client/useMutation";
 import useUser from "../libs/client/useUser";
 import Image from "next/image";
 import backInitImg from "../public/reef_img.jpg";
-//import backInitImg from "../../public/reef_img.jpg";
+
 import {
 	GetServerSideProps,
 	GetStaticPaths,

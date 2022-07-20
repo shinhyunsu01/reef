@@ -87,7 +87,6 @@ const Page: NextPage<hashtagForm> = (hashtagData) => {
 		if (postModal?.isLoading === true) setPostModal({ isLoading: false });
 		else setPostModal((prev) => ({ ...prev, isLoading: true }));
 	};
-	console.log("hashtagData", hashtagData);
 
 	return (
 		<Main>

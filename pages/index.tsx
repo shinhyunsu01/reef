@@ -1,16 +1,12 @@
 import { User } from ".prisma/client";
-import { useRouter } from "next/router";
 import styled from "styled-components";
-import useSWR from "swr";
 import Navbar from "../components/navbar";
 import Link from "next/link";
 import backInitImg from "../public/reef_img.jpg";
 import Image from "next/image";
 import { NextPage } from "next";
-
 import client from "../libs/server/client";
 import ShowAvatar from "../components/User/avatar";
-import useSearch from "../libs/client/useSearch";
 
 const Main = styled.div`
 	height: 100vh;
@@ -78,6 +74,7 @@ const PicTitle = styled.div`
 		border-width: 2px;
 		border-radius: 5px 5px 0 0;
 	}
+
 	z-index: 1;
 `;
 
@@ -90,16 +87,6 @@ const Page: NextPage<ManyUser> = ({ users }) => {
 	//const Page = () => {
 	//const { data: manyUser, error } = useSWR<ManyUser>("/api/users");
 
-	const router = useRouter();
-	/*	const onClick = (id: number) => {
-		router.push(`/users/${id.toString()}`);
-	}; /*
-onClick={() => {
-									onClick(data.id);
-								}}
-	*/
-	// console.log("users", users);
-
 	return (
 		<Main>
 			<Navbar />
@@ -111,7 +98,7 @@ onClick={() => {
 								<PicTitle>
 									<ShowAvatar
 										data={data?.avatar}
-										layout="responsive"
+										layout="fill"
 										width={100}
 										height={100}
 									/>

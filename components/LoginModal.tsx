@@ -6,6 +6,7 @@ import { Modal } from "./styledCom";
 const PlzLoginModal = styled(Modal.Init)`
 	background-color: initial;
 `;
+
 const Frame = styled(Modal.Flex)`
 	background-color: white;
 	width: 30%;
@@ -20,6 +21,11 @@ const Frame = styled(Modal.Flex)`
 		font-weight: normal;
 		padding-bottom: 20px;
 		font-size: 13px;
+	}
+
+	@media only screen and (max-width: 480px) {
+		width: 50%;
+		font-size: 22px;
 	}
 `;
 const CloseModal = styled.button`
@@ -57,7 +63,8 @@ const LoginModal = ({ state, naverCallback, loginCallback }: inputModal) => {
 			<Frame ref={modalRef}>
 				<div>로그인</div>
 				<p>REEF에 오신걸 환영합니다</p>
-				<NaverSvg onClick={naverCallback} style={{ width: "80px" }} />
+
+				<NaverSvg onClick={naverCallback} style={{ width: "70px" }} />
 				<CloseModal>
 					<CloseSvg onClick={loginCallback} />
 				</CloseModal>

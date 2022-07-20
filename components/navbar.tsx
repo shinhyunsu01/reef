@@ -19,7 +19,6 @@ import { Com, Modal } from "../components/styledCom";
 import Link from "next/link";
 import LoginModal from "./LoginModal";
 import useSWR from "swr";
-import useSearch from "../libs/client/useSearch";
 import { NextPage } from "next";
 import client from "../libs/server/client";
 
@@ -90,10 +89,12 @@ const SearchLogo = styled.div`
 `;
 
 const Reef = styled.div`
-	font-weight: bold;
-	font-size: 27px;
-	cursor: pointer;
-	height: 48px;
+	a {
+		font-weight: bold;
+		font-size: 27px;
+		cursor: pointer;
+		height: 48px;
+	}
 `;
 
 const Menu = styled(Com.ColCenter)`
@@ -110,7 +111,7 @@ const SearchTool = styled.div`
 	align-items: center;
 	justify-content: center;
 `;
-const HashTagBtn = styled.button`
+const HashTagBtn = styled.div`
 	width: 100%;
 	display: flex;
 	justify-content: space-between;
@@ -178,7 +179,7 @@ export default function Navbar() {
 		hashtag[x] = (hashtag[x] || 0) + 1;
 	});
 
-	let outtput: any = [];
+	let output: any = [];
 	const onChange = (e: any) => {
 		if (hashtag) {
 			let check: any[] = Object.keys(hashtag).filter((inputdata) =>
@@ -186,14 +187,14 @@ export default function Navbar() {
 			);
 
 			for (let cnt = 0; cnt < check.length; cnt++) {
-				outtput[cnt] = {
+				output[cnt] = {
 					name: check[cnt],
 					value: hashtag[check[cnt]],
 				};
 			}
 			if (e.target.value != "") setsearchFlag(true);
 			else setsearchFlag(false);
-			setSearchinput(outtput);
+			setSearchinput(output);
 		}
 	};
 
@@ -323,7 +324,11 @@ export default function Navbar() {
 	return (
 		<>
 			<Header>
-				<Reef onClick={() => router.push("/")}>REEF</Reef>
+				<Reef>
+					<Link href={"/"}>
+						<a>REEF</a>
+					</Link>
+				</Reef>
 				<SearchTool>
 					<Search>
 						<SearchInput required type="text" onChange={onChange} />
@@ -335,16 +340,14 @@ export default function Navbar() {
 						<SearchMiniOpen>
 							{searchInput
 								? searchInput.map((ee: any, i: any) => (
-										<HashTagBtn
-											onClick={() => {
-												hashbtn(ee.name);
-											}}
-											id={ee.name}
-											key={i}
-										>
-											<div>#{ee.name}</div>
-											<div style={{ display: "flex" }}>{ee.value}</div>
-										</HashTagBtn>
+										<Link href={`/search/${ee.name}`} key={i}>
+											<a>
+												<HashTagBtn>
+													<div>#{ee.name}</div>
+													<div style={{ display: "flex" }}>{ee.value}</div>
+												</HashTagBtn>
+											</a>
+										</Link>
 								  ))
 								: ""}
 						</SearchMiniOpen>
@@ -353,9 +356,18 @@ export default function Navbar() {
 					)}
 				</SearchTool>
 				<Menu>
-					<HomeSvg onClick={() => router.push("/")} />
+					<Link href={"/"}>
+						<a>
+							<HomeSvg />
+						</a>
+					</Link>
+
 					{user?.email || userInfo?.email ? (
-						<ProfileSvg onClick={() => router.push(`/users/${user?.id}`)} />
+						<Link href={`/${user?.id}`}>
+							<a>
+								<ProfileSvg />
+							</a>
+						</Link>
 					) : (
 						<ProfileSvg onClick={loginopenFn} />
 					)}
