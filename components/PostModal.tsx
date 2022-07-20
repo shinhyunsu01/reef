@@ -13,6 +13,11 @@ const Frame = styled(Modal.Flex)`
 
 	width: 70%;
 	height: 70%;
+	padding: 10px;
+
+	@media only screen and (max-width: 480px) {
+		height: 50%;
+	}
 `;
 const CloseModal = styled.button`
 	position: absolute;
@@ -27,29 +32,49 @@ const UploadModal = styled.div`
 	width: 50%;
 	position: relative;
 	border-radius: 20px;
-	padding: 0 10px;
+	margin: 0 2px;
 	overflow: auto;
 `;
 const Flex = styled.div`
 	display: flex;
-	align-items: center;
+	flex-direction: column;
 `;
-const NickName = styled.div`
+const HashTag = styled.div`
 	font-size: 22px;
+	width: 100px;
 	font-weight: bold;
+	display: flex;
 `;
-const Kind = styled.span`
+const Kind = styled.div`
 	font-size: 12px;
-	padding: 4px 4px;
 
-	margin: 4px 8px;
 	border-radius: 5px;
+	margin-top: 5px;
+	margin-right: 5px;
+	padding: 0px 2px;
 	color: white;
 	background-color: rgba(46, 142, 155, 0.7);
 `;
 const PostText = styled.div`
 	padding: 10px 30px;
 	border-bottom-width: 2px;
+`;
+
+const PicTitle = styled.div`
+	display: flex;
+
+	@media only screen and (max-width: 320px) {
+	}
+
+	@media only screen and (max-width: 480px) {
+	}
+
+	z-index: 1;
+`;
+const RowFlex = styled.div`
+	display: flex;
+	align-items: center;
+	margin-top: 10px;
 `;
 
 const PostModal = ({ handler, post }: any) => {
@@ -82,28 +107,30 @@ const PostModal = ({ handler, post }: any) => {
 				</UploadModal>
 				<UploadModal>
 					<Flex>
-						<ShowAvatar
-							data={post.data.avatar}
-							layout="responsive"
-							width={100}
-							height={100}
-						/>
-						<NickName>
-							{post.data.nickname}
-							<Flex>
-								{post.data.animateType ? (
-									<Kind>{post.data.animateType}</Kind>
-								) : (
-									""
-								)}
-								{post.data.coralType ? <Kind>{post.data.coralType}</Kind> : ""}
-								{post.data.hashtag
-									? post.data.hashtag
-											.split(",")
-											.map((hash: any, i: any) => <Kind key={i}>{hash}</Kind>)
-									: ""}
-							</Flex>
-						</NickName>
+						<RowFlex>
+							<PicTitle>
+								<ShowAvatar
+									data={post.data.avatar}
+									layout="fill"
+									width={100}
+									height={100}
+								/>
+							</PicTitle>
+							<div>{post.data.nickname}</div>
+						</RowFlex>
+						<HashTag>
+							{post.data.animateType ? (
+								<Kind>{post.data.animateType}</Kind>
+							) : (
+								""
+							)}
+							{post.data.coralType ? <Kind>{post.data.coralType}</Kind> : ""}
+							{post.data.hashtag
+								? post.data.hashtag
+										.split(",")
+										.map((hash: any, i: any) => <Kind key={i}>{hash}</Kind>)
+								: ""}
+						</HashTag>
 					</Flex>
 
 					<PostText>{post.data.description}</PostText>

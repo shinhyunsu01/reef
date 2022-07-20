@@ -17,7 +17,6 @@ import client from "../../libs/server/client";
 import { UploadInfo } from ".prisma/client";
 
 const Main = styled.div`
-	height: 100vh;
 	width: 100%;
 	display: flex;
 	justify-content: center;
@@ -26,6 +25,7 @@ const Main = styled.div`
 
 const PicBody = styled.div`
 	width: 100%;
+
 	margin-top: 64px;
 	margin-left: 0;
 	display: grid;
