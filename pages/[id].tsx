@@ -127,6 +127,11 @@ const WaterInfo = styled.div`
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: 0.5rem;
 	}
+	@media only screen and (min-width: 600px) {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 0.5rem;
+	}
 `;
 
 const ProductInfo = styled.div`
