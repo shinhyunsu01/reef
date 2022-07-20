@@ -96,6 +96,7 @@ async function handler(
 
 			await req.session.save();
 			await res.revalidate("/");
+			await res.revalidate(`/${user.id}`);
 		}
 		console.log("api post");
 		if (req.body === "") {
