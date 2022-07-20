@@ -279,7 +279,7 @@ export default function Navbar() {
 	};
 
 	const NaverLogout = async () => {
-		console.log("logout ok");
+		//console.log("logout ok");
 		loginData("");
 
 		setUserinfo({
@@ -298,8 +298,11 @@ export default function Navbar() {
 				service_provider: "NAVER",
 			},
 		});
-		router.push("/");
 	};
+
+	useEffect(() => {
+		router.push("/");
+	}, [userInfo]);
 
 	return (
 		<>
