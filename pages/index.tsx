@@ -96,12 +96,7 @@ const Page: NextPage<ManyUser> = ({ users }) => {
 						<Link href={`/${data.id}`}>
 							<a>
 								<PicTitle>
-									<ShowAvatar
-										data={data?.avatar}
-										layout="fill"
-										width={100}
-										height={100}
-									/>
+									<ShowAvatar data={data?.avatar} layout="fill" />
 									{data.nickname}
 								</PicTitle>
 

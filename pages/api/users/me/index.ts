@@ -97,8 +97,9 @@ async function handler(
 			await req.session.save();
 			await res.revalidate("/");
 		}
-
+		console.log("api post");
 		if (req.body === "") {
+			console.log("api logout");
 			delete req.session.user;
 			await req.session.destroy();
 		}

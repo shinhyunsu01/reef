@@ -108,8 +108,6 @@ const PostModal = ({ handler, post }: any) => {
 				<UploadModal>
 					<Image
 						layout="fill"
-						width={300}
-						height={300}
 						src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${post.data?.postavatar}/public`}
 					/>
 				</UploadModal>
@@ -117,12 +115,7 @@ const PostModal = ({ handler, post }: any) => {
 					<Flex>
 						<RowFlex>
 							<PicTitle>
-								<ShowAvatar
-									data={post.data.avatar}
-									layout="fill"
-									width={100}
-									height={100}
-								/>
+								<ShowAvatar data={post.data.avatar} layout="fill" />
 							</PicTitle>
 							<div>{post.data.nickname}</div>
 						</RowFlex>

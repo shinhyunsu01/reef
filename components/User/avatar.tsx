@@ -36,8 +36,8 @@ const AvatarImage = styled.div`
 interface inputType {
 	data: string | null;
 	layout: any;
-	width: number;
-	height: number;
+	width?: number;
+	height?: number;
 }
 const ShowAvatar = ({ data, layout, width, height }: inputType) => {
 	if (!data) {
