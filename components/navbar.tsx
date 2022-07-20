@@ -279,7 +279,7 @@ export default function Navbar() {
 	};
 
 	const NaverLogout = async () => {
-		//console.log("logout ok");
+		console.log("logout ok");
 
 		setUserinfo({
 			birthyear: "",
