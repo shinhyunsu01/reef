@@ -229,7 +229,7 @@ export default function Navbar() {
 		const login = () => {
 			naverLogin = new naver.LoginWithNaverId({
 				clientId: process.env.NEXT_PUBLIC_NAVER_LOGIN_ID, // ClientID
-				callbackUrl: "https://reef-nine.vercel.app",
+				callbackUrl: "http://localhost:3000",
 				isPopup: false, // 팝업 형태로 인증 여부
 				loginButton: { color: "green", type: 1, height: 10 },
 			});
@@ -254,6 +254,7 @@ export default function Navbar() {
 							});
 
 							loginData({ age, birthyear, email, gender });
+
 							router.push({
 								pathname: `/`,
 							});
@@ -279,8 +280,6 @@ export default function Navbar() {
 	};
 
 	const NaverLogout = async () => {
-		console.log("logout ok");
-
 		setUserinfo({
 			birthyear: "",
 			email: "",
@@ -297,10 +296,9 @@ export default function Navbar() {
 				service_provider: "NAVER",
 			},
 		});
-		console.log("check", user?.email, userInfo?.email);
 		loginData("");
 	};
-	console.log("fff", user?.email, "bbb", userInfo?.email);
+
 	/*
 	useEffect(() => {
 		console.log("effect");
@@ -348,7 +346,7 @@ export default function Navbar() {
 						</a>
 					</Link>
 
-					{!isLoading && (user?.email || userInfo?.email) ? (
+					{!isLoading && userInfo?.email ? (
 						<Link href={`/${user?.id}`}>
 							<a>
 								<ProfileSvg />
@@ -357,15 +355,15 @@ export default function Navbar() {
 					) : (
 						<ProfileSvg onClick={loginopenFn} />
 					)}
-					{!isLoading && (user?.email || userInfo?.email) ? (
+					{!isLoading && userInfo?.email ? (
 						<UploadSvg onClick={opnUpload} />
 					) : null}
-					{!isLoading && (user?.email || userInfo?.email) ? (
+					{!isLoading && userInfo?.email ? (
 						<NaverSvg onClick={handleNaverLogin} style={{ display: "none" }} />
 					) : (
 						<NaverSvg onClick={handleNaverLogin} />
 					)}
-					{!isLoading && (user?.email || userInfo?.email) ? (
+					{!isLoading && userInfo?.email ? (
 						<LogoutSvg onClick={NaverLogout} />
 					) : null}
 				</Menu>

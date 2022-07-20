@@ -41,7 +41,7 @@ async function handler(
 			});
 		} else {
 			res.json({
-				ok: false,
+				ok: true,
 			});
 		}
 	}
@@ -98,9 +98,8 @@ async function handler(
 			await res.revalidate("/");
 			await res.revalidate(`/${user.id}`);
 		}
-		console.log("api post");
+
 		if (req.body === "") {
-			console.log("api logout");
 			delete req.session.user;
 			await req.session.destroy();
 		}
