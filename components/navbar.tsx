@@ -297,8 +297,10 @@ export default function Navbar() {
 				service_provider: "NAVER",
 			},
 		});
+		console.log("check", user?.email, userInfo?.email);
 		loginData("");
 	};
+	console.log("fff", user?.email, userInfo?.email);
 	/*
 	useEffect(() => {
 		console.log("effect");
