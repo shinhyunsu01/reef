@@ -280,7 +280,6 @@ export default function Navbar() {
 
 	const NaverLogout = async () => {
 		//console.log("logout ok");
-		loginData("");
 
 		setUserinfo({
 			birthyear: "",
@@ -298,6 +297,7 @@ export default function Navbar() {
 				service_provider: "NAVER",
 			},
 		});
+		loginData("");
 	};
 	/*
 	useEffect(() => {
