@@ -29,7 +29,7 @@ const PicBody = styled.div`
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 `;
 
-const Pic = styled.a`
+const Pic = styled.div`
 	width: 100%;
 
 	aspect-ratio: 1 / 1;
@@ -107,7 +107,34 @@ onClick={() => {
 				{users.map((data, i) => (
 					<Link href={`/${data.id}`} key={i}>
 						<a>
-							<div>af</div>
+							<Pic>
+								<PicTitle>
+									<ShowAvatar
+										data={data?.avatar}
+										layout="responsive"
+										width={100}
+										height={100}
+									/>
+									{data.nickname}
+								</PicTitle>
+
+								{data.backavatar ? (
+									<Image
+										layout="responsive"
+										width={100}
+										height={100}
+										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
+									/>
+								) : (
+									<Image
+										layout="responsive"
+										width={100}
+										height={100}
+										src={backInitImg}
+										placeholder="blur"
+									/>
+								)}
+							</Pic>
 						</a>
 					</Link>
 				))}
