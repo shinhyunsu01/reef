@@ -15,22 +15,38 @@ import { useState } from "react";
 
 import client from "../../libs/server/client";
 import { UploadInfo } from ".prisma/client";
+import { SearchSvg } from "../../components/icon";
 
 const Main = styled.div`
 	width: 100%;
+
 	display: flex;
-	justify-content: center;
-	flex-direction: row;
+	flex-direction: column;
 `;
 
 const PicBody = styled.div`
 	width: 100%;
 
-	margin-top: 64px;
+	margin-top: 20px;
 	margin-left: 0;
 	display: grid;
 	gap: 16px;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
+`;
+const SearchResultDiv = styled.div`
+	margin-top: 70px;
+	padding: 0 15px;
+	display: flex;
+
+	width: 100%;
+	height: 30px;
+	align-items: end;
+	div span:nth-child(1) {
+		font-size: 20px;
+		font-weight: bold;
+		border-bottom-width: 2px;
+		border-color: blue;
+	}
 `;
 
 const Pic = styled.div`
@@ -44,6 +60,7 @@ const Pic = styled.div`
 
 	&:hover {
 		transform: scale(1.1);
+		z-index: 5;
 	}
 	&:nth-child(3n) {
 		transform-origin: right;
@@ -91,6 +108,16 @@ const Page: NextPage<hashtagForm> = (hashtagData) => {
 	return (
 		<Main>
 			<Navbar />
+			<SearchResultDiv>
+				<SearchSvg style={{ width: "2rem", height: "2rem" }} />
+				<div>
+					검색 결과 :{" "}
+					<span>
+						{hashtagData?.hashtag.length ? hashtagData?.hashtag.length : "0"}
+					</span>
+					<span> 개 발견</span>
+				</div>
+			</SearchResultDiv>
 			<PicBody>
 				{hashtagData
 					? hashtagData?.hashtag.map((data: any, i: any) => (

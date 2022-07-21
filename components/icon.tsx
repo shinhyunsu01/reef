@@ -1,3 +1,4 @@
+import { AnyAaaaRecord } from "dns";
 import styled from "styled-components";
 
 const Button = {
@@ -180,7 +181,7 @@ export const LogoutSvg = (key: any) => {
 	);
 };
 
-export const SearchSvg = () => {
+export const SearchSvg = (key: any) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -190,6 +191,7 @@ export const SearchSvg = () => {
 			viewBox="0 0 24 24"
 			stroke="currentColor"
 			strokeWidth="2"
+			{...key}
 		>
 			<path
 				strokeLinecap="round"

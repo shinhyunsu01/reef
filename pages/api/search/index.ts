@@ -11,6 +11,8 @@ async function handler(
 		const users = await client.user.findMany({
 			select: {
 				nickname: true,
+				avatar: true,
+				id: true,
 			},
 		});
 		const hashtags = await client.uploadInfo.findMany({

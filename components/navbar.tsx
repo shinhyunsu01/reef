@@ -22,6 +22,7 @@ import useSWR from "swr";
 import { NextPage } from "next";
 import client from "../libs/server/client";
 import { User } from ".prisma/client";
+import Image from "next/image";
 
 const Header = styled(Com.ColCenter)`
 	background-color: white;
@@ -114,6 +115,7 @@ const SearchTool = styled.div`
 `;
 const HashTagBtn = styled.div`
 	width: 100%;
+	height: 30px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -128,6 +130,22 @@ const HashTagBtn = styled.div`
 		font-weight: bold;
 	}
 `;
+const HashImg = styled.div`
+	position: relative;
+	width: 30px;
+	height: 30px;
+	img {
+		border-radius: 30px;
+	}
+`;
+const HashImgFont = styled.div`
+	margin-left: 20px;
+	font-weight: bold;
+`;
+const Flex = styled.div`
+	display: flex;
+`;
+
 const SearchMiniOpen = styled.div`
 	width: 256px;
 	height: 100px;
@@ -161,31 +179,33 @@ interface MutationResult {
 
 interface SearchResult {
 	ok: boolean;
-	users: string[];
+	users: User[];
 	hashtags: string[];
 }
 //const Navbar: NextPage<SearchResult> = ({ users, hashtags }) => {
 export default function Navbar() {
-	//const { user, isLoading } = useUser();
+	const Ref = useRef<any>(null);
 	const { data: user, mutate } = useSWR("/api/users/me");
 	const { data: searchData, error } = useSWR<SearchResult>("/api/search");
+	console.log("searchData", searchData);
 	const router = useRouter();
 	const [uploadopen, setUploadopen] = useState(false);
 	const [loginopen, setLoginopen] = useState(false);
-	/*
-	const [userInfo, setUserinfo] = useState({
-		email: user?.user.email,
-	});
-	console.log("first", userInfo);*/
+
+	//const [searchResult , searchResultData] = useState();
 
 	const [searchInput, setSearchinput] = useState([]);
+
 	const [searchFlag, setsearchFlag] = useState(false);
 	const [loginData, { data: logindataa }] =
 		useMutation<MutationResult>("/api/users/me");
 
 	let hashtag: any[] = [];
+	let users: any[] = [];
 	let hashtagArr;
+	let usersArr;
 
+	//서버 데이터 -> 분석 할수 있게 array 로 변환
 	if (!(searchData && error)) {
 		hashtagArr = searchData?.hashtags
 			.map((strData: any) => {
@@ -197,6 +217,11 @@ export default function Navbar() {
 
 		hashtagArr?.forEach((x: any) => {
 			hashtag[x] = (hashtag[x] || 0) + 1;
+		});
+
+		searchData?.users.map((searchUsers: any) => {
+			if (searchUsers.nickname === null) users.push("");
+			else users.push(searchUsers.nickname.toLowerCase());
 		});
 	}
 
@@ -210,12 +235,49 @@ export default function Navbar() {
 			for (let cnt = 0; cnt < check.length; cnt++) {
 				output[cnt] = {
 					name: check[cnt],
+					type: "post",
 					value: hashtag[check[cnt]],
 				};
 			}
 			if (e.target.value != "") setsearchFlag(true);
 			else setsearchFlag(false);
+
 			setSearchinput(output);
+		}
+		if (users) {
+			let check: any[] = users.filter((inputdata) =>
+				inputdata.includes(e.target.value)
+			);
+
+			for (let cnt = 0; cnt < check.length; cnt++) {
+				let usersLength = searchData?.users.length || 0;
+				//console.log("usersLength", usersLength, typeof usersLength);
+				let saveAvatar = "";
+				let id = 0;
+				for (let count = 0; count < usersLength; count++) {
+					if (searchData?.users[count].nickname?.toLowerCase() === check[cnt]) {
+						if (searchData?.users[count].avatar) {
+							saveAvatar = searchData?.users[count].avatar || "";
+							id = searchData?.users[count].id || 0;
+						} else {
+							saveAvatar = "";
+							id = 0;
+						}
+
+						break;
+					}
+				}
+
+				output[cnt] = {
+					name: check[cnt],
+					type: "user",
+					id: id,
+					avatar: saveAvatar,
+				};
+			}
+
+			if (e.target.value != "") setsearchFlag(true);
+			else setsearchFlag(false);
 		}
 	};
 
@@ -285,11 +347,6 @@ export default function Navbar() {
 	};
 
 	const NaverLogout = async () => {
-		/*setUserinfo({
-			email: "",
-		});*/
-
-		console.log("logout");
 		await axios.get("/oauth2.0/token", {
 			params: {
 				grant_type: "delete",
@@ -304,9 +361,7 @@ export default function Navbar() {
 	};
 
 	useEffect(() => {
-		console.log("mutation", logindataa, "swr", user);
 		if (logindataa?.user?.email) {
-			//cosole.log("check data", { ...logindataa?.user });
 			mutate(
 				{
 					ok: true,
@@ -317,9 +372,18 @@ export default function Navbar() {
 		}
 	}, [logindataa, user]);
 
+	useEffect(() => {
+		document.addEventListener("mousedown", clickModalOutside);
+		return () => {
+			document.removeEventListener("mousedown", clickModalOutside);
+		};
+	});
+	const clickModalOutside = (event: any) => {
+		if (!Ref.current.contains(event.target)) setsearchFlag(false);
+	};
 	return (
 		<>
-			<Header>
+			<Header ref={Ref}>
 				<Reef>
 					<Link href={"/"}>
 						<a>REEF</a>
@@ -327,7 +391,13 @@ export default function Navbar() {
 				</Reef>
 				<SearchTool>
 					<Search>
-						<SearchInput required type="text" onChange={onChange} />
+						<SearchInput
+							required
+							type="text"
+							onChange={onChange}
+							defaultValue={router.asPath.split("/search/")[1]}
+							onFocus={onChange}
+						/>
 						<SearchLogo>
 							<SearchSvg />
 						</SearchLogo>
@@ -336,14 +406,36 @@ export default function Navbar() {
 						<SearchMiniOpen>
 							{searchInput
 								? searchInput.map((ee: any, i: any) => (
-										<Link href={`/search/${ee.name}`} key={i}>
-											<a>
-												<HashTagBtn>
-													<div>#{ee.name}</div>
-													<div style={{ display: "flex" }}>{ee.value}</div>
-												</HashTagBtn>
-											</a>
-										</Link>
+										<>
+											{ee.type === "post" ? (
+												<Link href={`/search/${ee.name}`} key={i}>
+													<a>
+														<HashTagBtn>
+															<div>#{ee.name}</div>
+															<div style={{ display: "flex" }}>{ee.value}</div>
+														</HashTagBtn>
+													</a>
+												</Link>
+											) : (
+												<Link href={`/search/${ee.name}`} key={i}>
+													<a>
+														<HashTagBtn>
+															<Flex>
+																<HashImg>
+																	<Image
+																		layout="fill"
+																		width={100}
+																		height={100}
+																		src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${ee?.avatar}/public`}
+																	/>
+																</HashImg>
+																<HashImgFont>{ee.name}</HashImgFont>
+															</Flex>
+														</HashTagBtn>
+													</a>
+												</Link>
+											)}
+										</>
 								  ))
 								: ""}
 						</SearchMiniOpen>
@@ -385,23 +477,3 @@ export default function Navbar() {
 		</>
 	);
 }
-/*
-
-{user?.user.email ? (
-						<ProfileSvg
-							onClick={() => {
-								router.push(`/${user?.user.id}`);
-							}}
-						/>
-					) : (
-						<ProfileSvg onClick={loginopenFn} />
-					)}
-					{user?.user.email ? <UploadSvg onClick={opnUpload} /> : null}
-					{user?.user.email ? (
-						<NaverSvg onClick={handleNaverLogin} style={{ display: "none" }} />
-					) : (
-						<NaverSvg onClick={handleNaverLogin} />
-					)}
-					{user?.user.email ? <LogoutSvg onClick={NaverLogout} /> : null}
-
-*/
