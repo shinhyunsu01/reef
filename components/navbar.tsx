@@ -391,12 +391,14 @@ export default function Navbar() {
 	return (
 		<>
 			{loginloading ? (
-				<BallTriangle
-					height="100"
-					width="100"
-					color="blue"
-					ariaLabel="Loading"
-				/>
+				<Modal.Init>
+					<BallTriangle
+						height="100"
+						width="100"
+						color="blue"
+						ariaLabel="Loading"
+					/>
+				</Modal.Init>
 			) : (
 				""
 			)}
