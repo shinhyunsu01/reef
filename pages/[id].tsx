@@ -366,6 +366,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 	};
 
 	useEffect(() => {}, [prevPost]);
+	//
 	const postImgClick = (i: number, resData?: UploadInfo) => {
 		if (i >= 0) {
 			setPrevPost(i + 1);
