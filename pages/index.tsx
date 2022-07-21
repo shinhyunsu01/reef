@@ -122,16 +122,12 @@ const Page: NextPage<ManyUser> = ({ users }) => {
 
 	return (
 		<Main>
+			<Navbar />
 			<PicBody>
 				{users.map((data, i) => (
 					<Pic key={i} prevPage={prevLink}>
 						<Link href={`/${data.id}`}>
 							<a>
-								<PicTitle>
-									<ShowAvatar data={data?.avatar} layout="fill" />
-									{data.nickname === null ? "닉네임" : data.nickname}
-								</PicTitle>
-
 								{data.backavatar ? (
 									<Image
 										layout="responsive"
