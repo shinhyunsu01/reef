@@ -3,7 +3,7 @@ import Router, { useRouter } from "next/router";
 import styled from "styled-components";
 import axios from "axios";
 import useMutation from "../libs/client/useMutation";
-
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import {
 	CloseSvg,
 	HomeSvg,
@@ -23,6 +23,7 @@ import { NextPage } from "next";
 import client from "../libs/server/client";
 import { User } from ".prisma/client";
 import Image from "next/image";
+import { BallTriangle } from "react-loader-spinner";
 
 const Header = styled(Com.ColCenter)`
 	background-color: white;
@@ -191,12 +192,12 @@ export default function Navbar() {
 	const router = useRouter();
 	const [uploadopen, setUploadopen] = useState(false);
 	const [loginopen, setLoginopen] = useState(false);
-
-	//const [searchResult , searchResultData] = useState();
+	const [loginloading, setLoginloading] = useState(false);
 
 	const [searchInput, setSearchinput] = useState([]);
 
 	const [searchFlag, setsearchFlag] = useState(false);
+
 	const [loginData, { data: logindataa }] =
 		useMutation<MutationResult>("/api/users/me");
 
@@ -239,10 +240,6 @@ export default function Navbar() {
 					value: hashtag[check[cnt]],
 				};
 			}
-			if (e.target.value != "") setsearchFlag(true);
-			else setsearchFlag(false);
-
-			setSearchinput(output);
 		}
 		if (users) {
 			let check: any[] = users.filter((inputdata) =>
@@ -275,10 +272,11 @@ export default function Navbar() {
 					avatar: saveAvatar,
 				};
 			}
-
-			if (e.target.value != "") setsearchFlag(true);
-			else setsearchFlag(false);
 		}
+		if (e.target.value !== "") setsearchFlag(true);
+		else setsearchFlag(false);
+
+		setSearchinput(output);
 	};
 
 	const opnUpload = () => {
@@ -319,7 +317,7 @@ export default function Navbar() {
 							/*setUserinfo({
 								email,
 							});*/
-
+							setLoginloading(true);
 							loginData({ age, birthyear, email, gender });
 
 							router.push({
@@ -362,6 +360,7 @@ export default function Navbar() {
 
 	useEffect(() => {
 		console.log("mutate", logindataa);
+
 		if (logindataa?.user?.email) {
 			console.log("okkk");
 			mutate(
@@ -371,6 +370,7 @@ export default function Navbar() {
 				},
 				false
 			);
+			setLoginloading(false);
 		}
 	}, [logindataa, user]);
 
@@ -383,8 +383,24 @@ export default function Navbar() {
 	const clickModalOutside = (event: any) => {
 		if (!Ref.current.contains(event.target)) setsearchFlag(false);
 	};
+
+	useEffect(() => {
+		setsearchFlag(false);
+	}, [router.asPath]);
+
 	return (
 		<>
+			{loginloading ? (
+				<BallTriangle
+					height="100"
+					width="100"
+					color="blue"
+					ariaLabel="Loading"
+				/>
+			) : (
+				""
+			)}
+
 			<Header ref={Ref}>
 				<Reef>
 					<Link href={"/"}>
