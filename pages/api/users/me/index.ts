@@ -67,6 +67,8 @@ async function handler(
 					nickname,
 				},
 			});
+			await res.revalidate("/");
+			await res.revalidate(`/${req?.session?.user?.id}`);
 		} else if (email) {
 			user = await client.user.upsert({
 				where: {
