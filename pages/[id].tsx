@@ -244,6 +244,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 
 	//업로드 할때 미리 보기
 	const [profilePreImg, setProfilePreImg] = useState("");
+	const [backprofilePreImg, setbackProfilePreImg] = useState("");
 
 	useEffect(() => {
 		storePathValues();
@@ -256,8 +257,6 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		const prevPath = storage.getItem("currentPath") || "";
 		storage.setItem("prevPath", prevPath);
 		storage.setItem("currentPath", globalThis.location.pathname);
-
-		console.log("22prev", storage.getItem("prevPath"));
 	};
 
 	const productData = [
@@ -340,6 +339,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		if (all?.nickname) {
 			uploadFn({ nickname: all.nickname });
 		}
+
 		aquaInfoFn({ ...all });
 		setEditOpen(false);
 	};
@@ -351,7 +351,9 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		const file = input.files[0];
 		const readData = URL.createObjectURL(file);
 
-		setProfilePreImg(readData);
+		e.target.id === "backImg"
+			? setbackProfilePreImg(readData)
+			: setProfilePreImg(readData);
 
 		const { uploadURL } = await (await fetch("/api/files")).json();
 		const imageId = await cloudFlareUpload(uploadURL, file);
@@ -362,8 +364,12 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 
 		router.reload();
 	};
+
+	useEffect(() => {}, [prevPost]);
 	const postImgClick = (i: number, resData?: UploadInfo) => {
-		if (i) setPrevPost(i + 1);
+		if (i >= 0) {
+			setPrevPost(i + 1);
+		}
 		if (resData) {
 			const data = {
 				postavatar: resData.avatar,
@@ -402,12 +408,17 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 						) : (
 							""
 						)}
-						{userInfo?.backavatar ? (
+
+						{userInfo?.backavatar || backprofilePreImg ? (
 							<BackProfileImg>
-								<Image
-									layout="fill"
-									src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${userInfo?.backavatar}/public`}
-								/>
+								{!backprofilePreImg ? (
+									<Image
+										layout="fill"
+										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${userInfo?.backavatar}/public`}
+									/>
+								) : (
+									<Image layout="fill" src={backprofilePreImg} />
+								)}
 							</BackProfileImg>
 						) : (
 							<BackProfileImg>
@@ -435,14 +446,21 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 							)}
 							{userInfo?.avatar || profilePreImg ? (
 								<ProfileImg>
-									<Image
-										layout="responsive"
-										width={100}
-										height={100}
-										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${
-											userInfo?.avatar ? userInfo?.avatar : profilePreImg
-										}/public`}
-									/>
+									{!profilePreImg ? (
+										<Image
+											layout="responsive"
+											width={100}
+											height={100}
+											src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${userInfo?.avatar}/public`}
+										/>
+									) : (
+										<Image
+											layout="responsive"
+											width={100}
+											height={100}
+											src={profilePreImg}
+										/>
+									)}
 								</ProfileImg>
 							) : (
 								<ProfilePic

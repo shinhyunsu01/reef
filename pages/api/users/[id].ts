@@ -61,6 +61,7 @@ async function handler(
 				},
 			});
 		} else {
+			delete req.body.nickname;
 			info = await client.aquaInfo.update({
 				where: {
 					id: already?.id,

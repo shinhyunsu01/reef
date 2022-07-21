@@ -114,7 +114,6 @@ const Page: NextPage<ManyUser> = ({ users }) => {
 		readPrev = storage.getItem("prevPath");
 
 		users.forEach((data, i) => {
-			console.log(data.id, typeof data.id, readPrev.substr(1));
 			if (data.id === Number(readPrev.substr(1))) {
 				setPrevLink(Number(i + 1));
 			}

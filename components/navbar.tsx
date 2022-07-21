@@ -187,7 +187,7 @@ export default function Navbar() {
 	const Ref = useRef<any>(null);
 	const { data: user, mutate } = useSWR("/api/users/me");
 	const { data: searchData, error } = useSWR<SearchResult>("/api/search");
-	console.log("searchData", searchData);
+
 	const router = useRouter();
 	const [uploadopen, setUploadopen] = useState(false);
 	const [loginopen, setLoginopen] = useState(false);
@@ -417,7 +417,7 @@ export default function Navbar() {
 													</a>
 												</Link>
 											) : (
-												<Link href={`/search/${ee.name}`} key={i}>
+												<Link href={`/${ee.id}`} key={i}>
 													<a>
 														<HashTagBtn>
 															<Flex>
