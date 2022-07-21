@@ -242,6 +242,9 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 	const [uploadFn] = useMutation("/api/users/me");
 	const [prevPost, setPrevPost] = useState(0);
 
+	//업로드 할때 미리 보기
+	const [profilePreImg, setProfilePreImg] = useState("");
+
 	useEffect(() => {
 		storePathValues();
 	}, [router.asPath]);
@@ -346,6 +349,9 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		const input = e.target as HTMLInputElement;
 		if (!input.files?.length) return;
 		const file = input.files[0];
+		const readData = URL.createObjectURL(file);
+
+		setProfilePreImg(readData);
 
 		const { uploadURL } = await (await fetch("/api/files")).json();
 		const imageId = await cloudFlareUpload(uploadURL, file);
@@ -359,9 +365,6 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 	const postImgClick = (i: number, resData?: UploadInfo) => {
 		if (i) setPrevPost(i + 1);
 		if (resData) {
-			//const usserInfoData = aquaInfoInitData?.userInfo;
-			//const data = { ...resData, userInfoData };
-			//setPostModal((prev) => ({ ...prev, data }));
 			const data = {
 				postavatar: resData.avatar,
 				avatar: userInfo.avatar,
@@ -430,17 +433,25 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 							) : (
 								""
 							)}
-							{userInfo?.avatar ? (
+							{userInfo?.avatar || profilePreImg ? (
 								<ProfileImg>
 									<Image
 										layout="responsive"
 										width={100}
 										height={100}
-										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${userInfo?.avatar}/public`}
+										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${
+											userInfo?.avatar ? userInfo?.avatar : profilePreImg
+										}/public`}
 									/>
 								</ProfileImg>
 							) : (
-								<ProfilePic style={{ backgroundColor: "blue" }} />
+								<ProfilePic
+									style={{
+										backgroundColor: "rgba(0, 0, 0, 0.5)",
+										borderWidth: "2px",
+										borderStyle: "dashed",
+									}}
+								/>
 							)}
 						</ProfilePic>
 					</UserProfileDivision>
