@@ -4,7 +4,8 @@ import Head from "next/head";
 import styled from "styled-components";
 import { SWRConfig } from "swr";
 
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
+import { useEffect } from "react";
 
 Router.events.on("routeChangeError", (err, url, { shallow }) => {
 	console.log("Navigating to: " + "url: " + url, { cancelled: err.cancelled });

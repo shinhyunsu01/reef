@@ -7,9 +7,11 @@ import Image from "next/image";
 import { NextPage } from "next";
 import client from "../libs/server/client";
 import ShowAvatar from "../components/User/avatar";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const Main = styled.div`
-	height: 100vh;
+	//height: 100vh;
 	width: 100%;
 	display: flex;
 	justify-content: center;
@@ -25,7 +27,7 @@ const PicBody = styled.div`
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 `;
 
-const Pic = styled.div`
+const Pic = styled.div<any>`
 	width: 100%;
 
 	aspect-ratio: 1 / 1;
@@ -36,12 +38,19 @@ const Pic = styled.div`
 
 	&:hover {
 		transform: scale(1.1);
+
+		z-index: 5;
 	}
+
 	&:nth-child(3n) {
 		transform-origin: right;
 	}
 	&:nth-child(3n + 1) {
 		transform-origin: left;
+	}
+	&:hover:nth-child(${(props) =>
+				props.prevPage === "" ? "" : Number(props.prevPage)}) {
+		transform: scale(1);
 	}
 	cursor: pointer;
 `;
@@ -87,17 +96,42 @@ const Page: NextPage<ManyUser> = ({ users }) => {
 	//const Page = () => {
 	//const { data: manyUser, error } = useSWR<ManyUser>("/api/users");
 
+	const [prevLink, setPrevLink] = useState(0);
+	const router = useRouter();
+	useEffect(() => {
+		storePathValues();
+	}, [router.asPath]);
+	let readPrev: any;
+	const storePathValues = () => {
+		const storage = globalThis?.sessionStorage;
+
+		if (!storage) return;
+		const prevPath = storage.getItem("currentPath") || "";
+
+		storage.setItem("prevPath", prevPath);
+		storage.setItem("currentPath", globalThis.location.pathname);
+
+		readPrev = storage.getItem("prevPath");
+
+		users.forEach((data, i) => {
+			console.log(data.id, typeof data.id, readPrev.substr(1));
+			if (data.id === Number(readPrev.substr(1))) {
+				setPrevLink(Number(i + 1));
+			}
+		});
+	};
+
 	return (
 		<Main>
 			<Navbar />
 			<PicBody>
 				{users.map((data, i) => (
-					<Pic key={i}>
+					<Pic key={i} prevPage={prevLink}>
 						<Link href={`/${data.id}`}>
 							<a>
 								<PicTitle>
 									<ShowAvatar data={data?.avatar} layout="fill" />
-									{data.nickname}
+									{data.nickname === null ? "닉네임" : data.nickname}
 								</PicTitle>
 
 								{data.backavatar ? (

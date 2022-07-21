@@ -21,6 +21,7 @@ import LoginModal from "./LoginModal";
 import useSWR from "swr";
 import { NextPage } from "next";
 import client from "../libs/server/client";
+import { User } from ".prisma/client";
 
 const Header = styled(Com.ColCenter)`
 	background-color: white;
@@ -155,6 +156,7 @@ interface UserInfo {
 }
 interface MutationResult {
 	ok: boolean;
+	user?: User;
 }
 
 interface SearchResult {
@@ -164,15 +166,22 @@ interface SearchResult {
 }
 //const Navbar: NextPage<SearchResult> = ({ users, hashtags }) => {
 export default function Navbar() {
-	const { user, isLoading } = useUser();
+	//const { user, isLoading } = useUser();
+	const { data: user, mutate } = useSWR("/api/users/me");
 	const { data: searchData, error } = useSWR<SearchResult>("/api/search");
 	const router = useRouter();
 	const [uploadopen, setUploadopen] = useState(false);
 	const [loginopen, setLoginopen] = useState(false);
-	const [userInfo, setUserinfo] = useState<UserInfo>();
+	/*
+	const [userInfo, setUserinfo] = useState({
+		email: user?.user.email,
+	});
+	console.log("first", userInfo);*/
+
 	const [searchInput, setSearchinput] = useState([]);
 	const [searchFlag, setsearchFlag] = useState(false);
-	const [loginData] = useMutation<MutationResult>("/api/users/me");
+	const [loginData, { data: logindataa }] =
+		useMutation<MutationResult>("/api/users/me");
 
 	let hashtag: any[] = [];
 	let hashtagArr;
@@ -220,7 +229,6 @@ export default function Navbar() {
 		if (loginopen === false) setLoginopen(true);
 		else setLoginopen(false);
 	};
-
 	useEffect(() => {
 		const naver = (window as any).naver;
 		let naverLogin: any;
@@ -246,12 +254,9 @@ export default function Navbar() {
 						if (status) {
 							// 로그인 상태 값이 있을 경우
 							const { age, birthyear, email, gender } = naverLogin.user;
-							setUserinfo({
-								age,
-								birthyear,
+							/*setUserinfo({
 								email,
-								gender,
-							});
+							});*/
 
 							loginData({ age, birthyear, email, gender });
 
@@ -280,13 +285,11 @@ export default function Navbar() {
 	};
 
 	const NaverLogout = async () => {
-		setUserinfo({
-			birthyear: "",
+		/*setUserinfo({
 			email: "",
-			gender: "",
-			age: "",
-		});
+		});*/
 
+		console.log("logout");
 		await axios.get("/oauth2.0/token", {
 			params: {
 				grant_type: "delete",
@@ -297,13 +300,22 @@ export default function Navbar() {
 			},
 		});
 		loginData("");
+		mutate({ ok: true }, false);
 	};
 
-	/*
 	useEffect(() => {
-		console.log("effect");
-		router.push("/");
-	}, [userInfo]);*/
+		console.log("mutation", logindataa, "swr", user);
+		if (logindataa?.user?.email) {
+			//cosole.log("check data", { ...logindataa?.user });
+			mutate(
+				{
+					ok: true,
+					user: { email: logindataa.user.email, id: logindataa.user.id },
+				},
+				false
+			);
+		}
+	}, [logindataa, user]);
 
 	return (
 		<>
@@ -346,26 +358,22 @@ export default function Navbar() {
 						</a>
 					</Link>
 
-					{!isLoading && userInfo?.email ? (
-						<Link href={`/${user?.id}`}>
-							<a>
-								<ProfileSvg />
-							</a>
-						</Link>
+					{user?.user?.email ? (
+						<ProfileSvg
+							onClick={() => {
+								router.push(`/${user?.user.id}`);
+							}}
+						/>
 					) : (
 						<ProfileSvg onClick={loginopenFn} />
 					)}
-					{!isLoading && userInfo?.email ? (
-						<UploadSvg onClick={opnUpload} />
-					) : null}
-					{!isLoading && userInfo?.email ? (
+					{user?.user?.email ? <UploadSvg onClick={opnUpload} /> : null}
+					{user?.user?.email ? (
 						<NaverSvg onClick={handleNaverLogin} style={{ display: "none" }} />
 					) : (
 						<NaverSvg onClick={handleNaverLogin} />
 					)}
-					{!isLoading && userInfo?.email ? (
-						<LogoutSvg onClick={NaverLogout} />
-					) : null}
+					{user?.user?.email ? <LogoutSvg onClick={NaverLogout} /> : null}
 				</Menu>
 			</Header>
 			{uploadopen ? <Upload closeModal={closeUpload} /> : null}
@@ -377,3 +385,23 @@ export default function Navbar() {
 		</>
 	);
 }
+/*
+
+{user?.user.email ? (
+						<ProfileSvg
+							onClick={() => {
+								router.push(`/${user?.user.id}`);
+							}}
+						/>
+					) : (
+						<ProfileSvg onClick={loginopenFn} />
+					)}
+					{user?.user.email ? <UploadSvg onClick={opnUpload} /> : null}
+					{user?.user.email ? (
+						<NaverSvg onClick={handleNaverLogin} style={{ display: "none" }} />
+					) : (
+						<NaverSvg onClick={handleNaverLogin} />
+					)}
+					{user?.user.email ? <LogoutSvg onClick={NaverLogout} /> : null}
+
+*/

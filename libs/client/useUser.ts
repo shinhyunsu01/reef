@@ -14,6 +14,7 @@ export default function useUser() {
 		typeof window === "undefined" ? null : "/api/users/me"
 	);
 	useEffect(() => {
+		console.log("change");
 		if (data && !data.ok) {
 			router.replace("/");
 		}

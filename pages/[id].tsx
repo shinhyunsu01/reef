@@ -145,7 +145,7 @@ const ProductInfo = styled.div`
 	}
 `;
 
-const Pic = styled.a`
+const Pic = styled.div<any>`
 	width: 100%;
 
 	aspect-ratio: 1 / 1;
@@ -156,12 +156,17 @@ const Pic = styled.a`
 
 	&:hover {
 		transform: scale(1.1);
+		z-index: 5;
 	}
 	&:nth-child(3n) {
 		transform-origin: right;
 	}
 	&:nth-child(3n + 1) {
 		transform-origin: left;
+	}
+	&:hover:nth-child(${(props) =>
+				props.prevPost === "" ? "" : Number(props.prevPost)}) {
+		transform: scale(1);
 	}
 	cursor: pointer;
 `;
@@ -232,20 +237,25 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 	//const Page = () => {
 	const router = useRouter();
 	const { user } = useUser(); // middleware
-	/*
-	const { data: aquaInfoInitData } = useSWR<resAquaInfoForm>(
-		typeof window === "undefined"
-			? null
-			: `/api/users/${Number(router.query.id)}`
-	);
-	const { data: manyPost } = useSWR<resPost>(
-		typeof window === "undefined"
-			? null
-			: `/api/posts/${Number(router.query.id)}`
-	);*/
 
 	const [aquaInfoFn] = useMutation(`/api/users/${Number(router.query.id)}`);
 	const [uploadFn] = useMutation("/api/users/me");
+	const [prevPost, setPrevPost] = useState(0);
+
+	useEffect(() => {
+		storePathValues();
+	}, [router.asPath]);
+
+	const storePathValues = () => {
+		const storage = globalThis?.sessionStorage;
+
+		if (!storage) return;
+		const prevPath = storage.getItem("currentPath") || "";
+		storage.setItem("prevPath", prevPath);
+		storage.setItem("currentPath", globalThis.location.pathname);
+
+		console.log("22prev", storage.getItem("prevPath"));
+	};
 
 	const productData = [
 		{
@@ -346,9 +356,10 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 
 		router.reload();
 	};
-	const postImgClick = (resData?: UploadInfo) => {
+	const postImgClick = (i: number, resData?: UploadInfo) => {
+		if (i) setPrevPost(i + 1);
 		if (resData) {
-			//const userInfoData = aquaInfoInitData?.userInfo;
+			//const usserInfoData = aquaInfoInitData?.userInfo;
 			//const data = { ...resData, userInfoData };
 			//setPostModal((prev) => ({ ...prev, data }));
 			const data = {
@@ -510,8 +521,9 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 						<Pic
 							key={i}
 							onClick={() => {
-								postImgClick(data);
+								postImgClick(i, data);
 							}}
+							prevPost={prevPost}
 						>
 							<Image
 								layout="responsive"

@@ -13,6 +13,7 @@ const AvatarImage = styled.div`
 	border-width: 2px;
 	border-radius: 4rem;
 	border-style: dashed;
+	background-color: rgba(0, 0, 0, 0.7);
 
 	img {
 		border-radius: 4rem;
@@ -32,6 +33,12 @@ const AvatarImage = styled.div`
 			border-radius: 2.5rem;
 		}
 	}
+
+	div {
+		position: absolute;
+		height: 4rem;
+		width: 4rem;
+	}
 `;
 interface inputType {
 	data: string | null;
@@ -40,9 +47,9 @@ interface inputType {
 	height?: number;
 }
 const ShowAvatar = ({ data, layout, width, height }: inputType) => {
-	if (!data) {
+	/*if (!data) {
 		return <div></div>;
-	}
+	}*/
 
 	return (
 		<AvatarImage>

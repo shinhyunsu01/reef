@@ -19,6 +19,7 @@ async function handler(
 	let user;
 
 	if (req.method === "GET") {
+		console.log("get", req?.session?.user);
 		if (req?.session?.user) {
 			user = await client.user.findUnique({
 				where: {
@@ -105,6 +106,7 @@ async function handler(
 		}
 		res.json({
 			ok: true,
+			user,
 		});
 	}
 }
