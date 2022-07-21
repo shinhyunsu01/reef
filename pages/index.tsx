@@ -122,7 +122,6 @@ const Page: NextPage<ManyUser> = ({ users }) => {
 
 	return (
 		<Main>
-			<Navbar />
 			<PicBody>
 				{users.map((data, i) => (
 					<Pic key={i} prevPage={prevLink}>
