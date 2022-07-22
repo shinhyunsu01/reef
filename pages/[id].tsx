@@ -390,7 +390,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		if (posts.length !== manyPost?.post.length) {
 			if (manyPost) {
 				let index = manyPost.post.length || 0;
-				posts.push(manyPost.post[index - 1]);
+				posts.push(manyPost.post[index]);
 			}
 		}
 
