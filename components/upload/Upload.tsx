@@ -169,8 +169,15 @@ const Upload = ({ closeModal, userId }: responseType) => {
 				avatarPreview?.fileData
 			);
 			uploadFn({ ...selected, avatar: imageId });
+		} else {
+			setSelected((prev) => ({ ...prev, error: "사진을 선택해주세요" }));
+		}
+	};
+	useEffect(() => {
+		if (uploadloading === true && loading === false) {
 			console.log("userId", userId);
 			router.push(`/${userId}`);
+
 			setuploadloading(false);
 			setSelected({
 				picType: "",
@@ -182,10 +189,8 @@ const Upload = ({ closeModal, userId }: responseType) => {
 				error: "",
 			});
 			closeModal();
-		} else {
-			setSelected((prev) => ({ ...prev, error: "사진을 선택해주세요" }));
 		}
-	};
+	}, [loading]);
 	const fileRead = async (e: React.ChangeEvent) => {
 		e.preventDefault();
 		const input = e.target as HTMLInputElement;
