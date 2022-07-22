@@ -394,9 +394,9 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 			}
 		}
 
-		console.log(posts.length, "|", manyPost?.post.length);
-		console.log("posts", posts[0]);
-		console.log("manyPost", manyPost?.post[0]);
+		//console.log(posts.length, "|", manyPost?.post.length);
+		//console.log("posts", posts[0]);
+		//console.log("manyPost", manyPost?.post[0]);
 	}, [manyPost]);
 	return (
 		<>
