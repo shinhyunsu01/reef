@@ -168,7 +168,8 @@ const Upload = ({ closeModal }: responseType) => {
 				avatarPreview?.fileData
 			);
 			uploadFn({ ...selected, avatar: imageId });
-
+			router.push(`/${router.asPath}`);
+			setuploadloading(false);
 			setSelected({
 				picType: "",
 				animateType: "",
@@ -178,7 +179,7 @@ const Upload = ({ closeModal }: responseType) => {
 				isLoading: true,
 				error: "",
 			});
-			router.reload();
+			closeModal();
 		} else {
 			setSelected((prev) => ({ ...prev, error: "사진을 선택해주세요" }));
 		}

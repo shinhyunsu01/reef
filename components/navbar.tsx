@@ -359,10 +359,7 @@ export default function Navbar() {
 	};
 
 	useEffect(() => {
-		console.log("mutate", logindataa);
-
 		if (logindataa?.user?.email) {
-			console.log("okkk");
 			mutate(
 				{
 					ok: true,

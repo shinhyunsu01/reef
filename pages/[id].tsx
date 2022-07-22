@@ -386,6 +386,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		if (postModal?.isLoading === true) setPostModal({ isLoading: false });
 		else setPostModal((prev) => ({ ...prev, isLoading: true }));
 	};
+	console.log("rerender", posts);
 
 	return (
 		<>
