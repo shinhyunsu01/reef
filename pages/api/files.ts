@@ -27,6 +27,9 @@ async function handler(
 		)
 	).json();
 
+	await res.revalidate("/");
+	await res.revalidate(`/${req?.session?.user?.id}`);
+
 	res.json({
 		ok: true,
 		...response.result,
