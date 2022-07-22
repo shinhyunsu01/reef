@@ -384,8 +384,9 @@ export default function Navbar() {
 	useEffect(() => {
 		setsearchFlag(false);
 	}, [router.asPath]);
-	const initDefaultValue = decodeURI(router.asPath.split("/search/")[1]) || "";
-	console.log("initDefaultValue", initDefaultValue);
+	const initdefaultValue = router.asPath.split("/search/")[1]
+		? decodeURI(router.asPath.split("/search/")[1])
+		: "";
 	return (
 		<>
 			{loginloading ? (
@@ -413,7 +414,7 @@ export default function Navbar() {
 							required
 							type="text"
 							onChange={onChange}
-							defaultValue={initDefaultValue}
+							defaultValue={initdefaultValue}
 							onFocus={onChange}
 						/>
 						<SearchLogo>
