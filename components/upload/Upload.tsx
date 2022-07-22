@@ -175,8 +175,6 @@ const Upload = ({ closeModal, userId }: responseType) => {
 	};
 	useEffect(() => {
 		if (uploadloading === true && loading === false) {
-			console.log("userId", userId);
-
 			setuploadloading(false);
 			setSelected({
 				picType: "",
