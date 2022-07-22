@@ -384,7 +384,7 @@ export default function Navbar() {
 	useEffect(() => {
 		setsearchFlag(false);
 	}, [router.asPath]);
-	const initDefaultValue = router.asPath.split("/search/")[1].toString();
+	const initDefaultValue = router.asPath.split("/search/")[1];
 	console.log("initDefaultValue", initDefaultValue);
 	return (
 		<>
