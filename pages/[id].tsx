@@ -223,10 +223,6 @@ interface resAquaInfoForm {
 	info: AquaInfoForm;
 	userInfo: User;
 }
-interface stateModal {
-	isLoading: boolean;
-	data: UploadInfo;
-}
 
 interface resAquaInfoForm {
 	info: AquaInfoForm;
@@ -237,6 +233,12 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 	//const Page = () => {
 	const router = useRouter();
 	const { user } = useUser(); // middleware
+
+	const { data: manyPost } = useSWR<resPost>(
+		typeof window === "undefined"
+			? null
+			: `/api/posts/${Number(router.query.id)}`
+	);
 
 	const [aquaInfoFn] = useMutation(`/api/users/${Number(router.query.id)}`);
 	const [uploadFn] = useMutation("/api/users/me");
@@ -365,8 +367,6 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		router.reload();
 	};
 
-	useEffect(() => {}, [prevPost]);
-	//
 	const postImgClick = (i: number, resData?: UploadInfo) => {
 		if (i >= 0) {
 			setPrevPost(i + 1);
@@ -386,7 +386,9 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		if (postModal?.isLoading === true) setPostModal({ isLoading: false });
 		else setPostModal((prev) => ({ ...prev, isLoading: true }));
 	};
-
+	useEffect(() => {
+		console.log(posts.length, "|", manyPost.length);
+	}, [manyPost]);
 	return (
 		<>
 			<Main>
@@ -607,7 +609,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 			userInfo: JSON.parse(JSON.stringify(userInfo)),
 			posts: JSON.parse(JSON.stringify(posts)),
 		},
-		revalidate: 3,
+		//revalidate: 3,
 	};
 };
 
