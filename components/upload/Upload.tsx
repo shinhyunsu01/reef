@@ -187,9 +187,8 @@ const Upload = ({ closeModal, userId }: responseType) => {
 				isLoading: true,
 				error: "",
 			});
-			closeModal();
-
 			router.push(`/${userId}`);
+			closeModal();
 		}
 	}, [loading]);
 	const fileRead = async (e: React.ChangeEvent) => {
