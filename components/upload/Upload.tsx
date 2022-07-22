@@ -108,8 +108,9 @@ const PreviewImg = styled.img`
 
 interface responseType {
 	closeModal: () => void;
+	userId: number;
 }
-const Upload = ({ closeModal }: responseType) => {
+const Upload = ({ closeModal, userId }: responseType) => {
 	const [uploadloading, setuploadloading] = useState(false);
 	const [avatarPreview, setAvatarPreview] =
 		useState<{
@@ -168,7 +169,7 @@ const Upload = ({ closeModal }: responseType) => {
 				avatarPreview?.fileData
 			);
 			uploadFn({ ...selected, avatar: imageId });
-			router.push(`/${router.asPath}`);
+			router.push(`/${userId}`);
 			setuploadloading(false);
 			setSelected({
 				picType: "",

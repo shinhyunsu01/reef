@@ -485,7 +485,9 @@ export default function Navbar() {
 					{user?.user?.email ? <LogoutSvg onClick={NaverLogout} /> : null}
 				</Menu>
 			</Header>
-			{uploadopen ? <Upload closeModal={closeUpload} /> : null}
+			{uploadopen ? (
+				<Upload closeModal={closeUpload} userId={user?.user?.id} />
+			) : null}
 			<LoginModal
 				state={loginopen}
 				naverCallback={handleNaverLogin}
