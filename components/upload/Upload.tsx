@@ -176,7 +176,6 @@ const Upload = ({ closeModal, userId }: responseType) => {
 	useEffect(() => {
 		if (uploadloading === true && loading === false) {
 			console.log("userId", userId);
-			router.push(`/${userId}`);
 
 			setuploadloading(false);
 			setSelected({
@@ -189,6 +188,8 @@ const Upload = ({ closeModal, userId }: responseType) => {
 				error: "",
 			});
 			closeModal();
+
+			router.push(`/${userId}`);
 		}
 	}, [loading]);
 	const fileRead = async (e: React.ChangeEvent) => {
