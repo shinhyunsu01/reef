@@ -607,6 +607,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 			userInfo: JSON.parse(JSON.stringify(userInfo)),
 			posts: JSON.parse(JSON.stringify(posts)),
 		},
+		revalidate: 3,
 	};
 };
 
