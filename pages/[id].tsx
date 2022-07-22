@@ -387,7 +387,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		else setPostModal((prev) => ({ ...prev, isLoading: true }));
 	};
 	useEffect(() => {
-		console.log(posts.length, "|", manyPost.length);
+		console.log(posts.length, "|", manyPost?.post.length);
 	}, [manyPost]);
 	return (
 		<>
