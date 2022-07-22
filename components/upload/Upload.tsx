@@ -7,6 +7,8 @@ import { CloseSvg, UploadBtnSvg } from "../icon";
 import Btn from "./Btn";
 import { Com, Modal } from "../styledCom";
 import LoadingAnimation from "./LoadingAnimation";
+import { BallTriangle } from "react-loader-spinner";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 const ModalFlex = styled(Modal.Flex)`
 	width: 80%;
@@ -108,6 +110,7 @@ interface responseType {
 	closeModal: () => void;
 }
 const Upload = ({ closeModal }: responseType) => {
+	const [uploadloading, setuploadloading] = useState(false);
 	const [avatarPreview, setAvatarPreview] =
 		useState<{
 			preview: string | undefined;
@@ -157,16 +160,13 @@ const Upload = ({ closeModal }: responseType) => {
 
 	const onValid = async (e: any) => {
 		e.preventDefault();
-
+		setuploadloading(true);
 		const { uploadURL } = await (await fetch("/api/files")).json();
 		if (avatarPreview?.fileData != null) {
 			const imageId = await cloudFlareUpload(
 				uploadURL,
 				avatarPreview?.fileData
 			);
-
-			// teest
-
 			uploadFn({ ...selected, avatar: imageId });
 
 			setSelected({
@@ -197,6 +197,19 @@ const Upload = ({ closeModal }: responseType) => {
 	};
 	return (
 		<Modal.Init>
+			{uploadloading ? (
+				<Modal.Init>
+					<BallTriangle
+						height="100"
+						width="100"
+						color="blue"
+						ariaLabel="Loading"
+					/>
+				</Modal.Init>
+			) : (
+				""
+			)}
+
 			<ModalFlex>
 				{/* 왼쪽 업로드 사진 버튼 */}
 				<UploadModal>
@@ -259,13 +272,7 @@ const Upload = ({ closeModal }: responseType) => {
 						/>
 						<Com.Center>
 							<UploadBtn onClick={onValid}>
-								{selected?.error !== "" ? (
-									selected.error
-								) : selected?.isLoading === true ? (
-									<LoadingAnimation />
-								) : (
-									"Upload..."
-								)}
+								{selected?.error !== "" ? selected.error : "Upload..."}
 							</UploadBtn>
 						</Com.Center>
 					</UploadForm>
