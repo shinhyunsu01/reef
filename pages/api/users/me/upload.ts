@@ -42,7 +42,7 @@ async function handler(
 			},
 		});
 
-		await res.revalidate(`/users/${user?.id}`);
+		await res.revalidate(`/${user?.id}`);
 		//await res.revalidate("/");
 		res.json({
 			ok: true,
