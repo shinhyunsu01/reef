@@ -388,9 +388,10 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 	};
 	useEffect(() => {
 		if (posts.length !== manyPost?.post.length) {
-			//posts.push({
-			//manyPost?.post[manyPost?.post.length-1]
-			//})
+			if (manyPost) {
+				let index = manyPost.post.length || 0;
+				posts.push(manyPost.post[index - 1]);
+			}
 		}
 
 		console.log(posts.length, "|", manyPost?.post.length);
