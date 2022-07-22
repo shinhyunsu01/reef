@@ -53,12 +53,16 @@ const ShowAvatar = ({ data, layout, width, height }: inputType) => {
 
 	return (
 		<AvatarImage>
-			<Image
-				height={height}
-				width={width}
-				layout={layout}
-				src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data}/public`}
-			/>
+			{data ? (
+				<Image
+					height={height}
+					width={width}
+					layout={layout}
+					src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data}/public`}
+				/>
+			) : (
+				""
+			)}
 		</AvatarImage>
 	);
 };

@@ -101,6 +101,7 @@ const Page: NextPage<ManyUser> = ({ users }) => {
 	useEffect(() => {
 		storePathValues();
 	}, [router.asPath]);
+
 	let readPrev: any;
 	const storePathValues = () => {
 		const storage = globalThis?.sessionStorage;
@@ -128,6 +129,16 @@ const Page: NextPage<ManyUser> = ({ users }) => {
 					<Pic key={i} prevPage={prevLink}>
 						<Link href={`/${data.id}`}>
 							<a>
+								<PicTitle>
+									<ShowAvatar
+										data={data?.avatar}
+										layout="responsive"
+										width={100}
+										height={100}
+									/>
+									{data.nickname}
+								</PicTitle>
+
 								{data.backavatar ? (
 									<Image
 										layout="responsive"
