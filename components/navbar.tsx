@@ -412,7 +412,7 @@ export default function Navbar() {
 							required
 							type="text"
 							onChange={onChange}
-							defaultValue={router.asPath.split("/search/")[1]}
+							defaultValue={router.asPath.split("/search/")[1].toString()}
 							onFocus={onChange}
 						/>
 						<SearchLogo>
