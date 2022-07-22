@@ -169,6 +169,7 @@ const Upload = ({ closeModal, userId }: responseType) => {
 				avatarPreview?.fileData
 			);
 			uploadFn({ ...selected, avatar: imageId });
+			console.log("userId", userId);
 			router.push(`/${userId}`);
 			setuploadloading(false);
 			setSelected({
