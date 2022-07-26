@@ -9,12 +9,8 @@ import { Edit, EditPlusBtn, Save } from "../components/icon";
 import Input from "../components/Input";
 import Navbar from "../components/navbar";
 import { Com } from "../components/styledCom";
-import { cloudFlareUpload } from "../libs/client/cloudFlareUpload";
 import useMutation from "../libs/client/useMutation";
 import useUser from "../libs/client/useUser";
-import Image from "next/image";
-import backInitImg from "../public/reef_img.jpg";
-
 import {
 	GetServerSideProps,
 	GetStaticPaths,
@@ -22,19 +18,14 @@ import {
 	NextPage,
 } from "next";
 import client from "../libs/server/client";
-import Link from "next/link";
 import PostModal from "../components/PostModal";
 import { Pic, PicBody } from "../components/styles/showPic.styled";
 import ShowAvatar from "../components/User/avatar";
-import { AnyARecord } from "dns";
 import MiniProfileEditImg from "../components/User/MiniProfileEditImg";
 
 const Main = styled.div`
-	//height: 100vh;
 	width: 100%;
 	display: flex;
-	//margin: 0;
-	//padding: 0;
 	flex-direction: column;
 `;
 

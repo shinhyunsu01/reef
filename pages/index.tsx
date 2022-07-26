@@ -1,5 +1,5 @@
 import { User } from ".prisma/client";
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 import Navbar from "../components/navbar";
 import Link from "next/link";
 import backInitImg from "../public/reef_img.jpg";
@@ -15,10 +15,14 @@ const Main = styled.div`
 	width: 100%;
 	display: flex;
 	flex-direction: column;
+	position: absolute;
+	justify-content: center;
+	align-items: center;
 `;
 
-const PicTitle = styled.div`
+const PicTitle = styled.div<any>`
 	display: flex;
+	position: relative;
 
 	background-color: rgba(0, 0, 0, 0.5);
 	color: white;
@@ -46,6 +50,13 @@ const PicTitle = styled.div`
 		border-radius: 5px 5px 0 0;
 	}
 	z-index: 1;
+
+	div {
+		font-size: 22px;
+		@media only screen and (max-width: ${({ theme }) => theme.mobile}) {
+			font-size: 22px;
+		}
+	}
 `;
 
 interface ManyUser {

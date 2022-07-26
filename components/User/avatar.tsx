@@ -90,15 +90,3 @@ const ShowAvatar = (key: any) => {
 };
 
 export default ShowAvatar;
-/*
-
-{key?.data !== null ? (
-						<Image {...key} src={key?.data} />
-					) : (
-						<Image
-							{...key}
-							src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${key.initdata}/public`}
-						/>
-					)}
-
-*/
