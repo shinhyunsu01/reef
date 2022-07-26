@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-
+import backInitImg from "../../public/reef_img.jpg";
 import Image from "next/image";
 
 const AvatarImage = styled.div<any>`
@@ -34,12 +34,6 @@ const AvatarImage = styled.div<any>`
 		}
 	}
 `;
-const NoneImg = styled.div`
-	position: relative;
-	height: 100%;
-	width: 100%;
-	background-color: rgba(0, 0, 0, 0.7);
-`;
 
 const ShowAvatar = (key: any) => {
 	return (
@@ -70,7 +64,7 @@ const ShowAvatar = (key: any) => {
 							priority="true"
 						/>
 					) : (
-						<NoneImg>asdf</NoneImg>
+						<Image {...key} src={backInitImg} placeholder="blur" />
 					)}
 				</>
 			) : (
