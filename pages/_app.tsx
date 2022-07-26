@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 import { SWRConfig } from "swr";
 
 import Router, { useRouter } from "next/router";
@@ -18,6 +18,10 @@ const Init = styled.div`
 	margin-right: auto;
 	padding: 0 0.5em;
 `;
+const theme = {
+	mobile: "768px",
+};
+
 function MyApp({ Component, pageProps }: AppProps) {
 	return (
 		<>
@@ -34,7 +38,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 							defer
 						/>
 					</Head>
-					<Component {...pageProps} />
+					<ThemeProvider theme={theme}>
+						<Component {...pageProps} />
+					</ThemeProvider>
 				</Init>
 			</SWRConfig>
 		</>

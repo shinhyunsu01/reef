@@ -3,8 +3,8 @@ import styled from "styled-components";
 
 import Image from "next/image";
 
-const AvatarImage = styled.div`
-	position: relative;
+const AvatarImage = styled.div<any>`
+	//position: relative;
 	height: 4rem;
 	width: 4rem;
 
@@ -33,38 +33,78 @@ const AvatarImage = styled.div`
 			border-radius: 2.5rem;
 		}
 	}
-
-	div {
-		position: absolute;
-		height: 4rem;
-		width: 4rem;
-	}
 `;
-interface inputType {
-	data: string | null;
-	layout: any;
-	width?: number;
-	height?: number;
-}
-const ShowAvatar = ({ data, layout, width, height }: inputType) => {
-	/*if (!data) {
-		return <div></div>;
-	}*/
+const NoneImg = styled.div`
+	position: relative;
+	height: 100%;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.7);
+`;
 
+const ShowAvatar = (key: any) => {
 	return (
-		<AvatarImage>
-			{data ? (
-				<Image
-					height={height}
-					width={width}
-					layout={layout}
-					src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data}/public`}
-				/>
+		<>
+			{key?.avatar !== undefined ? (
+				<>
+					{key?.data !== null ? (
+						<AvatarImage>
+							<Image
+								{...key}
+								src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${key.data}/public`}
+							/>
+						</AvatarImage>
+					) : (
+						<AvatarImage />
+					)}
+				</>
 			) : (
 				""
 			)}
-		</AvatarImage>
+
+			{key?.backavatar !== undefined ? (
+				<>
+					{key?.data !== null ? (
+						<Image
+							{...key}
+							src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${key.data}/public`}
+							priority="true"
+						/>
+					) : (
+						<NoneImg>asdf</NoneImg>
+					)}
+				</>
+			) : (
+				""
+			)}
+
+			{key?.fillimg !== undefined ? (
+				<>
+					{key?.data !== null && key?.data !== "" ? (
+						<Image {...key} src={key?.data} />
+					) : (
+						<Image
+							{...key}
+							src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${key.initdata}/public`}
+						/>
+					)}
+				</>
+			) : (
+				""
+			)}
+		</>
 	);
 };
 
 export default ShowAvatar;
+/*
+
+{key?.data !== null ? (
+						<Image {...key} src={key?.data} />
+					) : (
+						<Image
+							{...key}
+							src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${key.initdata}/public`}
+						/>
+					)}
+
+*/

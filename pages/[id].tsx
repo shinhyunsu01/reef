@@ -24,13 +24,17 @@ import {
 import client from "../libs/server/client";
 import Link from "next/link";
 import PostModal from "../components/PostModal";
+import { Pic, PicBody } from "../components/styles/showPic.styled";
+import ShowAvatar from "../components/User/avatar";
+import { AnyARecord } from "dns";
+import MiniProfileEditImg from "../components/User/MiniProfileEditImg";
 
 const Main = styled.div`
-	height: 100vh;
+	//height: 100vh;
 	width: 100%;
 	display: flex;
-	margin: 0;
-	padding: 0;
+	//margin: 0;
+	//padding: 0;
 	flex-direction: column;
 `;
 
@@ -50,43 +54,6 @@ const UserProfileDivision = styled(Com.Center)`
 	@media only screen and (max-width: 320px) {
 		padding: 0 5px;
 	}
-`;
-
-const ProfilePic = styled.div`
-	height: 8rem;
-	width: 8rem;
-	border-radius: 8rem;
-	z-index: 5;
-	position: relative;
-`;
-const ProfileImg = styled.div`
-	img {
-		width: 100%;
-		height: 100%;
-		border-radius: 8rem;
-	}
-`;
-const BackProfileImg = styled.div`
-	img {
-		opacity: 30%;
-		width: 100%;
-		height: 100%;
-		border-radius: 20px;
-		position: absolute;
-	}
-`;
-
-const BackEditPlus = styled.div`
-	z-index: 10;
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	cursor: pointer;
-`;
-const EditPlus = styled.div`
-	position: absolute;
-	cursor: pointer;
-	z-index: 50;
 `;
 
 const ProfileTop = styled.div`
@@ -145,41 +112,6 @@ const ProductInfo = styled.div`
 	}
 `;
 
-const Pic = styled.div<any>`
-	width: 100%;
-
-	aspect-ratio: 1 / 1;
-	transition-property: transform, backdrop-filter;
-	transition-duration: 500ms;
-	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-	transition: transform 1;
-
-	&:hover {
-		transform: scale(1.1);
-		z-index: 5;
-	}
-	&:nth-child(3n) {
-		transform-origin: right;
-	}
-	&:nth-child(3n + 1) {
-		transform-origin: left;
-	}
-	&:hover:nth-child(${(props) =>
-				props.prevPost === "" ? "" : Number(props.prevPost)}) {
-		transform: scale(1);
-	}
-	cursor: pointer;
-`;
-
-const PicBody = styled.div`
-	width: 100%;
-	margin-top: 10px;
-	margin-left: 0;
-	display: grid;
-	gap: 8px;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-`;
-
 const MiniProfile = styled.div`
 	display: flex;
 	align-items: center;
@@ -232,21 +164,19 @@ interface resAquaInfoForm {
 const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 	//const Page = () => {
 	const router = useRouter();
-	const { user } = useUser(); // middleware
+	const { user } = useUser();
 
 	const { data: manyPost } = useSWR<resPost>(
 		typeof window === "undefined"
 			? null
-			: `/api/posts/${Number(router.query.id)}`
+			: `/api/posts/${Number(router.query.id)}`,
+
+		{ refreshInterval: 1000 }
 	);
 
 	const [aquaInfoFn] = useMutation(`/api/users/${Number(router.query.id)}`);
 	const [uploadFn] = useMutation("/api/users/me");
 	const [prevPost, setPrevPost] = useState(0);
-
-	//업로드 할때 미리 보기
-	const [profilePreImg, setProfilePreImg] = useState("");
-	const [backprofilePreImg, setbackProfilePreImg] = useState("");
 
 	useEffect(() => {
 		storePathValues();
@@ -346,27 +276,6 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		setEditOpen(false);
 	};
 
-	const fileRead = async (e: React.ChangeEvent) => {
-		e.preventDefault();
-		const input = e.target as HTMLInputElement;
-		if (!input.files?.length) return;
-		const file = input.files[0];
-		const readData = URL.createObjectURL(file);
-
-		e.target.id === "backImg"
-			? setbackProfilePreImg(readData)
-			: setProfilePreImg(readData);
-
-		const { uploadURL } = await (await fetch("/api/files")).json();
-		const imageId = await cloudFlareUpload(uploadURL, file);
-
-		e.target.id === "backImg"
-			? uploadFn({ backavatar: imageId })
-			: uploadFn({ avatar: imageId });
-
-		router.reload();
-	};
-
 	const postImgClick = (i: number, resData?: UploadInfo) => {
 		if (i >= 0) {
 			setPrevPost(i + 1);
@@ -386,198 +295,112 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		if (postModal?.isLoading === true) setPostModal({ isLoading: false });
 		else setPostModal((prev) => ({ ...prev, isLoading: true }));
 	};
-	useEffect(() => {
-		if (posts.length !== manyPost?.post.length) {
-			if (manyPost) {
-				let index = manyPost.post.length || 0;
-				posts.push(manyPost.post[index]);
-			}
-		}
+	console.log("re render ", manyPost?.post.length);
 
-		console.log(posts.length, "|", manyPost?.post.length);
-		console.log("posts", posts[0]);
-		console.log("manyPost", manyPost?.post[0]);
-	}, [manyPost]);
 	return (
-		<>
-			<Main>
-				<Navbar />
-				<UserProfile>
-					<UserProfileDivision>
-						{editOpen ? (
-							<BackEditPlus>
-								<label>
-									<input
-										type="file"
-										accept="image/*"
-										style={{ display: "none" }}
-										onChange={fileRead}
-										id="backImg"
-									/>
-									<EditPlusBtn style={{ cursor: "pointer" }} />
-								</label>
-							</BackEditPlus>
-						) : (
-							""
-						)}
+		<Main>
+			<Navbar />
+			<UserProfile>
+				<UserProfileDivision>
+					<MiniProfileEditImg
+						id="backImg"
+						editOpen={editOpen}
+						userInfo={userInfo}
+						handler={uploadFn}
+						editHandler={editFn}
+					/>
+				</UserProfileDivision>
 
-						{userInfo?.backavatar || backprofilePreImg ? (
-							<BackProfileImg>
-								{!backprofilePreImg ? (
-									<Image
-										layout="fill"
-										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${userInfo?.backavatar}/public`}
-									/>
+				<UserProfileDivision>
+					<form
+						onSubmit={handleSubmit(onValid)}
+						style={{ width: "100%", height: "100%" }}
+					>
+						<ProfileTop>
+							<Input
+								db="nickname"
+								itemValue={userInfo?.nickname ? userInfo?.nickname : ""}
+								editEnable={editOpen}
+								register={register("nickname")}
+								type="text"
+							/>
+							<MiniProfile>
+								{user?.id === Number(router?.query?.id) ? (
+									<>
+										<NaverUserInfo>
+											{user?.gender}/{user?.age}
+											<div>{user?.email}</div>
+										</NaverUserInfo>
+
+										<Edit onClick={editFn} style={{ cursor: "pointer" }} />
+
+										{editOpen ? (
+											<button type="submit">
+												<Save style={{ cursor: "pointer" }} />
+											</button>
+										) : null}
+									</>
 								) : (
-									<Image layout="fill" src={backprofilePreImg} />
+									""
 								)}
-							</BackProfileImg>
-						) : (
-							<BackProfileImg>
-								<Image layout="fill" src={backInitImg} placeholder="blur" />
-							</BackProfileImg>
-						)}
+							</MiniProfile>
+						</ProfileTop>
 
-						<ProfilePic>
-							{editOpen ? (
-								<EditPlus>
-									<label>
-										<input
-											type="file"
-											accept="image/*"
-											style={{ display: "none" }}
-											onChange={fileRead}
-											id="profileImg"
-										/>
-
-										<EditPlusBtn style={{ cursor: "pointer" }} />
-									</label>
-								</EditPlus>
-							) : (
-								""
-							)}
-							{userInfo?.avatar || profilePreImg ? (
-								<ProfileImg>
-									{!profilePreImg ? (
-										<Image
-											layout="responsive"
-											width={100}
-											height={100}
-											src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${userInfo?.avatar}/public`}
-										/>
-									) : (
-										<Image
-											layout="responsive"
-											width={100}
-											height={100}
-											src={profilePreImg}
-										/>
-									)}
-								</ProfileImg>
-							) : (
-								<ProfilePic
-									style={{
-										backgroundColor: "rgba(0, 0, 0, 0.5)",
-										borderWidth: "2px",
-										borderStyle: "dashed",
-									}}
-								/>
-							)}
-						</ProfilePic>
-					</UserProfileDivision>
-
-					<UserProfileDivision>
-						<form
-							onSubmit={handleSubmit(onValid)}
-							style={{ width: "100%", height: "100%" }}
-						>
-							<ProfileTop>
+						<ProductInfo>
+							{productData.map((v, i) => (
 								<Input
-									db="nickname"
-									itemValue={userInfo?.nickname ? userInfo?.nickname : ""}
+									key={i}
+									db={i}
+									item={v.name}
+									itemValue={v.value ? v.value : ""}
 									editEnable={editOpen}
-									register={register("nickname")}
+									register={register(v.db)}
 									type="text"
 								/>
-								<MiniProfile>
-									{user?.id === Number(router?.query?.id) ? (
-										<>
-											<NaverUserInfo>
-												{user?.gender}/{user?.age}
-												<div>{user?.email}</div>
-											</NaverUserInfo>
+							))}
+						</ProductInfo>
+						<WaterInfo>
+							{waterData.map((v, i) => (
+								<Input
+									key={i}
+									db={i}
+									item={v.name}
+									itemValue={v.value ? v.value : ""}
+									editEnable={editOpen}
+									register={register(v.db)}
+									type="number"
+								/>
+							))}
+						</WaterInfo>
+					</form>
+				</UserProfileDivision>
+			</UserProfile>
 
-											<Edit onClick={editFn} style={{ cursor: "pointer" }} />
+			<Season>
+				<SeasonItem />
+			</Season>
 
-											{editOpen ? (
-												<button type="submit">
-													<Save style={{ cursor: "pointer" }} />
-												</button>
-											) : null}
-										</>
-									) : (
-										""
-									)}
-								</MiniProfile>
-							</ProfileTop>
-
-							<ProductInfo>
-								{productData.map((v, i) => (
-									<Input
-										key={i}
-										db={i}
-										item={v.name}
-										itemValue={v.value ? v.value : ""}
-										editEnable={editOpen}
-										register={register(v.db)}
-										type="text"
-									/>
-								))}
-							</ProductInfo>
-							<WaterInfo>
-								{waterData.map((v, i) => (
-									<Input
-										key={i}
-										db={i}
-										item={v.name}
-										itemValue={v.value ? v.value : ""}
-										editEnable={editOpen}
-										register={register(v.db)}
-										type="number"
-									/>
-								))}
-							</WaterInfo>
-						</form>
-					</UserProfileDivision>
-				</UserProfile>
-
-				<Season>
-					{[1].map((_, i) => (
-						<SeasonItem key={i}></SeasonItem>
-					))}
-				</Season>
-
-				<PicBody>
-					{posts?.map((data, i) => (
-						<Pic
-							key={i}
-							onClick={() => {
-								postImgClick(i, data);
-							}}
-							prevPost={prevPost}
-						>
-							<Image
-								layout="responsive"
-								width={100}
-								height={100}
-								src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.avatar}/public`}
-							/>
-						</Pic>
-					))}
-				</PicBody>
-				<PostModal post={postModal} handler={postImgClick} />
-			</Main>
-		</>
+			<PicBody margintop={"0px"}>
+				{posts?.map((data, i) => (
+					<Pic
+						key={i}
+						prevPage={prevPost}
+						onClick={() => {
+							postImgClick(i, data);
+						}}
+					>
+						<ShowAvatar
+							data={data?.avatar}
+							layout="responsive"
+							width={100}
+							height={100}
+							backavatar="true"
+						/>
+					</Pic>
+				))}
+			</PicBody>
+			<PostModal post={postModal} handler={postImgClick} />
+		</Main>
 	);
 };
 

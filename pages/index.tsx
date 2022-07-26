@@ -9,50 +9,12 @@ import client from "../libs/server/client";
 import ShowAvatar from "../components/User/avatar";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { PicBody, Pic } from "../components/styles/showPic.styled";
 
 const Main = styled.div`
-	//height: 100vh;
 	width: 100%;
 	display: flex;
-	justify-content: center;
-	flex-direction: row;
-`;
-
-const PicBody = styled.div`
-	width: 100%;
-	margin-top: 64px;
-	margin-left: 0;
-	display: grid;
-	gap: 16px;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-`;
-
-const Pic = styled.div<any>`
-	width: 100%;
-
-	aspect-ratio: 1 / 1;
-	transition-property: transform, backdrop-filter;
-	transition-duration: 500ms;
-	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-	transition: transform 1;
-
-	&:hover {
-		transform: scale(1.1);
-
-		z-index: 5;
-	}
-
-	&:nth-child(3n) {
-		transform-origin: right;
-	}
-	&:nth-child(3n + 1) {
-		transform-origin: left;
-	}
-	&:hover:nth-child(${(props) =>
-				props.prevPage === "" ? "" : Number(props.prevPage)}) {
-		transform: scale(1);
-	}
-	cursor: pointer;
+	flex-direction: column;
 `;
 
 const PicTitle = styled.div`
@@ -83,7 +45,6 @@ const PicTitle = styled.div`
 		border-width: 2px;
 		border-radius: 5px 5px 0 0;
 	}
-
 	z-index: 1;
 `;
 
@@ -120,11 +81,11 @@ const Page: NextPage<ManyUser> = ({ users }) => {
 			}
 		});
 	};
-
+	//
 	return (
 		<Main>
 			<Navbar />
-			<PicBody>
+			<PicBody margintop={"64px"}>
 				{users.map((data, i) => (
 					<Pic key={i} prevPage={prevLink}>
 						<Link href={`/${data.id}`}>
@@ -135,26 +96,18 @@ const Page: NextPage<ManyUser> = ({ users }) => {
 										layout="responsive"
 										width={100}
 										height={100}
+										avatar="true"
 									/>
-									{data.nickname}
+									<div>{data.nickname}</div>
 								</PicTitle>
 
-								{data.backavatar ? (
-									<Image
-										layout="responsive"
-										width={100}
-										height={100}
-										src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${data?.backavatar}/public`}
-									/>
-								) : (
-									<Image
-										layout="responsive"
-										width={100}
-										height={100}
-										src={backInitImg}
-										placeholder="blur"
-									/>
-								)}
+								<ShowAvatar
+									data={data?.backavatar}
+									layout="responsive"
+									width={100}
+									height={100}
+									backavatar="true"
+								/>
 							</a>
 						</Link>
 					</Pic>
