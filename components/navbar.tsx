@@ -41,8 +41,8 @@ const Header = styled(Com.ColCenter)`
 `;
 
 const Search = styled(Com.ColCenter)`
-	//position: absolute;
-
+	position: relative;
+	//display: flex;
 	cursor: text;
 	&:focus-within {
 		div {
@@ -51,17 +51,19 @@ const Search = styled(Com.ColCenter)`
 	}
 `;
 const SearchInput = styled.input`
-	left: 0;
+	position: relative;
+	//left: 0;
 	width: 256px;
 	outline: 2px solid transparent;
 	outline-offset: 2px;
-	padding-left: 32px;
+	//padding-left: 32px;
 	height: 40px;
 	border-width: 1px;
 	border-radius: 6px;
 	background-color: rgb(244 244 246);
 	color: rgb(107 114 128);
-	margin: 0 10px;
+	text-align: center;
+	//margin: 0 10px;
 
 	&:focus {
 		color: black;
@@ -88,14 +90,16 @@ const SearchInput = styled.input`
 	}*/
 `;
 
+const Chk = styled.div`
+	position: relative;
+`;
 const SearchMiniOpen = styled.div`
 	position: absolute;
 
-	swidth: 256px;
+	width: 256px;
 	height: 100px;
 	overflow: auto;
 
-	margin-top: 150px;
 	border-bottom-left-radius: 15px;
 	border-bottom-right-radius: 15px;
 	background-color: rgb(244 244 246);
@@ -106,9 +110,6 @@ const SearchMiniOpen = styled.div`
 	@media only screen and (max-width: 480px) {
 		width: 100px;
 	}
-	/*@media only screen and (max-width: 320px) {
-		width: 100px;
-	}*/
 `;
 
 const SearchLogo = styled.div`
@@ -138,10 +139,14 @@ const Menu = styled(Com.ColCenter)`
 `;
 const SearchTool = styled.div`
 	display: flex;
-	height: 100%;
-	align-items: center;
-	justify-content: center;
-`;
+	flex-direction: column;
+	
+	//display: flex;
+	//position: relative;
+	//height: 100%;
+	//align-items: center;
+	//justify-content: center;
+s`;
 const HashTagBtn = styled.div`
 	width: 100%;
 	height: 30px;
@@ -417,7 +422,7 @@ export default function Navbar() {
 					</Link>
 				</Reef>
 				<SearchTool>
-					<Search>
+					<Chk>
 						<SearchInput
 							required
 							type="text"
@@ -425,50 +430,49 @@ export default function Navbar() {
 							defaultValue={initdefaultValue}
 							onFocus={onChange}
 						/>
-						<SearchLogo>
-							<SearchSvg />
-						</SearchLogo>
-					</Search>
-					{searchFlag ? (
-						<SearchMiniOpen>
-							{searchInput
-								? searchInput.map((ee: any, i: any) => (
-										<>
-											{ee.type === "post" ? (
-												<Link href={`/search/${ee.name}`} key={i}>
-													<a>
-														<HashTagBtn>
-															<div>#{ee.name}</div>
-															<div style={{ display: "flex" }}>{ee.value}</div>
-														</HashTagBtn>
-													</a>
-												</Link>
-											) : (
-												<Link href={`/${ee.id}`} key={i}>
-													<a>
-														<HashTagBtn>
-															<Flex>
-																<HashImg>
-																	<Image
-																		layout="fill"
-																		width={100}
-																		height={100}
-																		src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${ee?.avatar}/public`}
-																	/>
-																</HashImg>
-																<HashImgFont>{ee.name}</HashImgFont>
-															</Flex>
-														</HashTagBtn>
-													</a>
-												</Link>
-											)}
-										</>
-								  ))
-								: ""}
-						</SearchMiniOpen>
-					) : (
-						""
-					)}
+						{searchFlag ? (
+							<SearchMiniOpen>
+								{searchInput
+									? searchInput.map((ee: any, i: any) => (
+											<>
+												{ee.type === "post" ? (
+													<Link href={`/search/${ee.name}`} key={i}>
+														<a>
+															<HashTagBtn>
+																<div>#{ee.name}</div>
+																<div style={{ display: "flex" }}>
+																	{ee.value}
+																</div>
+															</HashTagBtn>
+														</a>
+													</Link>
+												) : (
+													<Link href={`/${ee.id}`} key={i}>
+														<a>
+															<HashTagBtn>
+																<Flex>
+																	<HashImg>
+																		<Image
+																			layout="fill"
+																			width={100}
+																			height={100}
+																			src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${ee?.avatar}/public`}
+																		/>
+																	</HashImg>
+																	<HashImgFont>{ee.name}</HashImgFont>
+																</Flex>
+															</HashTagBtn>
+														</a>
+													</Link>
+												)}
+											</>
+									  ))
+									: ""}
+							</SearchMiniOpen>
+						) : (
+							""
+						)}
+					</Chk>
 				</SearchTool>
 				<Menu>
 					<Link href={"/"}>
