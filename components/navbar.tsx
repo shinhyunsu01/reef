@@ -72,7 +72,7 @@ const SearchInput = styled.input`
 		width: 150px;
 	}
 	@media only screen and (max-width: 480px) {
-		width: 100px;
+		width: 50px;
 		&:focus {
 			z-index: 1000;
 			width: 100px;
