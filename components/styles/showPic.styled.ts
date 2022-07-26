@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 export const PicBody = styled.div<any>`
 	width: 100%;
-	height: 100%;
 
 	margin-top: ${({ margintop }) => margintop};
 	display: grid;

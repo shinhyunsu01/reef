@@ -15,7 +15,7 @@ const Main = styled.div`
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	position: absolute;
+
 	justify-content: center;
 	align-items: center;
 `;
@@ -52,9 +52,10 @@ const PicTitle = styled.div<any>`
 	z-index: 1;
 
 	div {
+		font-weight: bold;
 		font-size: 22px;
 		@media only screen and (max-width: ${({ theme }) => theme.mobile}) {
-			font-size: 22px;
+			font-size: 13px;
 		}
 	}
 `;
