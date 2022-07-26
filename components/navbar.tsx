@@ -76,7 +76,7 @@ const SearchInput = styled.input`
 		width: 50px;
 		&:focus {
 			z-index: 1000;
-			width: 100px;
+			width: 150px;
 			color: black;
 			padding-left: 16px;
 		}
@@ -108,7 +108,7 @@ const SearchMiniOpen = styled.div`
 		width: 150px;
 	}
 	@media only screen and (max-width: 480px) {
-		width: 100px;
+		width: 150px;
 	}
 `;
 
