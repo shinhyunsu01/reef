@@ -41,7 +41,7 @@ const Header = styled(Com.ColCenter)`
 `;
 
 const Search = styled(Com.ColCenter)`
-	position: relative;
+	//position: absolute;
 
 	cursor: text;
 	&:focus-within {
@@ -51,7 +51,6 @@ const Search = styled(Com.ColCenter)`
 	}
 `;
 const SearchInput = styled.input`
-	display: flex;
 	left: 0;
 	width: 256px;
 	outline: 2px solid transparent;
@@ -80,11 +79,35 @@ const SearchInput = styled.input`
 			padding-left: 16px;
 		}
 	}
+
 	/*@media only screen and (max-width: 320px) {
 		width: 50px;
 		margin: 0 10px;
 
 		
+	}*/
+`;
+
+const SearchMiniOpen = styled.div`
+	position: absolute;
+
+	swidth: 256px;
+	height: 100px;
+	overflow: auto;
+
+	margin-top: 150px;
+	border-bottom-left-radius: 15px;
+	border-bottom-right-radius: 15px;
+	background-color: rgb(244 244 246);
+
+	@media only screen and (max-width: 500px) {
+		width: 150px;
+	}
+	@media only screen and (max-width: 480px) {
+		width: 100px;
+	}
+	/*@media only screen and (max-width: 320px) {
+		width: 100px;
 	}*/
 `;
 
@@ -152,26 +175,6 @@ const Flex = styled.div`
 	display: flex;
 `;
 
-const SearchMiniOpen = styled.div`
-	width: 256px;
-	height: 100px;
-	overflow: auto;
-
-	margin-top: 150px;
-	border-bottom-left-radius: 15px;
-	border-bottom-right-radius: 15px;
-	background-color: rgb(244 244 246);
-
-	@media only screen and (max-width: 500px) {
-		width: 150px;
-	}
-	@media only screen and (max-width: 480px) {
-		width: 100px;
-	}
-	@media only screen and (max-width: 320px) {
-		width: 100px;
-	}
-`;
 interface UserInfo {
 	age: string;
 	birthyear: string;
