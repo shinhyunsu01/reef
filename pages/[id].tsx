@@ -32,7 +32,7 @@ const Main = styled.div`
 const UserProfile = styled(Com.Center)`
 	height: 18rem;
 	padding: 10px;
-	margin-top: 40px;
+	margin-top: 64px;
 	width: 100%;
 `;
 

@@ -55,7 +55,7 @@ const PicTitle = styled.div<any>`
 		font-weight: bold;
 		font-size: 22px;
 		@media only screen and (max-width: ${({ theme }) => theme.mobile}) {
-			font-size: 13px;
+			font-size: 12px;
 		}
 	}
 `;

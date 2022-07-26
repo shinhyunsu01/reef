@@ -41,7 +41,7 @@ const Header = styled(Com.ColCenter)`
 `;
 
 const Search = styled(Com.ColCenter)`
-	position: absolute;
+	position: relative;
 
 	cursor: text;
 	&:focus-within {
@@ -51,6 +51,8 @@ const Search = styled(Com.ColCenter)`
 	}
 `;
 const SearchInput = styled.input`
+	display: flex;
+	left: 0;
 	width: 256px;
 	outline: 2px solid transparent;
 	outline-offset: 2px;
@@ -60,6 +62,8 @@ const SearchInput = styled.input`
 	border-radius: 6px;
 	background-color: rgb(244 244 246);
 	color: rgb(107 114 128);
+	margin: 0 10px;
+
 	&:focus {
 		color: black;
 		padding-left: 16px;
@@ -69,11 +73,6 @@ const SearchInput = styled.input`
 	}
 	@media only screen and (max-width: 480px) {
 		width: 100px;
-	}
-	@media only screen and (max-width: 320px) {
-		width: 50px;
-		margin: 0 10px;
-
 		&:focus {
 			z-index: 1000;
 			width: 100px;
@@ -81,6 +80,12 @@ const SearchInput = styled.input`
 			padding-left: 16px;
 		}
 	}
+	/*@media only screen and (max-width: 320px) {
+		width: 50px;
+		margin: 0 10px;
+
+		
+	}*/
 `;
 
 const SearchLogo = styled.div`
