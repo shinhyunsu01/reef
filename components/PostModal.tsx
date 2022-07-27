@@ -28,12 +28,21 @@ const CloseModal = styled.button`
 	cursor: pointer;
 	margin: 10px 10px;
 `;
-const UploadModal = styled.div`
+const LeftModal = styled.div`
+	height: 100%;
+	width: 50%;
+
+	position: relative;
+	border-radius: 20px;
+	margin-right: 10px;
+	overflow: auto;
+`;
+const RightModal = styled.div`
 	height: 100%;
 	width: 50%;
 	position: relative;
 	border-radius: 20px;
-	margin: 0 2px;
+	margin-left: 10px;
 	overflow: auto;
 `;
 const Flex = styled.div`
@@ -42,18 +51,16 @@ const Flex = styled.div`
 `;
 const HashTag = styled.div`
 	font-size: 22px;
-	width: 150px;
-	font-weight: bold;
-	display: flex;
-`;
-const Kind = styled.div`
-	font-size: 12px;
 	width: 100%;
+	font-weight: bold;
+`;
+const Kind = styled.span`
+	font-size: 12px;
 	text-align: center;
 	border-radius: 5px;
 	margin-top: 5px;
 	margin-right: 5px;
-	padding: 0px 2px;
+	padding: 2px 5px;
 	color: white;
 	background-color: rgba(46, 142, 155, 0.7);
 `;
@@ -61,8 +68,14 @@ const PostText = styled.div`
 	padding: 10px 30px;
 	width: 100%;
 	border-bottom-width: 2px;
-
+	font-size: 22px;
+	/*
 	@media only screen and (max-width: 480px) {
+		
+	}*/
+
+	@media only screen and (max-width: ${({ theme }) => theme.mobile}) {
+		font-size: 15px;
 		width: 150px;
 		padding: 10px 5px;
 	}
@@ -78,6 +91,9 @@ const PicTitle = styled.div`
 	}
 
 	z-index: 1;
+`;
+const Nickname = styled.div`
+	font-weight: bold;
 `;
 const RowFlex = styled.div`
 	display: flex;
@@ -105,19 +121,19 @@ const PostModal = ({ handler, post }: any) => {
 	return (
 		<Modal.Init>
 			<Frame ref={modalRef}>
-				<UploadModal>
+				<LeftModal>
 					<Image
 						layout="fill"
 						src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${post.data?.postavatar}/public`}
 					/>
-				</UploadModal>
-				<UploadModal>
+				</LeftModal>
+				<RightModal>
 					<Flex>
 						<RowFlex>
 							<PicTitle>
 								<ShowAvatar data={post.data.avatar} layout="fill" />
 							</PicTitle>
-							<div>{post.data.nickname}</div>
+							<Nickname>{post.data.nickname}</Nickname>
 						</RowFlex>
 						<HashTag>
 							{post.data.animateType ? (
@@ -135,7 +151,7 @@ const PostModal = ({ handler, post }: any) => {
 					</Flex>
 
 					<PostText>{post.data.description}</PostText>
-				</UploadModal>
+				</RightModal>
 
 				<CloseModal>
 					<CloseSvg onClick={handler} />
