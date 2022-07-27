@@ -288,6 +288,8 @@ export default function Navbar() {
 				};
 			}
 		}
+		if (e.target.value !== "") setsearchFlag(true);
+		else setsearchFlag(false);
 
 		setSearchinput(output);
 	};
