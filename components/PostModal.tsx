@@ -120,6 +120,8 @@ const PostModal = ({ handler, post }: any) => {
 	};
 
 	if (!post.isLoading) return <div ref={modalRef}></div>;
+
+	//console.log(post.data.description.userFlag);
 	return (
 		<Modal.Init>
 			<Frame ref={modalRef}>
@@ -159,7 +161,7 @@ const PostModal = ({ handler, post }: any) => {
 				</RightModal>
 
 				<CloseModal>
-					{post.data.description.userFlag ? <DeleteBtnSvg /> : ""}
+					{post.data.userFlag ? <DeleteBtnSvg /> : ""}
 
 					<CloseSvg onClick={handler} />
 				</CloseModal>
