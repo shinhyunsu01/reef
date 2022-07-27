@@ -419,13 +419,13 @@ export default function Navbar() {
 				""
 			)}
 
-			<Header ref={Ref}>
+			<Header>
 				<Reef>
 					<Link href={"/"}>
 						<a>REEF</a>
 					</Link>
 				</Reef>
-				<SearchTool>
+				<SearchTool ref={Ref}>
 					<Chk>
 						<SearchInput
 							required
