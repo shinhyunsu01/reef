@@ -4,7 +4,7 @@ import backInitImg from "../../public/reef_img.jpg";
 import Image from "next/image";
 
 const AvatarImage = styled.div<any>`
-	//position: relative;
+	position: relative;
 	height: 4rem;
 	width: 4rem;
 
