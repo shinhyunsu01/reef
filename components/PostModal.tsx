@@ -31,7 +31,7 @@ const CloseModal = styled.button`
 const LeftModal = styled.div`
 	height: 100%;
 	width: 50%;
-
+	background-color: rgb(0, 0, 0);
 	position: relative;
 	border-radius: 20px;
 	margin-right: 10px;
@@ -48,6 +48,8 @@ const RightModal = styled.div`
 const Flex = styled.div`
 	display: flex;
 	flex-direction: column;
+	padding-bottom: 10px;
+	border-bottom-width: 2px;
 `;
 const HashTag = styled.div`
 	font-size: 22px;
@@ -64,11 +66,16 @@ const Kind = styled.span`
 	color: white;
 	background-color: rgba(46, 142, 155, 0.7);
 `;
+const Creadted = styled.div`
+	font-size: 7px;
+	display: flex;
+	justify-content: flex-end;
+	border-bottom-width: 2px;
+`;
 const PostText = styled.div`
 	padding: 10px 30px;
 	width: 100%;
-	border-bottom-width: 2px;
-	font-size: 22px;
+	font-size: 15px;
 	/*
 	@media only screen and (max-width: 480px) {
 		
@@ -124,6 +131,7 @@ const PostModal = ({ handler, post }: any) => {
 				<LeftModal>
 					<Image
 						layout="fill"
+						objectFit="contain"
 						src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${post.data?.postavatar}/public`}
 					/>
 				</LeftModal>
@@ -133,6 +141,7 @@ const PostModal = ({ handler, post }: any) => {
 							<PicTitle>
 								<ShowAvatar data={post.data.avatar} layout="fill" />
 							</PicTitle>
+
 							<Nickname>{post.data.nickname}</Nickname>
 						</RowFlex>
 						<HashTag>
@@ -151,6 +160,7 @@ const PostModal = ({ handler, post }: any) => {
 					</Flex>
 
 					<PostText>{post.data.description}</PostText>
+					<Creadted>{post.data.created.substring(0, 10)}</Creadted>
 				</RightModal>
 
 				<CloseModal>

@@ -279,6 +279,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 				coralType: resData?.coralType,
 				hashtag: resData?.hashtag,
 				description: resData?.description,
+				created: resData?.updatedAt,
 			};
 			setPostModal((prev) => ({ ...prev, data }));
 		}
