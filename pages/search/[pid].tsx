@@ -97,6 +97,8 @@ const Page: NextPage<hashtagForm> = (hashtagData) => {
 				coralType: hashtagData?.coralType,
 				hashtag: hashtagData?.hashtag,
 				description: hashtagData?.description,
+				created: hashtagData?.updatedAt,
+				userFlag: hashtagData?.userFlag,
 			};
 			setPostModal((prev) => ({ ...prev, data }));
 		}

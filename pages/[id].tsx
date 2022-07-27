@@ -272,6 +272,11 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 			setPrevPost(i + 1);
 		}
 		if (resData) {
+			let userFlag = false;
+			if (user?.email) {
+				userFlag = true;
+			}
+			//console.log("checkemail", user?.email);
 			const data = {
 				postavatar: resData.avatar,
 				avatar: userInfo.avatar,
@@ -280,6 +285,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 				hashtag: resData?.hashtag,
 				description: resData?.description,
 				created: resData?.updatedAt,
+				userFlag: userFlag,
 			};
 			setPostModal((prev) => ({ ...prev, data }));
 		}

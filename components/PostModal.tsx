@@ -1,9 +1,8 @@
-import { UploadInfo } from ".prisma/client";
 import Image from "next/image";
 import React, { useRef, useEffect } from "react";
 import styled from "styled-components";
-import { CloseSvg, NaverSvg } from "./icon";
-import { Com, Modal } from "./styledCom";
+import { CloseSvg, DeleteBtnSvg } from "./icon";
+import { Modal } from "./styledCom";
 import ShowAvatar from "./User/avatar";
 
 const Frame = styled(Modal.Flex)`
@@ -76,10 +75,6 @@ const PostText = styled.div`
 	padding: 10px 30px;
 	width: 100%;
 	font-size: 15px;
-	/*
-	@media only screen and (max-width: 480px) {
-		
-	}*/
 
 	@media only screen and (max-width: ${({ theme }) => theme.mobile}) {
 		font-size: 15px;
@@ -164,6 +159,8 @@ const PostModal = ({ handler, post }: any) => {
 				</RightModal>
 
 				<CloseModal>
+					{post.data.description.userFlag ? <DeleteBtnSvg /> : ""}
+
 					<CloseSvg onClick={handler} />
 				</CloseModal>
 			</Frame>
