@@ -286,10 +286,14 @@ export default function Navbar() {
 				};
 			}
 		}
-		if (e.target.value !== "") setsearchFlag(true);
-		else setsearchFlag(false);
+		//if (e.target.value !== "") setsearchFlag(true);
+		//else
+		//setsearchFlag(false);
 
 		setSearchinput(output);
+	};
+	const onFocus = (e: any) => {
+		setsearchFlag(true);
 	};
 
 	const opnUpload = () => {
@@ -428,7 +432,7 @@ export default function Navbar() {
 							type="text"
 							onChange={onChange}
 							defaultValue={initdefaultValue}
-							onFocus={onChange}
+							onFocus={onFocus}
 						/>
 						{searchFlag ? (
 							<SearchMiniOpen>

@@ -23,6 +23,7 @@ const Main = styled.div`
 const PicTitle = styled.div<any>`
 	display: flex;
 	position: relative;
+	align-items: center;
 
 	background-color: rgba(0, 0, 0, 0.5);
 	color: white;
@@ -52,8 +53,10 @@ const PicTitle = styled.div<any>`
 	z-index: 1;
 
 	div {
+		display: flex;
+		align-items: center;
 		font-weight: bold;
-		font-size: 22px;
+		font-size: 18px;
 		@media only screen and (max-width: ${({ theme }) => theme.mobile}) {
 			font-size: 12px;
 		}
