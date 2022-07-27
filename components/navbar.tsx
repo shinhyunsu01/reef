@@ -200,7 +200,7 @@ interface SearchResult {
 export default function Navbar() {
 	const Ref = useRef<any>(null);
 	const { data: user, mutate } = useSWR("/api/users/me");
-	const { data: searchData, error } = useSWR<SearchResult>("/api/search");
+	const { data: serverData, error } = useSWR<SearchResult>("/api/search");
 
 	const router = useRouter();
 	const [uploadopen, setUploadopen] = useState(false);
@@ -208,6 +208,7 @@ export default function Navbar() {
 	const [loginloading, setLoginloading] = useState(false);
 
 	const [searchInput, setSearchinput] = useState([]);
+	const [searchData, setsearchData] = useState("");
 
 	const [searchFlag, setsearchFlag] = useState(false);
 
@@ -220,8 +221,8 @@ export default function Navbar() {
 	let usersArr;
 
 	//서버 데이터 -> 분석 할수 있게 array 로 변환
-	if (!(searchData && error)) {
-		hashtagArr = searchData?.hashtags
+	if (!(serverData && error)) {
+		hashtagArr = serverData?.hashtags
 			.map((strData: any) => {
 				return strData.hashtag;
 			})
@@ -233,7 +234,7 @@ export default function Navbar() {
 			hashtag[x] = (hashtag[x] || 0) + 1;
 		});
 
-		searchData?.users.map((searchUsers: any) => {
+		serverData?.users.map((searchUsers: any) => {
 			if (searchUsers.nickname === null) users.push("");
 			else users.push(searchUsers.nickname.toLowerCase());
 		});
@@ -241,6 +242,7 @@ export default function Navbar() {
 
 	let output: any = [];
 	const onChange = (e: any) => {
+		setsearchData(e.target.value);
 		if (hashtag) {
 			let check: any[] = Object.keys(hashtag).filter((inputdata) =>
 				inputdata.includes(e.target.value)
@@ -260,15 +262,15 @@ export default function Navbar() {
 			);
 
 			for (let cnt = 0; cnt < check.length; cnt++) {
-				let usersLength = searchData?.users.length || 0;
+				let usersLength = serverData?.users.length || 0;
 				//console.log("usersLength", usersLength, typeof usersLength);
 				let saveAvatar = "";
 				let id = 0;
 				for (let count = 0; count < usersLength; count++) {
-					if (searchData?.users[count].nickname?.toLowerCase() === check[cnt]) {
-						if (searchData?.users[count].avatar) {
-							saveAvatar = searchData?.users[count].avatar || "";
-							id = searchData?.users[count].id || 0;
+					if (serverData?.users[count].nickname?.toLowerCase() === check[cnt]) {
+						if (serverData?.users[count].avatar) {
+							saveAvatar = serverData?.users[count].avatar || "";
+							id = serverData?.users[count].id || 0;
 						} else {
 							saveAvatar = "";
 							id = 0;
@@ -286,14 +288,15 @@ export default function Navbar() {
 				};
 			}
 		}
-		//if (e.target.value !== "") setsearchFlag(true);
-		//else
-		//setsearchFlag(false);
 
 		setSearchinput(output);
 	};
-	const onFocus = (e: any) => {
-		setsearchFlag(true);
+	const onKeyPress = (e: any) => {
+		if (e.key === "Enter") {
+			setsearchFlag(false);
+
+			router.push(`/search/${searchData}`);
+		}
 	};
 
 	const opnUpload = () => {
@@ -432,7 +435,7 @@ export default function Navbar() {
 							type="text"
 							onChange={onChange}
 							defaultValue={initdefaultValue}
-							onFocus={onFocus}
+							onKeyPress={onKeyPress}
 						/>
 						{searchFlag ? (
 							<SearchMiniOpen>
