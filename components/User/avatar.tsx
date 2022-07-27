@@ -5,18 +5,18 @@ import Image from "next/image";
 
 const AvatarImage = styled.div<any>`
 	position: relative;
-	height: 4rem;
-	width: 4rem;
+	height: 3rem;
+	width: 3rem;
 
 	margin-right: 0.2rem;
 
 	border-width: 2px;
-	border-radius: 4rem;
+	border-radius: 3rem;
 	border-style: dashed;
 	background-color: rgba(0, 0, 0, 0.7);
 
 	img {
-		border-radius: 4rem;
+		border-radius: 3rem;
 	}
 
 	@media only screen and (max-width: 320px) {

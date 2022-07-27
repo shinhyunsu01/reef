@@ -1,8 +1,9 @@
 import Image from "next/image";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
-import { CloseSvg, DeleteBtnSvg } from "./icon";
-import { Modal } from "./styledCom";
+import useMutation from "../libs/client/useMutation";
+import { CloseSvg, DeleteBtnSvg, Edit, UploadSvg } from "./icon";
+import { Com, Modal } from "./styledCom";
 import ShowAvatar from "./User/avatar";
 
 const Frame = styled(Modal.Flex)`
@@ -19,7 +20,9 @@ const Frame = styled(Modal.Flex)`
 		height: 50%;
 	}
 `;
-const CloseModal = styled.button`
+const CloseModal = styled.div`
+	display: flex;
+
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -46,9 +49,12 @@ const RightModal = styled.div`
 `;
 const Flex = styled.div`
 	display: flex;
+	height: 100%;
 	flex-direction: column;
 	padding-bottom: 10px;
-	border-bottom-width: 2px;
+	//border-bottom-width: 2px;
+
+	justify-content: start;
 `;
 const HashTag = styled.div`
 	font-size: 22px;
@@ -85,6 +91,7 @@ const PostText = styled.div`
 
 const PicTitle = styled.div`
 	display: flex;
+	position: relative;
 
 	@media only screen and (max-width: 320px) {
 	}
@@ -103,8 +110,70 @@ const RowFlex = styled.div`
 	margin-top: 10px;
 `;
 
-const PostModal = ({ handler, post }: any) => {
+const TextPost = styled.textarea`
+	margin-top: 1rem;
+	width: 100%;
+
+	border-width: 2px;
+	border-radius: 0.375rem;
+`;
+
+const UploadBtn = styled.span`
+	padding: 5px 15px;
+	border-radius: 20px;
+
+	background-color: black;
+	color: white;
+	text-align: center;
+	cursor: pointer;
+
+	&:active {
+		border-width: 4px;
+		background-color: white;
+		color: black;
+	}
+
+	@media all and (max-width: 768px) {
+		font-size: 10px;
+	}
+	@media all and (max-width: 480px) {
+		font-size: 8px;
+	}
+	@media all and (min-width: 768px) {
+		font-size: 16px;
+	}
+`;
+
+const AnswerFlex = styled.div`
+	margin-top: 5px;
+	display: flex;
+	align-items: center;
+
+	font-weight: bold;
+	font-size: 10px;
+`;
+
+const AnswerInput = styled.input`
+	outline: none;
+`;
+const AnswerFrame = styled.div`
+	margin-top: auto;
+	display: flex;
+`;
+const AnswerBtn = styled.div`
+	margin-left: auto;
+	cursor: pointer;
+`;
+
+const PostModal = ({ handler, post, user }: any) => {
 	const modalRef = useRef<any>(null);
+	const [editState, setEditState] = useState(false);
+	const [edittext, seteditText] = useState("");
+	const [answertext, setanswerText] = useState("");
+	const [uploadFn, { data, loading, error }] = useMutation(
+		"/api/users/me/upload"
+	);
+	const [answerFn] = useMutation("/api/users/me/answer");
 
 	useEffect(() => {
 		document.addEventListener("mousedown", clickModalOutside);
@@ -118,10 +187,29 @@ const PostModal = ({ handler, post }: any) => {
 			if (!modalRef.current.contains(event.target)) handler();
 		}
 	};
+	//console.log("post", post);
+	const postHandler = (e: any) => {
+		if (e.target.id === "edit") {
+			if (editState) setEditState(false);
+			else setEditState(true);
+		}
+		if (e.target.id === "delete") {
+			handler();
+			uploadFn({ postId: post.data.postId, delete: true });
+		}
+		if (e.target.id === "answer") {
+			//console.log("post.data.postId", post.data.postId);
+			answerFn({ postId: post.data.postId, answers: answertext });
+		}
+		console.log(e.target.id);
+	};
+	const editBtnHandler = () => {
+		uploadFn({ postId: post.data.postId, description: edittext });
+		setEditState(false);
+	};
 
 	if (!post.isLoading) return <div ref={modalRef}></div>;
-
-	//console.log(post.data.description.userFlag);
+	//	console.log("post.data.avatar", post.data);
 	return (
 		<Modal.Init>
 			<Frame ref={modalRef}>
@@ -136,7 +224,11 @@ const PostModal = ({ handler, post }: any) => {
 					<Flex>
 						<RowFlex>
 							<PicTitle>
-								<ShowAvatar data={post.data.avatar} layout="fill" />
+								<ShowAvatar
+									avatar="true"
+									data={post.data.avatar}
+									layout="fill"
+								/>
 							</PicTitle>
 
 							<Nickname>{post.data.nickname}</Nickname>
@@ -154,15 +246,65 @@ const PostModal = ({ handler, post }: any) => {
 										.map((hash: any, i: any) => <Kind key={i}>{hash}</Kind>)
 								: ""}
 						</HashTag>
-					</Flex>
+						{editState ? (
+							<>
+								<TextPost
+									defaultValue={post.data.description}
+									placeholder={post.data.description}
+									onChange={(e: any) => seteditText(e.target.value)}
+								/>
+								<Com.Center>
+									<UploadBtn onClick={editBtnHandler}>Save</UploadBtn>
+								</Com.Center>
+							</>
+						) : (
+							<PostText>{edittext ? edittext : post.data.description}</PostText>
+						)}
 
-					<PostText>{post.data.description}</PostText>
-					<Creadted>{post.data.created.substring(0, 10)}</Creadted>
+						<Creadted>{post.data.created.substring(0, 10)}</Creadted>
+
+						<AnswerFlex>
+							{/* 수정 */}
+							<ShowAvatar avatar="true" data={post.data.avatar} layout="fill" />
+
+							<div style={{ display: "flex", flexDirection: "column" }}>
+								<div style={{ display: "flex" }}>
+									<div style={{ marginRight: "20px" }}>Reefer</div>
+									<div>description</div>
+								</div>
+								<div>2022-07-00</div>
+							</div>
+						</AnswerFlex>
+
+						<AnswerFrame>
+							<AnswerInput
+								placeholder="댓글 입력..."
+								onChange={(e: any) => setanswerText(e.target.value)}
+							></AnswerInput>
+							<AnswerBtn>
+								<UploadSvg id="answer" onClick={postHandler} />
+							</AnswerBtn>
+						</AnswerFrame>
+					</Flex>
 				</RightModal>
 
 				<CloseModal>
-					{post.data.userFlag ? <DeleteBtnSvg /> : ""}
-
+					{!post.data.userFlag ? (
+						<>
+							<Edit
+								onClick={postHandler}
+								id="edit"
+								style={{ marginRight: "10px" }}
+							/>
+							<DeleteBtnSvg
+								onClick={postHandler}
+								id="delete"
+								style={{ marginRight: "10px" }}
+							/>{" "}
+						</>
+					) : (
+						""
+					)}
 					<CloseSvg onClick={handler} />
 				</CloseModal>
 			</Frame>

@@ -285,6 +285,7 @@ export const DeleteBtnSvg = (key: any) => {
 			viewBox="0 0 24 24"
 			stroke="currentColor"
 			strokeWidth="2"
+			{...key}
 		>
 			<path
 				strokeLinecap="round"

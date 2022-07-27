@@ -276,7 +276,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 			if (user?.email) {
 				userFlag = true;
 			}
-			//console.log("checkemail", user?.email);
+
 			const data = {
 				postavatar: resData.avatar,
 				avatar: userInfo.avatar,
@@ -286,6 +286,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 				description: resData?.description,
 				created: resData?.updatedAt,
 				userFlag: userFlag,
+				postId: resData.id,
 			};
 			setPostModal((prev) => ({ ...prev, data }));
 		}
@@ -293,7 +294,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		if (postModal?.isLoading === true) setPostModal({ isLoading: false });
 		else setPostModal((prev) => ({ ...prev, isLoading: true }));
 	};
-	console.log("re render ", manyPost?.post.length);
+	console.log("user ", user);
 
 	return (
 		<Main>
@@ -397,7 +398,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 					</Pic>
 				))}
 			</PicBody>
-			<PostModal post={postModal} handler={postImgClick} />
+			<PostModal post={postModal} handler={postImgClick} user={user} />
 		</Main>
 	);
 };
