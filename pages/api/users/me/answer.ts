@@ -18,14 +18,35 @@ async function handler(
 ) {
 	const {
 		session: { user },
-		body: { answers, postId },
+		body: { answerId, postId, reanswer },
 	} = req;
 
 	if (req.method === "GET") {
 	}
 	if (req.method === "POST") {
-		console.log("ddd", req.body, user?.id);
-		const newAnswer = await client.answer.create({
+		/*
+		const newReAnswer = await client.reAnsWer.create({
+			data: {
+				user: {
+					connect: {
+						id: user?.id,
+					},
+				},
+				upload: {
+					connect: {
+						id: +postId.toString(),
+					},
+				},
+				answer: {
+					connect: {
+						id: +answerId.toString(),
+					},
+				},
+				reanswer,
+			},
+		});*/
+		console.log("newReAnswer", req.body);
+		/*const newAnswer = await client.answer.create({
 			data: {
 				user: {
 					connect: {
@@ -41,10 +62,10 @@ async function handler(
 			},
 		});
 		console.log("ccc", newAnswer, req.body);
-		/*
+		
 		res.json({
 			ok: true,
-			post,
+			newAnswer,
 		});*/
 	}
 }

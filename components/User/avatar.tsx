@@ -5,20 +5,22 @@ import Image from "next/image";
 
 const AvatarImage = styled.div<any>`
 	position: relative;
-	height: 3rem;
-	width: 3rem;
+	height: ${(props) => (props.size === "sm" ? "35px" : "50px")};
+
+	width: ${(props) => (props.size === "sm" ? "35px" : "50px")};
 
 	margin-right: 0.2rem;
 
 	border-width: 2px;
-	border-radius: 3rem;
+	border-radius: ${(props) => (props.size === "sm" ? "35px" : "50px")};
 	border-style: dashed;
 	background-color: rgba(0, 0, 0, 0.7);
 
 	img {
-		border-radius: 3rem;
+		border-radius: ${(props) => (props.size === "sm" ? "35px" : "50px")};
 	}
 
+	/*
 	@media only screen and (max-width: 320px) {
 		height: 1.5rem;
 		width: 1.5rem;
@@ -32,7 +34,7 @@ const AvatarImage = styled.div<any>`
 		img {
 			border-radius: 2.5rem;
 		}
-	}
+	}*/
 `;
 
 const ShowAvatar = (key: any) => {
@@ -41,7 +43,7 @@ const ShowAvatar = (key: any) => {
 			{key?.avatar !== undefined ? (
 				<>
 					{key?.data !== null ? (
-						<AvatarImage>
+						<AvatarImage size={key?.size}>
 							<Image
 								{...key}
 								src={`https://imagedelivery.net/fhkogDoSTeLvyDALpsIbnw/${key.data}/public`}

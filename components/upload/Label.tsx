@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Com } from "../styledCom";
+import { Com } from "../styles/styledCom";
 
 const Label = styled.label`
 	input:checked + div {

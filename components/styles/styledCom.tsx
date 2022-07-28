@@ -10,6 +10,17 @@ export const Com = {
 		display: flex;
 		align-items: center;
 	`,
+	Flex: styled.div`
+		display: flex;
+	`,
+	FlexColumn: styled.div`
+		display: flex;
+		flex-direction: Column;
+	`,
+	FlexAliCenter: styled.div`
+		display: flex;
+		align-items: center;
+	`,
 };
 export const Modal = {
 	Init: styled(Com.Center)`

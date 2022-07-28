@@ -8,7 +8,7 @@ import useSWR from "swr";
 import { Edit, EditPlusBtn, Save } from "../components/icon";
 import Input from "../components/Input";
 import Navbar from "../components/navbar";
-import { Com } from "../components/styledCom";
+import { Com } from "../components/styles/styledCom";
 import useMutation from "../libs/client/useMutation";
 import useUser from "../libs/client/useUser";
 import {
@@ -153,17 +153,19 @@ interface resAquaInfoForm {
 	posts: UploadInfo[];
 }
 const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
+	console.log("posts", posts);
 	//const Page = () => {
 	const router = useRouter();
 	const { user } = useUser();
 
+	/*
 	const { data: manyPost } = useSWR<resPost>(
 		typeof window === "undefined"
 			? null
 			: `/api/posts/${Number(router.query.id)}`,
 
 		{ refreshInterval: 1000 }
-	);
+	);*/
 
 	const [aquaInfoFn] = useMutation(`/api/users/${Number(router.query.id)}`);
 	const [uploadFn] = useMutation("/api/users/me");
@@ -267,7 +269,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		setEditOpen(false);
 	};
 
-	const postImgClick = (i: number, resData?: UploadInfo) => {
+	const postImgClick = (i: number, resData?: any) => {
 		if (i >= 0) {
 			setPrevPost(i + 1);
 		}
@@ -287,6 +289,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 				created: resData?.updatedAt,
 				userFlag: userFlag,
 				postId: resData.id,
+				answers: resData?.Answer,
 			};
 			setPostModal((prev) => ({ ...prev, data }));
 		}
@@ -294,7 +297,6 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 		if (postModal?.isLoading === true) setPostModal({ isLoading: false });
 		else setPostModal((prev) => ({ ...prev, isLoading: true }));
 	};
-	console.log("user ", user);
 
 	return (
 		<Main>
@@ -433,7 +435,38 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 		where: {
 			userId: queryId,
 		},
+		include: {
+			Answer: {
+				select: {
+					answer: true,
+					updatedAt: true,
+					id: true,
+					user: {
+						select: {
+							id: true,
+							nickname: true,
+							avatar: true,
+						},
+					},
+					ReAnsWer: {
+						select: {
+							reanswer: true,
+							updatedAt: true,
+							id: true,
+							user: {
+								select: {
+									id: true,
+									nickname: true,
+									avatar: true,
+								},
+							},
+						},
+					},
+				},
+			},
+		},
 	});
+
 	return {
 		props: {
 			info: JSON.parse(JSON.stringify(info)),

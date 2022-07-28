@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Com } from "../styledCom";
+import { Com } from "../styles/styledCom";
 // 42
 const Svg = styled.svg`
 	position: relative;

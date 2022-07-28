@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import UploadLabel from "./Label";
-import { Com } from "../styledCom";
+import { Com } from "../styles/styledCom";
 
 const Line = styled(Com.ColCenter)``;
 

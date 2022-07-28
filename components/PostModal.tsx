@@ -1,9 +1,10 @@
 import Image from "next/image";
 import React, { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
+import useSWR from "swr";
 import useMutation from "../libs/client/useMutation";
 import { CloseSvg, DeleteBtnSvg, Edit, UploadSvg } from "./icon";
-import { Com, Modal } from "./styledCom";
+import { Com, Modal } from "./styles/styledCom";
 import ShowAvatar from "./User/avatar";
 
 const Frame = styled(Modal.Flex)`
@@ -43,9 +44,10 @@ const RightModal = styled.div`
 	height: 100%;
 	width: 50%;
 	position: relative;
-	border-radius: 20px;
+
 	margin-left: 10px;
-	overflow: auto;
+	overflow: scroll;
+	//overflow-x: scroll;
 `;
 const Flex = styled.div`
 	display: flex;
@@ -147,7 +149,8 @@ const UploadBtn = styled.span`
 const AnswerFlex = styled.div`
 	margin-top: 5px;
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	//align-items: center;
 
 	font-weight: bold;
 	font-size: 10px;
@@ -155,8 +158,9 @@ const AnswerFlex = styled.div`
 
 const AnswerInput = styled.input`
 	outline: none;
+	width: 100%;
 `;
-const AnswerFrame = styled.div`
+const AnswerInputFrame = styled.div`
 	margin-top: auto;
 	display: flex;
 `;
@@ -165,11 +169,32 @@ const AnswerBtn = styled.div`
 	cursor: pointer;
 `;
 
+const AnswerFrame = styled.button`
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+
+	:hover {
+		border-radius: 5px;
+		background-color: rgba(46, 142, 155, 0.2);
+	}
+	:active,
+	:focus,
+	:focus-within {
+		background-color: rgba(46, 142, 155, 0.2);
+	}
+`;
+
 const PostModal = ({ handler, post, user }: any) => {
 	const modalRef = useRef<any>(null);
 	const [editState, setEditState] = useState(false);
 	const [edittext, seteditText] = useState("");
+
 	const [answertext, setanswerText] = useState("");
+	const [reanswerPosition, setreanswerPosition] = useState({
+		answerId: null,
+	});
+
 	const [uploadFn, { data, loading, error }] = useMutation(
 		"/api/users/me/upload"
 	);
@@ -184,10 +209,13 @@ const PostModal = ({ handler, post, user }: any) => {
 	});
 	const clickModalOutside = (event: any) => {
 		if (post.isLoading) {
-			if (!modalRef.current.contains(event.target)) handler();
+			if (!modalRef.current.contains(event.target)) {
+				setreanswerPosition({ answerId: null });
+				handler();
+			}
 		}
 	};
-	//console.log("post", post);
+
 	const postHandler = (e: any) => {
 		if (e.target.id === "edit") {
 			if (editState) setEditState(false);
@@ -198,10 +226,19 @@ const PostModal = ({ handler, post, user }: any) => {
 			uploadFn({ postId: post.data.postId, delete: true });
 		}
 		if (e.target.id === "answer") {
-			//console.log("post.data.postId", post.data.postId);
-			answerFn({ postId: post.data.postId, answers: answertext });
+			if (
+				reanswerPosition?.answerId !== null &&
+				reanswerPosition?.answerId !== 0
+			) {
+				answerFn({
+					postId: post.data.postId,
+					answerId: reanswerPosition?.answerId,
+					reanswer: answertext,
+				});
+			} else {
+				answerFn({ postId: post.data.postId, reanswer: answertext });
+			}
 		}
-		console.log(e.target.id);
 	};
 	const editBtnHandler = () => {
 		uploadFn({ postId: post.data.postId, description: edittext });
@@ -209,7 +246,7 @@ const PostModal = ({ handler, post, user }: any) => {
 	};
 
 	if (!post.isLoading) return <div ref={modalRef}></div>;
-	//	console.log("post.data.avatar", post.data);
+
 	return (
 		<Modal.Init>
 			<Frame ref={modalRef}>
@@ -264,19 +301,73 @@ const PostModal = ({ handler, post, user }: any) => {
 						<Creadted>{post.data.created.substring(0, 10)}</Creadted>
 
 						<AnswerFlex>
-							{/* 수정 */}
-							<ShowAvatar avatar="true" data={post.data.avatar} layout="fill" />
+							{post.data.answers.map((answerUser: any) => (
+								<>
+									<AnswerFrame
+										style={{ marginBottom: "10px" }}
+										onClick={() =>
+											setreanswerPosition({
+												answerId: answerUser.id,
+											})
+										}
+									>
+										<ShowAvatar
+											avatar="true"
+											data={answerUser.user.avatar}
+											layout="fixed"
+											width={30}
+											height={30}
+											size="sm"
+										/>
 
-							<div style={{ display: "flex", flexDirection: "column" }}>
-								<div style={{ display: "flex" }}>
-									<div style={{ marginRight: "20px" }}>Reefer</div>
-									<div>description</div>
-								</div>
-								<div>2022-07-00</div>
-							</div>
+										<Com.FlexColumn>
+											<Com.Flex>
+												<div style={{ marginRight: "20px" }}>
+													{answerUser.user.nickname}
+												</div>
+
+												<div style={{ fontWeight: "normal" }}>
+													{answerUser.answer}
+												</div>
+											</Com.Flex>
+
+											<div style={{ color: "#808080" }}>
+												{answerUser.updatedAt.substring(0, 10)}
+											</div>
+										</Com.FlexColumn>
+									</AnswerFrame>
+									{/*re answer */}
+									{answerUser.ReAnsWer?.map((reanswer: any) => (
+										<Com.FlexAliCenter
+											style={{ marginBottom: "10px", marginLeft: "20px" }}
+										>
+											<ShowAvatar
+												avatar="true"
+												data={reanswer.user.avatar}
+												layout="fixed"
+												width={30}
+												height={30}
+												size="sm"
+											/>
+
+											<Com.FlexColumn>
+												<Com.Flex>
+													<div style={{ marginRight: "20px" }}>
+														{reanswer.user.nickname}
+													</div>
+
+													<div style={{ fontWeight: "normal" }}>
+														{reanswer.reanswer}
+													</div>
+												</Com.Flex>
+											</Com.FlexColumn>
+										</Com.FlexAliCenter>
+									))}
+								</>
+							))}
 						</AnswerFlex>
 
-						<AnswerFrame>
+						<AnswerInputFrame>
 							<AnswerInput
 								placeholder="댓글 입력..."
 								onChange={(e: any) => setanswerText(e.target.value)}
@@ -284,7 +375,7 @@ const PostModal = ({ handler, post, user }: any) => {
 							<AnswerBtn>
 								<UploadSvg id="answer" onClick={postHandler} />
 							</AnswerBtn>
-						</AnswerFrame>
+						</AnswerInputFrame>
 					</Flex>
 				</RightModal>
 

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import styled from "styled-components";
 import { CloseSvg, NaverSvg } from "./icon";
-import { Modal } from "./styledCom";
+import { Modal } from "./styles/styledCom";
 
 const PlzLoginModal = styled(Modal.Init)`
 	background-color: initial;

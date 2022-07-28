@@ -5,7 +5,7 @@ import { cloudFlareUpload } from "../../libs/client/cloudFlareUpload";
 import useMutation from "../../libs/client/useMutation";
 import { CloseSvg, UploadBtnSvg } from "../icon";
 import Btn from "./Btn";
-import { Com, Modal } from "../styledCom";
+import { Com, Modal } from "../styles/styledCom";
 import LoadingAnimation from "./LoadingAnimation";
 import { BallTriangle } from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";

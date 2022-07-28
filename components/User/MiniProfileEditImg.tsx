@@ -8,7 +8,7 @@ import backInitImg from "../../public/reef_img.jpg";
 import ShowAvatar from "./avatar";
 import EditImgBtn from "./EditImgBtn";
 import { BallTriangle } from "react-loader-spinner";
-import { Modal } from "../styledCom";
+import { Modal } from "../styles/styledCom";
 
 const BackEditPlus = styled.div<any>`
 	z-index: ${({ zindex }) => zindex};
