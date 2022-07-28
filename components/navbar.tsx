@@ -263,7 +263,7 @@ export default function Navbar() {
 
 			for (let cnt = 0; cnt < check.length; cnt++) {
 				let usersLength = serverData?.users.length || 0;
-				//console.log("usersLength", usersLength, typeof usersLength);
+
 				let saveAvatar = "";
 				let id = 0;
 				for (let count = 0; count < usersLength; count++) {

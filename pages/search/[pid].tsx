@@ -80,11 +80,14 @@ interface hashtagForm {
 }
 
 const Page: NextPage<hashtagForm> = (hashtagData) => {
+	console.log("hashtagData", hashtagData);
 	//const Page = () => {
 	const router = useRouter();
+
 	/*const { data: hashtagData, error } = useSWR<hashtagForm>(
 		`/api/search/${router.query.pid}`
 	);*/
+
 	const [postModal, setPostModal] = useState({
 		isLoading: false,
 	});
@@ -99,6 +102,8 @@ const Page: NextPage<hashtagForm> = (hashtagData) => {
 				description: hashtagData?.description,
 				created: hashtagData?.updatedAt,
 				userFlag: hashtagData?.userFlag,
+				postId: hashtagData.id,
+				answers: hashtagData?.Answer,
 			};
 			setPostModal((prev) => ({ ...prev, data }));
 		}
@@ -159,33 +164,89 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 	}
 	let arr: any = [];
 	const path: any = ctx?.params?.pid || "";
-	const hashtags = await client.uploadInfo.findMany({
-		where: {
-			hashtag: {
-				not: null,
+	const picKey = ["All", "Fish", "SPS", "LPS", "연산호"];
+
+	if (picKey.includes(path)) {
+		let picType = "";
+		if (path === "All") picType = "picType";
+		else if (path === "Fish") picType = "animateType";
+		else picType = "coralType";
+
+		const manypost = await client.uploadInfo.findMany({
+			where: {
+				[picType]: path,
 			},
-		},
-		include: {
-			user: {
-				select: {
-					avatar: true,
-					nickname: true,
+			include: {
+				Answer: {
+					select: {
+						answer: true,
+						updatedAt: true,
+						id: true,
+						user: {
+							select: {
+								id: true,
+								nickname: true,
+								avatar: true,
+							},
+						},
+						ReAnsWer: {
+							select: {
+								reanswer: true,
+								updatedAt: true,
+								id: true,
+								user: {
+									select: {
+										id: true,
+										nickname: true,
+										avatar: true,
+									},
+								},
+							},
+						},
+					},
+				},
+				user: {
+					select: {
+						avatar: true,
+						nickname: true,
+					},
 				},
 			},
-		},
-	});
+		});
+		return {
+			props: {
+				hashtag: JSON.parse(JSON.stringify(manypost)),
+			},
+		};
+	} else {
+		const hashtags = await client.uploadInfo.findMany({
+			where: {
+				hashtag: {
+					not: null,
+				},
+			},
+			include: {
+				user: {
+					select: {
+						avatar: true,
+						nickname: true,
+					},
+				},
+			},
+		});
 
-	hashtags.map((data) => {
-		if (data.hashtag?.includes(path)) {
-			arr.push(data);
-		}
-	});
+		hashtags.map((data) => {
+			if (data.hashtag?.includes(path)) {
+				arr.push(data);
+			}
+		});
 
-	return {
-		props: {
-			hashtag: JSON.parse(JSON.stringify(arr)),
-		},
-	};
+		return {
+			props: {
+				hashtag: JSON.parse(JSON.stringify(arr)),
+			},
+		};
+	}
 };
 
 export default Page;

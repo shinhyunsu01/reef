@@ -201,9 +201,7 @@ const Upload = ({ closeModal, userId }: responseType) => {
 			fileData: file,
 		});
 	};
-	useEffect(() => {
-		console.log("upload data ", data);
-	}, [data]);
+
 	return (
 		<Modal.Init>
 			{uploadloading ? (

@@ -3,7 +3,7 @@ import React, { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 import useSWR from "swr";
 import useMutation from "../libs/client/useMutation";
-import { CloseSvg, DeleteBtnSvg, Edit, UploadSvg } from "./icon";
+import { Close, CloseSvg, DeleteBtnSvg, Edit, Reply, UploadSvg } from "./icon";
 import { Com, Modal } from "./styles/styledCom";
 import ShowAvatar from "./User/avatar";
 
@@ -159,33 +159,31 @@ const AnswerFlex = styled.div`
 const AnswerInput = styled.input`
 	outline: none;
 	width: 100%;
+	margin-left: 10px;
 `;
 const AnswerInputFrame = styled.div`
 	margin-top: auto;
 	display: flex;
+	font-size: 12px;
 `;
 const AnswerBtn = styled.div`
 	margin-left: auto;
 	cursor: pointer;
 `;
 
-const AnswerFrame = styled.button`
+const AnswerFrame = styled.div`
 	display: flex;
 	align-items: center;
-	cursor: pointer;
 
 	:hover {
 		border-radius: 5px;
 		background-color: rgba(46, 142, 155, 0.2);
 	}
-	:active,
-	:focus,
-	:focus-within {
-		background-color: rgba(46, 142, 155, 0.2);
-	}
 `;
 
 const PostModal = ({ handler, post, user }: any) => {
+	const { data: dataswr, mutate } = useSWR(`/api/post/${post.data?.postId}`);
+
 	const modalRef = useRef<any>(null);
 	const [editState, setEditState] = useState(false);
 	const [edittext, seteditText] = useState("");
@@ -193,6 +191,7 @@ const PostModal = ({ handler, post, user }: any) => {
 	const [answertext, setanswerText] = useState("");
 	const [reanswerPosition, setreanswerPosition] = useState({
 		answerId: null,
+		answerNick: null,
 	});
 
 	const [uploadFn, { data, loading, error }] = useMutation(
@@ -210,7 +209,7 @@ const PostModal = ({ handler, post, user }: any) => {
 	const clickModalOutside = (event: any) => {
 		if (post.isLoading) {
 			if (!modalRef.current.contains(event.target)) {
-				setreanswerPosition({ answerId: null });
+				setreanswerPosition({ answerId: null, answerNick: null });
 				handler();
 			}
 		}
@@ -301,16 +300,9 @@ const PostModal = ({ handler, post, user }: any) => {
 						<Creadted>{post.data.created.substring(0, 10)}</Creadted>
 
 						<AnswerFlex>
-							{post.data.answers.map((answerUser: any) => (
-								<>
-									<AnswerFrame
-										style={{ marginBottom: "10px" }}
-										onClick={() =>
-											setreanswerPosition({
-												answerId: answerUser.id,
-											})
-										}
-									>
+							{post.data.answers?.map((answerUser: any, i: any) => (
+								<div key={i}>
+									<AnswerFrame style={{ marginBottom: "10px" }}>
 										<ShowAvatar
 											avatar="true"
 											data={answerUser.user.avatar}
@@ -331,15 +323,27 @@ const PostModal = ({ handler, post, user }: any) => {
 												</div>
 											</Com.Flex>
 
-											<div style={{ color: "#808080" }}>
-												{answerUser.updatedAt.substring(0, 10)}
-											</div>
+											<Com.Flex>
+												<div style={{ color: "#808080", marginRight: "20px" }}>
+													{answerUser.updatedAt.substring(0, 10)}
+												</div>
+
+												<Reply
+													onClick={() =>
+														setreanswerPosition({
+															answerId: answerUser.id,
+															answerNick: answerUser.user.nickname,
+														})
+													}
+												/>
+											</Com.Flex>
 										</Com.FlexColumn>
 									</AnswerFrame>
 									{/*re answer */}
-									{answerUser.ReAnsWer?.map((reanswer: any) => (
+									{answerUser.ReAnsWer?.map((reanswer: any, i: any) => (
 										<Com.FlexAliCenter
 											style={{ marginBottom: "10px", marginLeft: "20px" }}
+											key={i}
 										>
 											<ShowAvatar
 												avatar="true"
@@ -363,11 +367,29 @@ const PostModal = ({ handler, post, user }: any) => {
 											</Com.FlexColumn>
 										</Com.FlexAliCenter>
 									))}
-								</>
+								</div>
 							))}
 						</AnswerFlex>
 
 						<AnswerInputFrame>
+							{reanswerPosition?.answerNick ? (
+								<div
+									style={{
+										display: "flex",
+										alignItems: "center",
+									}}
+								>
+									<div>{reanswerPosition?.answerNick}</div>
+									<Close
+										style={{ marginBottom: "13px", cursor: "pointer" }}
+										onClick={() =>
+											setreanswerPosition({ answerId: null, answerNick: null })
+										}
+									/>
+								</div>
+							) : (
+								""
+							)}
 							<AnswerInput
 								placeholder="댓글 입력..."
 								onChange={(e: any) => setanswerText(e.target.value)}

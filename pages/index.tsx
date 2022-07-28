@@ -1,8 +1,7 @@
 import { User } from ".prisma/client";
-import styled, { ThemeProvider } from "styled-components";
+import styled from "styled-components";
 import Navbar from "../components/navbar";
 import Link from "next/link";
-import backInitImg from "../public/reef_img.jpg";
 import Image from "next/image";
 import { NextPage } from "next";
 import client from "../libs/server/client";
@@ -10,14 +9,15 @@ import ShowAvatar from "../components/User/avatar";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { PicBody, Pic } from "../components/styles/showPic.styled";
+import Category from "../components/Category";
 
 const Main = styled.div`
 	width: 100%;
 	display: flex;
 	flex-direction: column;
 
-	justify-content: center;
-	align-items: center;
+	//justify-content: center;
+	//align-items: center;
 `;
 
 const PicTitle = styled.div<any>`
@@ -100,7 +100,8 @@ const Page: NextPage<ManyUser> = ({ users }) => {
 	return (
 		<Main>
 			<Navbar />
-			<PicBody margintop={"64px"}>
+			<Category />
+			<PicBody margintop={"34px"}>
 				{users.map((data, i) => (
 					<Pic key={i} prevPage={prevLink}>
 						<Link href={`/${data.id}`}>

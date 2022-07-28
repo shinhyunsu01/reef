@@ -24,49 +24,53 @@ async function handler(
 	if (req.method === "GET") {
 	}
 	if (req.method === "POST") {
-		/*
-		const newReAnswer = await client.reAnsWer.create({
-			data: {
-				user: {
-					connect: {
-						id: user?.id,
+		console.log(req.body);
+		let answer;
+		delete req.body.answerNick;
+		if (answerId !== null && answerId !== undefined) {
+			answer = await client.reAnsWer.create({
+				data: {
+					user: {
+						connect: {
+							id: user?.id,
+						},
 					},
-				},
-				upload: {
-					connect: {
-						id: +postId.toString(),
+					upload: {
+						connect: {
+							id: +postId.toString(),
+						},
 					},
-				},
-				answer: {
-					connect: {
-						id: +answerId.toString(),
+					answer: {
+						connect: {
+							id: +answerId.toString(),
+						},
 					},
+					reanswer,
 				},
-				reanswer,
-			},
-		});*/
-		console.log("newReAnswer", req.body);
-		/*const newAnswer = await client.answer.create({
-			data: {
-				user: {
-					connect: {
-						id: user?.id,
+			});
+		} else {
+			delete req.body.reanswer;
+			answer = await client.answer.create({
+				data: {
+					user: {
+						connect: {
+							id: user?.id,
+						},
 					},
-				},
-				upload: {
-					connect: {
-						id: +postId.toString(),
+					upload: {
+						connect: {
+							id: +postId.toString(),
+						},
 					},
+					answer: reanswer,
 				},
-				answer: answers,
-			},
-		});
-		console.log("ccc", newAnswer, req.body);
-		
+			});
+		}
+
 		res.json({
 			ok: true,
-			newAnswer,
-		});*/
+			answer,
+		});
 	}
 }
 

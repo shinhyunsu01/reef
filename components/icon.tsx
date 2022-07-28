@@ -295,3 +295,44 @@ export const DeleteBtnSvg = (key: any) => {
 		</svg>
 	);
 };
+
+export const Reply = (key: any) => {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="1rem"
+			height="1rem"
+			fill="none"
+			viewBox="0 0 24 24"
+			stroke="#808080"
+			strokeWidth="2"
+			style={{ cursor: "pointer" }}
+			{...key}
+		>
+			<path
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+			/>
+		</svg>
+	);
+};
+
+export const Close = (key: any) => {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="1.2rem"
+			height="1.2srem"
+			viewBox="0 0 20 20"
+			fill="currentColor"
+			{...key}
+		>
+			<path
+				fillRule="evenodd"
+				d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+				clipRule="evenodd"
+			/>
+		</svg>
+	);
+};
