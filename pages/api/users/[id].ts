@@ -72,7 +72,7 @@ async function handler(
 				},
 			});
 		}
-		await res.revalidate(`/users/${user?.id}`);
+		await res.revalidate(`/${user?.id}`);
 		res.json({
 			ok: true,
 			info,

@@ -17,11 +17,18 @@ async function handler(
 	res: NextApiResponse<ResponseType>
 ) {
 	if (req.method === "GET") {
-		const post = await client.uploadInfo.findMany({
+		const post = await client.uploadInfo.findFirst({
 			where: {
 				id: Number(req?.query.id),
 			},
 			include: {
+				user: {
+					select: {
+						id: true,
+						nickname: true,
+						avatar: true,
+					},
+				},
 				Answer: {
 					select: {
 						answer: true,

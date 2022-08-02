@@ -22,6 +22,7 @@ import PostModal from "../components/PostModal";
 import { Pic, PicBody } from "../components/styles/showPic.styled";
 import ShowAvatar from "../components/User/avatar";
 import MiniProfileEditImg from "../components/User/MiniProfileEditImg";
+import Graph from "../components/User/graph";
 
 const Main = styled.div`
 	width: 100%;
@@ -376,6 +377,7 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 				</UserProfileDivision>
 			</UserProfile>
 
+			<Graph user={user} />
 			<Season>
 				<SeasonItem />
 			</Season>
@@ -399,7 +401,11 @@ const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
 					</Pic>
 				))}
 			</PicBody>
-			<PostModal post={postModal} handler={postImgClick} user={user} />
+			{postModal?.isLoading === true ? (
+				<PostModal post={postModal} handler={postImgClick} user={user} />
+			) : (
+				""
+			)}
 		</Main>
 	);
 };

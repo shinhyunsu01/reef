@@ -24,7 +24,6 @@ async function handler(
 	if (req.method === "GET") {
 	}
 	if (req.method === "POST") {
-		console.log(req.body);
 		let answer;
 		delete req.body.answerNick;
 		if (answerId !== null && answerId !== undefined) {
@@ -66,6 +65,7 @@ async function handler(
 				},
 			});
 		}
+		//await res.revalidate(`/${req.query?.id}`);
 
 		res.json({
 			ok: true,

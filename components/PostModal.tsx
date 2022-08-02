@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React, { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 import useSWR from "swr";
@@ -182,22 +183,29 @@ const AnswerFrame = styled.div`
 `;
 
 const PostModal = ({ handler, post, user }: any) => {
-	const { data: dataswr, mutate } = useSWR(`/api/post/${post.data?.postId}`);
+	const router = useRouter();
 
+	const {
+		data: dataSwr,
+		mutate,
+		error,
+	} = useSWR(`/api/post/${post?.data?.postId}`);
+	console.log("swr", dataSwr);
+	//console.log("user", user);
+	const inputRef = useRef("");
 	const modalRef = useRef<any>(null);
 	const [editState, setEditState] = useState(false);
 	const [edittext, seteditText] = useState("");
-
-	const [answertext, setanswerText] = useState("");
 	const [reanswerPosition, setreanswerPosition] = useState({
 		answerId: null,
 		answerNick: null,
+		keyIndex: 0,
 	});
 
-	const [uploadFn, { data, loading, error }] = useMutation(
-		"/api/users/me/upload"
+	const [uploadFn] = useMutation("/api/users/me/upload");
+	const [answerFn, { data, loading }] = useMutation(
+		`/api/users/answer/${router.query?.id}`
 	);
-	const [answerFn] = useMutation("/api/users/me/answer");
 
 	useEffect(() => {
 		document.addEventListener("mousedown", clickModalOutside);
@@ -209,13 +217,17 @@ const PostModal = ({ handler, post, user }: any) => {
 	const clickModalOutside = (event: any) => {
 		if (post.isLoading) {
 			if (!modalRef.current.contains(event.target)) {
-				setreanswerPosition({ answerId: null, answerNick: null });
+				setreanswerPosition({ answerId: null, answerNick: null, keyIndex: 0 });
 				handler();
 			}
 		}
 	};
 
 	const postHandler = (e: any) => {
+		let today = new Date();
+		let now = today.toLocaleString().substr(0, 11);
+		let nowTime = now.replaceAll(". ", "-");
+		console.log("why", e.target.id);
 		if (e.target.id === "edit") {
 			if (editState) setEditState(false);
 			else setEditState(true);
@@ -229,22 +241,74 @@ const PostModal = ({ handler, post, user }: any) => {
 				reanswerPosition?.answerId !== null &&
 				reanswerPosition?.answerId !== 0
 			) {
+				let answerCopy = dataSwr?.post.Answer || "";
+				answerCopy[reanswerPosition?.keyIndex] = {
+					...answerCopy[reanswerPosition?.keyIndex],
+					ReAnsWer: [
+						...answerCopy[reanswerPosition?.keyIndex].ReAnsWer,
+						{
+							reanswer: inputRef.current,
+							user: {
+								nickname: user.nickname,
+								avatar: user.avatar,
+							},
+							updatedAt: nowTime,
+						},
+					],
+				};
+				mutate(
+					(prev: any) =>
+						prev && {
+							...prev,
+							post: {
+								Answer: answerCopy,
+							},
+						},
+					false
+				);
+
 				answerFn({
 					postId: post.data.postId,
 					answerId: reanswerPosition?.answerId,
-					reanswer: answertext,
+					reanswer: inputRef.current,
 				});
 			} else {
-				answerFn({ postId: post.data.postId, reanswer: answertext });
+				mutate(
+					(prev: any) =>
+						prev && {
+							...prev,
+							post: {
+								...prev.post,
+								Answer: [
+									...prev.post.Answer,
+									{
+										answer: inputRef.current,
+										user: {
+											nickname: user.nickname,
+											avatar: user.avatar,
+										},
+										updatedAt: nowTime,
+									},
+								],
+							},
+						},
+					false
+				);
+				answerFn({ postId: post.data.postId, reanswer: inputRef.current });
 			}
 		}
 	};
+
 	const editBtnHandler = () => {
 		uploadFn({ postId: post.data.postId, description: edittext });
 		setEditState(false);
 	};
 
 	if (!post.isLoading) return <div ref={modalRef}></div>;
+
+	const inputAnswerOnChange = (e: any) => {
+		inputRef.current = e.target.value;
+	};
 
 	return (
 		<Modal.Init>
@@ -262,22 +326,28 @@ const PostModal = ({ handler, post, user }: any) => {
 							<PicTitle>
 								<ShowAvatar
 									avatar="true"
-									data={post.data.avatar}
+									data={dataSwr?.post?.avatar}
 									layout="fill"
 								/>
 							</PicTitle>
 
-							<Nickname>{post.data.nickname}</Nickname>
+							<Nickname>{dataSwr?.post?.user?.nickname}</Nickname>
 						</RowFlex>
 						<HashTag>
-							{post.data.animateType ? (
-								<Kind>{post.data.animateType}</Kind>
+							{dataSwr?.post?.animateType ? (
+								<Kind>{dataSwr?.post?.animateType}</Kind>
 							) : (
 								""
 							)}
-							{post.data.coralType ? <Kind>{post.data.coralType}</Kind> : ""}
-							{post.data.hashtag
-								? post.data.hashtag
+							{dataSwr?.post?.coralType ? (
+								<Kind>{dataSwr?.post?.coralType}</Kind>
+							) : (
+								""
+							)}
+							{dataSwr?.post?.hashtag !== "" &&
+							dataSwr?.post?.hashtag !== null &&
+							dataSwr?.post?.hashtag !== undefined
+								? dataSwr?.post?.hashtag
 										.split(",")
 										.map((hash: any, i: any) => <Kind key={i}>{hash}</Kind>)
 								: ""}
@@ -285,8 +355,8 @@ const PostModal = ({ handler, post, user }: any) => {
 						{editState ? (
 							<>
 								<TextPost
-									defaultValue={post.data.description}
-									placeholder={post.data.description}
+									defaultValue={dataSwr?.post?.description}
+									placeholder={dataSwr?.post?.description}
 									onChange={(e: any) => seteditText(e.target.value)}
 								/>
 								<Com.Center>
@@ -294,81 +364,98 @@ const PostModal = ({ handler, post, user }: any) => {
 								</Com.Center>
 							</>
 						) : (
-							<PostText>{edittext ? edittext : post.data.description}</PostText>
+							<PostText>
+								{edittext ? edittext : dataSwr?.post?.description}
+							</PostText>
 						)}
 
-						<Creadted>{post.data.created.substring(0, 10)}</Creadted>
+						<Creadted>{dataSwr?.post?.created?.substring(0, 10)}</Creadted>
 
 						<AnswerFlex>
-							{post.data.answers?.map((answerUser: any, i: any) => (
-								<div key={i}>
-									<AnswerFrame style={{ marginBottom: "10px" }}>
-										<ShowAvatar
-											avatar="true"
-											data={answerUser.user.avatar}
-											layout="fixed"
-											width={30}
-											height={30}
-											size="sm"
-										/>
-
-										<Com.FlexColumn>
-											<Com.Flex>
-												<div style={{ marginRight: "20px" }}>
-													{answerUser.user.nickname}
-												</div>
-
-												<div style={{ fontWeight: "normal" }}>
-													{answerUser.answer}
-												</div>
-											</Com.Flex>
-
-											<Com.Flex>
-												<div style={{ color: "#808080", marginRight: "20px" }}>
-													{answerUser.updatedAt.substring(0, 10)}
-												</div>
-
-												<Reply
-													onClick={() =>
-														setreanswerPosition({
-															answerId: answerUser.id,
-															answerNick: answerUser.user.nickname,
-														})
-													}
+							{dataSwr?.post?.Answer
+								? dataSwr.post.Answer.map((answerUser: any, i: any) => (
+										<div key={i}>
+											<AnswerFrame style={{ marginBottom: "10px" }}>
+												<ShowAvatar
+													avatar="true"
+													data={answerUser.user.avatar}
+													layout="fixed"
+													width={30}
+													height={30}
+													size="sm"
 												/>
-											</Com.Flex>
-										</Com.FlexColumn>
-									</AnswerFrame>
-									{/*re answer */}
-									{answerUser.ReAnsWer?.map((reanswer: any, i: any) => (
-										<Com.FlexAliCenter
-											style={{ marginBottom: "10px", marginLeft: "20px" }}
-											key={i}
-										>
-											<ShowAvatar
-												avatar="true"
-												data={reanswer.user.avatar}
-												layout="fixed"
-												width={30}
-												height={30}
-												size="sm"
-											/>
 
-											<Com.FlexColumn>
-												<Com.Flex>
-													<div style={{ marginRight: "20px" }}>
-														{reanswer.user.nickname}
-													</div>
+												<Com.FlexColumn>
+													<Com.Flex>
+														<div style={{ marginRight: "20px" }}>
+															{answerUser.user.nickname}
+														</div>
 
-													<div style={{ fontWeight: "normal" }}>
-														{reanswer.reanswer}
-													</div>
-												</Com.Flex>
-											</Com.FlexColumn>
-										</Com.FlexAliCenter>
-									))}
-								</div>
-							))}
+														<div style={{ fontWeight: "normal" }}>
+															{answerUser.answer}
+														</div>
+													</Com.Flex>
+
+													<Com.Flex>
+														<div
+															style={{ color: "#808080", marginRight: "20px" }}
+														>
+															{answerUser.updatedAt.substring(0, 10)}
+														</div>
+
+														<Reply
+															onClick={() =>
+																setreanswerPosition({
+																	answerId: answerUser.id,
+																	answerNick: answerUser.user.nickname,
+																	keyIndex: i,
+																})
+															}
+														/>
+													</Com.Flex>
+												</Com.FlexColumn>
+											</AnswerFrame>
+											{/*re answer */}
+											{answerUser.ReAnsWer?.map((reanswer: any, i: any) => (
+												<Com.FlexAliCenter
+													style={{ marginBottom: "10px", marginLeft: "20px" }}
+													key={i}
+												>
+													<ShowAvatar
+														avatar="true"
+														data={reanswer.user.avatar}
+														layout="fixed"
+														width={30}
+														height={30}
+														size="sm"
+													/>
+
+													<Com.FlexColumn>
+														<Com.Flex>
+															<div style={{ marginRight: "20px" }}>
+																{reanswer.user.nickname}
+															</div>
+
+															<div style={{ fontWeight: "normal" }}>
+																{reanswer.reanswer}
+															</div>
+														</Com.Flex>
+														<Com.Flex>
+															<div
+																style={{
+																	color: "#808080",
+																	marginRight: "20px",
+																}}
+															>
+																{reanswer.updatedAt.substring(0, 10)}
+															</div>
+														</Com.Flex>
+													</Com.FlexColumn>
+												</Com.FlexAliCenter>
+											))}
+										</div>
+								  ))
+								: ""}
 						</AnswerFlex>
 
 						<AnswerInputFrame>
@@ -383,7 +470,11 @@ const PostModal = ({ handler, post, user }: any) => {
 									<Close
 										style={{ marginBottom: "13px", cursor: "pointer" }}
 										onClick={() =>
-											setreanswerPosition({ answerId: null, answerNick: null })
+											setreanswerPosition({
+												answerId: null,
+												answerNick: null,
+												keyIndex: 0,
+											})
 										}
 									/>
 								</div>
@@ -392,7 +483,7 @@ const PostModal = ({ handler, post, user }: any) => {
 							)}
 							<AnswerInput
 								placeholder="댓글 입력..."
-								onChange={(e: any) => setanswerText(e.target.value)}
+								onChange={inputAnswerOnChange}
 							></AnswerInput>
 							<AnswerBtn>
 								<UploadSvg id="answer" onClick={postHandler} />

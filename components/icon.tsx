@@ -300,19 +300,17 @@ export const Reply = (key: any) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			width="1rem"
-			height="1rem"
-			fill="none"
-			viewBox="0 0 24 24"
-			stroke="#808080"
-			strokeWidth="2"
-			style={{ cursor: "pointer" }}
-			{...key}
+			style={{
+				width: "20px",
+				height: "20px",
+			}}
+			viewBox="0 0 20 20"
+			fill="currentColor"
 		>
 			<path
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+				fillRule="evenodd"
+				d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+				clipRule="evenodd"
 			/>
 		</svg>
 	);
@@ -322,8 +320,10 @@ export const Close = (key: any) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			width="1.2rem"
-			height="1.2srem"
+			style={{
+				width: "20px",
+				height: "20px",
+			}}
 			viewBox="0 0 20 20"
 			fill="currentColor"
 			{...key}
@@ -331,6 +331,27 @@ export const Close = (key: any) => {
 			<path
 				fillRule="evenodd"
 				d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+				clipRule="evenodd"
+			/>
+		</svg>
+	);
+};
+
+export const DownArrow = (key: any) => {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			style={{
+				width: "20px",
+				height: "20px",
+			}}
+			viewBox="0 0 20 20"
+			fill="currentColor"
+			{...key}
+		>
+			<path
+				fillRule="evenodd"
+				d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
 				clipRule="evenodd"
 			/>
 		</svg>
