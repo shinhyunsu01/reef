@@ -28,7 +28,7 @@ const DropFlex = styled.div`
 	align-items: center;
 `;
 const Chart = styled.div`
-	width: 100%;
+	width: 50%;
 `;
 const DropInput = styled.input`
 	margin: 0 10px;
