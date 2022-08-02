@@ -66,8 +66,12 @@ const Dropdown = ({ options, title, size, handler }: DropdownInputType) => {
 				setIsActive(false);
 			}
 			if (Ref.current !== "" && Ref.current !== null) {
+				console.log("aaa");
 				if (title === "원소") {
-					handler((prev: any) => ({ ...prev, element: Ref.current }));
+					handler((prev: any) => ({
+						...prev,
+						element: Ref.current,
+					}));
 				} else if (title === "날짜") {
 					handler((prev: any) => ({ ...prev, date: Ref.current }));
 				}
@@ -76,6 +80,19 @@ const Dropdown = ({ options, title, size, handler }: DropdownInputType) => {
 			}
 		}
 	};
+
+	useEffect(() => {
+		if (isItem !== "" && isItem !== "추가") {
+			if (title === "원소") {
+				handler((prev: any) => ({
+					...prev,
+					element: isItem,
+				}));
+			} else if (title === "날짜") {
+				handler((prev: any) => ({ ...prev, date: isItem }));
+			}
+		}
+	}, [isItem]);
 
 	return (
 		<Flex size={size} ref={inputRef}>

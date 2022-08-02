@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import styled from "styled-components";
 import Dropdown from "../Dropdown";
@@ -39,8 +39,9 @@ const DropInput = styled.input`
 	padding-left: 20px;
 `;
 const SaveBtn = styled.div`
+	width: 100px;
 	padding: 5px;
-	width: 70%;
+	margin: 5px;
 
 	background-color: black;
 	color: white;
@@ -50,6 +51,7 @@ const SaveBtn = styled.div`
 `;
 
 const Graph = ({ user }: any) => {
+	const inputRef = useRef<any>(null);
 	const router = useRouter();
 	const options = ["2022-07-02", "2022-07-02", "2022-07-02", "추가"];
 	const waterOptions = ["PH", "소금", "CAL", "추가"];
@@ -58,6 +60,14 @@ const Graph = ({ user }: any) => {
 		date: "",
 		data: "",
 	});
+	const onClick = (e: any) => {
+		if (data.element !== "" && data.date !== "" && inputRef.current !== "") {
+			setData((prev) => ({ ...prev, data: inputRef.current }));
+		}
+	};
+	const onChange = (e: any) => {
+		inputRef.current = e.target.value;
+	};
 
 	useEffect(() => {
 		console.log("data", data);
@@ -102,9 +112,12 @@ const Graph = ({ user }: any) => {
 								size=""
 								handler={setData}
 							/>
-							<DropInput placeholder="데이터" />
+							<DropInput placeholder="데이터" onChange={onChange} />
 						</DropFlex>
-						<SaveBtn>Save...</SaveBtn>
+						<Com.Flex>
+							<SaveBtn onClick={onClick}>Save</SaveBtn>
+							<SaveBtn onClick={onClick}>Delete</SaveBtn>
+						</Com.Flex>
 					</ColFlex>
 				) : (
 					""
