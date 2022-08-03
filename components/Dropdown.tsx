@@ -61,10 +61,7 @@ const Dropdown = ({ options, title, size, handler }: DropdownInputType) => {
 		};
 	}, []);
 	const clickModalOutside = (event: any) => {
-		if (!inputRef.current.contains(event.target)) {
-			if (isActive) {
-				setIsActive(false);
-			}
+		if (!inputRef.current?.contains(event.target)) {
 			if (Ref.current !== "" && Ref.current !== null) {
 				console.log("aaa");
 				if (title === "원소") {
@@ -76,12 +73,13 @@ const Dropdown = ({ options, title, size, handler }: DropdownInputType) => {
 					handler((prev: any) => ({ ...prev, date: Ref.current }));
 				}
 				Ref.current = null;
-				setIsActive(false);
 			}
+			setIsActive(false);
 		}
 	};
 
 	useEffect(() => {
+		console.log("isItem", isItem);
 		if (isItem !== "" && isItem !== "추가") {
 			if (title === "원소") {
 				handler((prev: any) => ({

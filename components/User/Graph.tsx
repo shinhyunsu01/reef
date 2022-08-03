@@ -4,6 +4,8 @@ import styled from "styled-components";
 import Dropdown from "../Dropdown";
 import { Com } from "../styles/styledCom";
 import { useRouter } from "next/router";
+import useMutation from "../../libs/client/useMutation";
+import useSWR from "swr";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const Flex = styled.div`
@@ -51,48 +53,197 @@ const SaveBtn = styled.div`
 `;
 
 const Graph = ({ user }: any) => {
-	const inputRef = useRef<any>(null);
+	//const inputRef = useRef<any>(null);
+
 	const router = useRouter();
-	const options = ["2022-07-02", "2022-07-02", "2022-07-02", "추가"];
-	const waterOptions = ["PH", "소금", "CAL", "추가"];
-	const [data, setData] = useState({
+	//const options = ["2022-07-02", "2022-07-02", "2022-07-02", "추가"];
+	//const waterOptions = ["PH", "소금", "CAL", "추가"];
+	const [clientData, setClientData] = useState({
 		element: "",
 		date: "",
-		data: "",
+		graphdata: "",
+		mode: "create",
 	});
-	const onClick = (e: any) => {
-		if (data.element !== "" && data.date !== "" && inputRef.current !== "") {
-			setData((prev) => ({ ...prev, data: inputRef.current }));
+	const [useInputText, setuseInputText] = useState("");
+
+	const [graphFn] = useMutation("/api/graph");
+	const { data: useSwrData, mutate } = useSWR("/api/graph");
+
+	let serverGraph: any[];
+	const [showData, setshowData] = useState<any>([
+		{
+			name: "1ph",
+			data: [1],
+		},
+	]);
+	const [xshowData, xsetshowData] = useState<any>([""]);
+	const [options, setoptions] = useState<any>([]);
+	const [dateoptions, setdateoptions] = useState<any>([]);
+
+	useEffect(() => {
+		if (useSwrData?.ok) {
+			//문자열을 숫자로 변경
+			let xlenMax = 0;
+			let totalOptions: any = [];
+			serverGraph = useSwrData.graph.map((swrdata: any) => {
+				return {
+					element: swrdata.element,
+					graphdata: swrdata.graphdata?.split(",").map((ee: any) => Number(ee)),
+					date: swrdata.date?.split(","),
+				};
+			});
+
+			//초기에 배열만 있고 데이터가 없을 경우
+
+			setshowData(
+				serverGraph.map((swrdata: any) => {
+					if (xlenMax < swrdata.date?.length || xlenMax === 0) {
+						xlenMax = swrdata.date?.length;
+						if (swrdata.date === undefined) {
+							xsetshowData([0]);
+						} else xsetshowData(swrdata.date);
+					}
+
+					totalOptions.push(swrdata.element);
+					//if (swrdata.date === undefined) xlenMax = 0;
+					//else xlenMax = swrdata.date?.length;
+
+					if (swrdata?.graphdata === undefined) {
+						return {
+							name: swrdata.element,
+							data: [0],
+						};
+					} else {
+						return {
+							name: swrdata.element,
+							data: swrdata.graphdata,
+						};
+					}
+				})
+			);
+			//}
+			totalOptions.push("추가");
+			setoptions(totalOptions);
 		}
-	};
-	const onChange = (e: any) => {
-		inputRef.current = e.target.value;
+	}, [useSwrData]);
+
+	const onClick = (e: any) => {
+		let result = showData;
+		let xresult = xshowData;
+
+		if (e.target.id === "edit") {
+			showData.map((showdata: any, i: any) => {
+				if (showdata.name === clientData.element) {
+					let flag = false;
+
+					//데이터가 있으면 수정 사항 만 저장
+					xresult.map((ee: any, ii: any) => {
+						if (ee === clientData.date) {
+							result[i].data[ii] = Number(useInputText);
+							flag = true;
+						}
+					});
+					//데이터가 없으면 새로 만듬
+					if (!flag) {
+						result[i].data.push(Number(useInputText));
+						xresult.push(clientData.date);
+					}
+
+					graphFn({
+						element: showdata.name,
+						graphdata: result[i].data.toString(),
+						date: xresult.toString(),
+					});
+					setuseInputText("");
+				}
+			});
+			//create
+			if (!options.includes(clientData.element)) {
+				setshowData((prev: any) => [
+					...prev,
+					{
+						name: clientData.element,
+						data: [Number(useInputText)],
+					},
+				]);
+
+				graphFn({
+					element: clientData.element,
+					graphdata: useInputText,
+					date: clientData.date,
+				});
+				let remakeOptions = options;
+				remakeOptions.pop();
+				remakeOptions.push(clientData.element);
+				remakeOptions.push("추가");
+				if (xshowData.includes(clientData.date) === false) {
+					xsetshowData((prev: any) => [...prev, clientData.date]);
+				}
+
+				setoptions(remakeOptions);
+				setuseInputText("");
+			}
+		} else if (e.target.id === "del") {
+			showData.map((showdata: any, i: any) => {
+				if (showdata.name === clientData.element) {
+					graphFn({
+						element: showdata.name,
+						date: clientData.date,
+						del: true,
+					});
+				}
+			});
+		}
 	};
 
 	useEffect(() => {
-		console.log("data", data);
-	}, [data]);
-	console.log("rerender", user);
+		console.log("options", options);
+	}, [options]);
+
+	const onChange = (e: any) => {
+		setuseInputText(e.target.value);
+	};
+
+	useEffect(() => {
+		if (useSwrData) {
+			serverGraph = useSwrData.graph.map((swrdata: any) => {
+				return {
+					element: swrdata.element,
+					graphdata: swrdata.graphdata?.split(",").map((ee: any) => Number(ee)),
+					date: swrdata.date?.split(","),
+				};
+			});
+			serverGraph.map((swrdata: any) => {
+				if (clientData.element === swrdata.element) {
+					if (swrdata.date !== undefined) {
+						let arr;
+						arr = swrdata.date;
+						arr.push("추가");
+						setdateoptions(arr);
+					}
+				}
+			});
+		}
+
+		if (dateoptions.length === 0) {
+			setdateoptions(["추가"]);
+		}
+	}, [clientData]);
+
 	return (
 		<>
 			<Flex>
 				<Chart>
 					<ApexChart
 						type="line"
-						series={[
-							{
-								name: "hello",
-								data: [1, 2, 3, 4, 5, 6],
-							},
-							{
-								name: "aello",
-								data: [6, 5, 4, 3, 2, 1],
-							},
-						]}
+						series={showData}
 						options={{
 							chart: {
 								height: "100%",
 								width: "100%",
+							},
+							xaxis: {
+								categories: xshowData,
 							},
 						}}
 					/>
@@ -101,22 +252,30 @@ const Graph = ({ user }: any) => {
 					<ColFlex>
 						<DropFlex>
 							<Dropdown
-								options={waterOptions}
+								options={options}
 								title="원소"
 								size="sm"
-								handler={setData}
+								handler={setClientData}
 							/>
 							<Dropdown
-								options={options}
+								options={dateoptions}
 								title="날짜"
 								size=""
-								handler={setData}
+								handler={setClientData}
 							/>
-							<DropInput placeholder="데이터" onChange={onChange} />
+							<DropInput
+								value={useInputText}
+								placeholder="데이터"
+								onChange={onChange}
+							/>
 						</DropFlex>
 						<Com.Flex>
-							<SaveBtn onClick={onClick}>Save</SaveBtn>
-							<SaveBtn onClick={onClick}>Delete</SaveBtn>
+							<SaveBtn onClick={onClick} id="edit">
+								Save
+							</SaveBtn>
+							<SaveBtn onClick={onClick} id="del">
+								Delete
+							</SaveBtn>
 						</Com.Flex>
 					</ColFlex>
 				) : (

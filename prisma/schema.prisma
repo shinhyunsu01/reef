@@ -29,6 +29,7 @@ model User {
   uploadInfo UploadInfo[]
   Answer     Answer[]
   ReAnsWer   ReAnsWer[]
+  Graph      Graph[]
 }
 
 model AquaInfo {
@@ -102,4 +103,17 @@ model ReAnsWer {
   answerId Int
 
   reanswer String @db.MediumText
+}
+
+model Graph {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  element   String
+  graphdata String?
+  date      String?
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
 }
