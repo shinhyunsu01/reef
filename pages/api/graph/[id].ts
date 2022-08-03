@@ -36,6 +36,7 @@ async function handler(
 	if (req.method === "POST") {
 		const alreay = await client.graph.findFirst({
 			where: {
+				userId: Number(req?.query.id),
 				element,
 			},
 		});
