@@ -20,6 +20,7 @@ async function handler(
 		session: { user },
 		body: { element, graphdata, date, del },
 	} = req;
+
 	let graph;
 	if (req.method === "GET") {
 		graph = await client.graph.findMany({
