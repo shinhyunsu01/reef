@@ -31,6 +31,9 @@ const DropFlex = styled.div`
 `;
 const Chart = styled.div`
 	width: 50%;
+	@media only screen and (max-width: ${({ theme }) => theme.mobile}) {
+		width: 100%;
+	}
 `;
 const DropInput = styled.input`
 	margin: 0 10px;
@@ -39,6 +42,10 @@ const DropInput = styled.input`
 	height: 60px;
 	box-shadow: 3px 3px 10px 6px rgba(0, 0, 0, 0.06);
 	padding-left: 20px;
+
+	@media only screen and (max-width: ${({ theme }) => theme.mobile}) {
+		width: 100px;
+	}
 `;
 const SaveBtn = styled.div`
 	width: 100px;
