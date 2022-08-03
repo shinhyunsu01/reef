@@ -21,11 +21,10 @@ async function handler(
 		body: { element, graphdata, date, del },
 	} = req;
 	let graph;
-	console.log("api", req.body);
 	if (req.method === "GET") {
 		graph = await client.graph.findMany({
 			where: {
-				userId: user?.id,
+				userId: Number(req?.query.id),
 			},
 		});
 

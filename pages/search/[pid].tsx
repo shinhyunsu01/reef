@@ -80,7 +80,6 @@ interface hashtagForm {
 }
 
 const Page: NextPage<hashtagForm> = (hashtagData) => {
-	console.log("hashtagData", hashtagData);
 	//const Page = () => {
 	const router = useRouter();
 

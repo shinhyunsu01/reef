@@ -73,8 +73,8 @@ const Graph = ({ user }: any) => {
 	});
 	const [useInputText, setuseInputText] = useState("");
 
-	const [graphFn] = useMutation("/api/graph");
-	const { data: useSwrData, mutate } = useSWR("/api/graph");
+	const [graphFn] = useMutation(`/api/graph/${router.query.id}`);
+	const { data: useSwrData, mutate } = useSWR(`/api/graph/${router.query.id}`);
 
 	let serverGraph: any[];
 	const [showData, setshowData] = useState<any>([
@@ -203,24 +203,20 @@ const Graph = ({ user }: any) => {
 		}
 	};
 
-	useEffect(() => {
-		console.log("options", options);
-	}, [options]);
-
 	const onChange = (e: any) => {
 		setuseInputText(e.target.value);
 	};
 
 	useEffect(() => {
 		if (useSwrData) {
-			serverGraph = useSwrData.graph.map((swrdata: any) => {
+			serverGraph = useSwrData?.graph?.map((swrdata: any) => {
 				return {
 					element: swrdata.element,
 					graphdata: swrdata.graphdata?.split(",").map((ee: any) => Number(ee)),
 					date: swrdata.date?.split(","),
 				};
 			});
-			serverGraph.map((swrdata: any) => {
+			serverGraph?.map((swrdata: any) => {
 				if (clientData.element === swrdata.element) {
 					if (swrdata.date !== undefined) {
 						let arr;

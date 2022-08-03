@@ -154,7 +154,6 @@ interface resAquaInfoForm {
 	posts: UploadInfo[];
 }
 const Page: NextPage<resAquaInfoForm> = ({ info, userInfo, posts }) => {
-	console.log("info", info);
 	//const Page = () => {
 	const router = useRouter();
 	const { user } = useUser();

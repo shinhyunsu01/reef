@@ -190,8 +190,6 @@ const PostModal = ({ handler, post, user }: any) => {
 		mutate,
 		error,
 	} = useSWR(`/api/post/${post?.data?.postId}`);
-	console.log("swr", dataSwr);
-	//console.log("user", user);
 	const inputRef = useRef("");
 	const modalRef = useRef<any>(null);
 	const [editState, setEditState] = useState(false);
@@ -227,7 +225,6 @@ const PostModal = ({ handler, post, user }: any) => {
 		let today = new Date();
 		let now = today.toLocaleString().substr(0, 11);
 		let nowTime = now.replaceAll(". ", "-");
-		console.log("why", e.target.id);
 		if (e.target.id === "edit") {
 			if (editState) setEditState(false);
 			else setEditState(true);
