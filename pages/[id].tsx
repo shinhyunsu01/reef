@@ -22,7 +22,7 @@ import PostModal from "../components/PostModal";
 import { Pic, PicBody } from "../components/styles/showPic.styled";
 import ShowAvatar from "../components/User/avatar";
 import MiniProfileEditImg from "../components/User/MiniProfileEditImg";
-import Graph from "../components/User/graph";
+import Graph from "../components/User/Graph";
 
 const Main = styled.div`
 	width: 100%;
